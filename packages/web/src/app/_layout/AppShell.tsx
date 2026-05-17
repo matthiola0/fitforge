@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import { InstallPromptManager } from '@/features/pwa/InstallPromptManager';
 import { BottomNav } from './BottomNav';
 
 /**
@@ -24,6 +25,7 @@ export function AppShell() {
         <Outlet />
       </main>
       {!hideNav && <BottomNav />}
+      <InstallPromptManager />
     </div>
   );
 }

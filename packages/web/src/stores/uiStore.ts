@@ -28,6 +28,12 @@ type UiState = {
   // PWA 安裝
   installPromptDismissed: boolean;
   dismissInstallPrompt: () => void;
+  /** 已開啟過幾「天」(一天最多 +1)。第 3 天才彈安裝引導 */
+  visitCount: number;
+  /** 最後一次計數的本地日期 (YYYY-MM-DD)、用來節流 */
+  lastVisitDate: string | null;
+  /** 進入 App 時呼叫一次 — 如果今天還沒記錄、visitCount + 1 */
+  markVisitToday: () => void;
 
   // Modal / Dialog
   activeModal: ModalKey;
@@ -50,6 +56,14 @@ export const useUiStore = create<UiState>()(
 
       installPromptDismissed: false,
       dismissInstallPrompt: () => set({ installPromptDismissed: true }),
+      visitCount: 0,
+      lastVisitDate: null,
+      markVisitToday: () =>
+        set((s) => {
+          const today = new Date().toISOString().slice(0, 10);
+          if (s.lastVisitDate === today) return s;
+          return { visitCount: s.visitCount + 1, lastVisitDate: today };
+        }),
 
       activeModal: null,
       openModal: (m) => set({ activeModal: m }),
@@ -68,6 +82,8 @@ export const useUiStore = create<UiState>()(
       partialize: (s) => ({
         theme: s.theme,
         installPromptDismissed: s.installPromptDismissed,
+        visitCount: s.visitCount,
+        lastVisitDate: s.lastVisitDate,
       }),
     },
   ),

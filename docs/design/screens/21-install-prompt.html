@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · §16 安裝到主畫面</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            accent: { DEFAULT: 'hsl(var(--accent) / <alpha-value>)', foreground: 'hsl(var(--accent-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            destructive: { DEFAULT: 'hsl(var(--destructive) / <alpha-value>)', foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)' },
+            success: { DEFAULT: 'hsl(var(--success) / <alpha-value>)', foreground: 'hsl(var(--success-foreground) / <alpha-value>)' },
+            warning: { DEFAULT: 'hsl(var(--warning) / <alpha-value>)', foreground: 'hsl(var(--warning-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            input: 'hsl(var(--input) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          borderRadius: { sm: '6px', md: '10px', lg: '14px', xl: '20px' },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          boxShadow: {
+            'ds-sm': '0 1px 2px 0 hsl(var(--shadow-color) / 0.06), 0 1px 1px 0 hsl(var(--shadow-color) / 0.04)',
+            'ds-md': '0 4px 12px -2px hsl(var(--shadow-color) / 0.10), 0 2px 4px -1px hsl(var(--shadow-color) / 0.06)',
+            'ds-lg': '0 -20px 40px -12px hsl(var(--shadow-color) / 0.25), 0 -8px 16px -6px hsl(var(--shadow-color) / 0.14)',
+          },
+          transitionTimingFunction: { forge: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        }
+      }
+    };
+  </script>
+  <style>
+    /* ========== Light tokens (default) ========== */
+    :root {
+      --background: 30 25% 99%;
+      --foreground: 240 12% 10%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 12% 10%;
+      --primary: 8 78% 55%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 30 12% 94%;
+      --secondary-foreground: 240 12% 18%;
+      --accent: 15 100% 96%;
+      --accent-foreground: 8 78% 38%;
+      --muted: 30 8% 95%;
+      --muted-foreground: 240 5% 45%;
+      --destructive: 0 78% 52%;
+      --destructive-foreground: 0 0% 100%;
+      --success: 150 62% 38%;
+      --success-foreground: 0 0% 100%;
+      --warning: 38 94% 50%;
+      --warning-foreground: 30 30% 12%;
+      --border: 30 10% 88%;
+      --input: 30 10% 90%;
+      --ring: 8 78% 55%;
+      --shadow-color: 240 30% 12%;
+    }
+    /* ========== Dark tokens (scoped per phone) ========== */
+    .theme-dark {
+      --background: 240 10% 7%;
+      --foreground: 30 20% 95%;
+      --card: 240 8% 10%;
+      --card-foreground: 30 20% 95%;
+      --primary: 8 85% 62%;
+      --primary-foreground: 240 30% 8%;
+      --secondary: 240 6% 16%;
+      --secondary-foreground: 30 20% 92%;
+      --accent: 240 6% 18%;
+      --accent-foreground: 8 85% 72%;
+      --muted: 240 6% 14%;
+      --muted-foreground: 240 5% 64%;
+      --destructive: 0 72% 58%;
+      --destructive-foreground: 0 0% 100%;
+      --success: 150 58% 50%;
+      --success-foreground: 240 30% 8%;
+      --warning: 38 90% 56%;
+      --warning-foreground: 240 30% 8%;
+      --border: 240 6% 20%;
+      --input: 240 6% 22%;
+      --ring: 8 85% 62%;
+      --shadow-color: 0 0% 0%;
+    }
+
+    html, body {
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background:
+        radial-gradient(1200px 600px at 30% 10%, #efe9dd 0%, transparent 60%),
+        radial-gradient(900px 700px at 80% 90%, #e7dfd0 0%, transparent 55%),
+        #ebe4d5;
+      color: #17181F;
+    }
+    .num { font-variant-numeric: tabular-nums lining-nums; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+    .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: hsl(var(--muted-foreground));
+    }
+    .eyebrow .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: hsl(var(--primary)); vertical-align: 1px; margin-right: 8px;
+    }
+    .eyebrow-page {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #6B6D77;
+    }
+    .eyebrow-page .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: #E14B36; vertical-align: 1px; margin-right: 8px;
+    }
+    code.tok {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; padding: 1px 6px; border-radius: 4px;
+      background: rgba(255,255,255,0.7); color: #17181F;
+      border: 1px solid #E1DDD7;
+    }
+
+    /* ========== Phone bezel ========== */
+    .phone {
+      width: 390px; height: 844px;
+      border-radius: 48px;
+      background: hsl(var(--background));
+      overflow: hidden;
+      position: relative;
+      color: hsl(var(--foreground));
+      box-shadow:
+        0 36px 64px -24px rgba(20, 16, 10, 0.30),
+        0 16px 32px -16px rgba(20, 16, 10, 0.20),
+        0 0 0 11px #15151b,
+        0 0 0 12px #2a2a32;
+    }
+    /* Notch */
+    .notch {
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 32px; border-radius: 18px;
+      background: #0a0a10;
+      z-index: 20;
+    }
+
+    /* ========== Icons ========== */
+    .ico-12 svg { width: 12px; height: 12px; stroke-width: 2; }
+    .ico-14 svg { width: 14px; height: 14px; stroke-width: 2; }
+    .ico-16 svg { width: 16px; height: 16px; stroke-width: 2; }
+    .ico-18 svg { width: 18px; height: 18px; stroke-width: 2; }
+    .ico-20 svg { width: 20px; height: 20px; stroke-width: 2; }
+    .ico-22 svg { width: 22px; height: 22px; stroke-width: 2; }
+    .ico-24 svg { width: 24px; height: 24px; stroke-width: 2; }
+
+    /* ========== Dim overlay behind sheet ========== */
+    .dim {
+      position: absolute; inset: 0;
+      background: rgba(16, 12, 8, 0.42);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+    .theme-dark .dim { background: rgba(0, 0, 0, 0.55); }
+
+    /* ========== Sheet ========== */
+    .sheet {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      background: hsl(var(--card));
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      box-shadow:
+        0 -24px 48px -16px hsl(var(--shadow-color) / 0.28),
+        0 -8px 16px -8px hsl(var(--shadow-color) / 0.14);
+    }
+    .handle {
+      width: 40px; height: 4px;
+      border-radius: 999px;
+      background: hsl(var(--border));
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-weight: 700;
+      font-size: 12.5px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .app-icon-wrap {
+      filter: drop-shadow(0 10px 22px hsl(var(--primary) / 0.32));
+    }
+
+    /* mini-share icon inline pill (iOS step 1) */
+    .share-pill {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: hsl(var(--accent));
+      color: hsl(var(--primary));
+      vertical-align: -7px;
+      margin: 0 2px;
+    }
+    .share-pill svg { width: 13px; height: 13px; stroke-width: 2.2; }
+
+    /* Home indicator (iOS) */
+    .home-bar {
+      position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%);
+      width: 134px; height: 5px; border-radius: 3px;
+      background: hsl(var(--foreground));
+      opacity: 0.55;
+      z-index: 30;
+    }
+
+    /* hairline divider with label */
+    .div-label {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .div-label .line { flex: 1; height: 1px; background: hsl(var(--border)); }
+    .div-label .lbl {
+      font-size: 10.5px; font-weight: 700; letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: hsl(var(--muted-foreground));
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* sheet inner scroll-safe area (visual only) */
+    .sheet-pad { padding: 6px 24px 26px; }
+
+    /* Section title */
+    .var-eyebrow {
+      font-size: 10.5px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; color: #8a8074;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ====================================================== -->
+  <!-- PAGE MASTHEAD                                          -->
+  <!-- ====================================================== -->
+  <div class="max-w-[1120px] mx-auto px-8 pt-16 pb-8">
+    <div class="eyebrow-page"><span class="dot"></span>FITFORGE · §16 · INSTALL PROMPT</div>
+    <h1 class="mt-3 text-[44px] md:text-[52px] font-extrabold tracking-[-0.035em] leading-[1.02]">
+      裝到主畫面、<span style="color: #E14B36;">訓練時更快開</span>。
+    </h1>
+    <p class="mt-5 text-[16px] text-[#5a5b66] leading-[1.6] max-w-[64ch]">
+      第 3 次訪問、未 dismiss、PWA 可安裝時、從底部滑入。Android 點 CTA 觸發
+      <code class="tok">beforeinstallprompt</code>、iOS 不允許 native prompt、改顯示三步教學。
+    </p>
+    <div class="mt-7 py-3 border-t border-b border-[#dcd6c9] flex flex-wrap gap-x-7 gap-y-2 text-[12.5px] text-[#5a5b66]">
+      <span><strong class="text-[#17181F] font-bold">觸發</strong> · 第 3 次 visit + PWA 可裝</span>
+      <span><strong class="text-[#17181F] font-bold">入口動畫</strong> · slide-up · 300ms forge</span>
+      <span><strong class="text-[#17181F] font-bold">退出</strong> · 「之後再說」7 天內不再出</span>
+      <span class="mono ml-auto text-[#8a8074]">390 × 844 · 2 × variant</span>
+    </div>
+  </div>
+
+  <!-- ====================================================== -->
+  <!-- VARIANT A — ANDROID                                    -->
+  <!-- ====================================================== -->
+  <div class="max-w-[1120px] mx-auto px-8 mt-6">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">Variant A</span>
+      <h2 class="text-[24px] font-bold tracking-[-0.02em]">Android · Chrome</h2>
+      <span class="text-[13.5px] text-[#5a5b66]">點 CTA → 系統 install prompt 接手</span>
+    </div>
+
+    <div class="mt-7 grid grid-cols-2 gap-10 place-items-center pb-10">
+
+      <!-- ====== Phone: Android · Light ====== -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone" data-screen-label="16 Install · Android · Light">
+          <div class="notch"></div>
+
+          <!-- Status bar -->
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+
+          <!-- Today screen background -->
+          <div class="absolute inset-0 pt-[54px] flex flex-col">
+            <div class="px-5 pt-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-[12px] font-medium" style="color: hsl(var(--muted-foreground));">五月 18 · 週一</div>
+                  <div class="mt-0.5 text-[26px] font-extrabold tracking-[-0.025em]">嗨, Alex</div>
+                </div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold" style="background: hsl(var(--secondary));">A</div>
+              </div>
+
+              <div class="mt-6 eyebrow"><span class="dot"></span>今天 · WK 03</div>
+
+              <div class="mt-2 rounded-[14px] p-5" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <div class="text-[20px] font-bold tracking-[-0.02em]">Push Day</div>
+                    <div class="mt-0.5 text-[13px]" style="color: hsl(var(--muted-foreground));">胸三頭 · <span class="num">5</span> 動作 · <span class="num">52</span> 分</div>
+                  </div>
+                  <span class="ico-20" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dim overlay -->
+          <div class="dim"></div>
+
+          <!-- Bottom sheet -->
+          <div class="sheet">
+            <div class="pt-2.5 pb-1 flex justify-center"><div class="handle"></div></div>
+
+            <div class="sheet-pad">
+              <!-- App icon -->
+              <div class="flex justify-center pt-4">
+                <div class="app-icon-wrap">
+                  <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="80" rx="20" fill="hsl(var(--primary))"/>
+                    <g fill="hsl(var(--primary-foreground))">
+                      <rect x="9" y="32" width="5" height="16" rx="1.5"/>
+                      <rect x="16" y="26" width="11" height="28" rx="2.5"/>
+                      <rect x="27" y="36" width="26" height="8" rx="1"/>
+                      <rect x="53" y="26" width="11" height="28" rx="2.5"/>
+                      <rect x="66" y="32" width="5" height="16" rx="1.5"/>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Title -->
+              <h3 class="mt-5 text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">
+                裝到主畫面、訓練時更快開
+              </h3>
+              <p class="mt-2 text-[14px] text-center leading-[1.55] px-2" style="color: hsl(var(--muted-foreground));">
+                離線可用、安裝後像 native app 一樣秒開
+              </p>
+
+              <!-- Bullets -->
+              <ul class="mt-5 space-y-2.5 px-1">
+                <li class="flex items-start gap-3 rounded-md py-1">
+                  <span class="mt-0.5 ico-16 flex-shrink-0" style="color: hsl(var(--success));"><i data-lucide="check"></i></span>
+                  <span class="text-[14px] leading-[1.45]">訓練中可完全離線</span>
+                </li>
+                <li class="flex items-start gap-3 rounded-md py-1">
+                  <span class="mt-0.5 ico-16 flex-shrink-0" style="color: hsl(var(--success));"><i data-lucide="check"></i></span>
+                  <span class="text-[14px] leading-[1.45]">桌面 icon、不用每次找瀏覽器</span>
+                </li>
+              </ul>
+
+              <!-- CTA -->
+              <button class="mt-7 w-full rounded-[10px] font-bold text-[15px] inline-flex items-center justify-center gap-2 transition-all duration-200 ease-forge"
+                style="height: 52px; background: hsl(var(--primary)); color: hsl(var(--primary-foreground));">
+                <span class="ico-18"><i data-lucide="download"></i></span>立即安裝
+              </button>
+
+              <!-- Ghost -->
+              <button class="mt-1 w-full h-11 rounded-md font-semibold text-[14px]" style="background: transparent; color: hsl(var(--muted-foreground));">
+                之後再說
+              </button>
+            </div>
+          </div>
+
+          <!-- Home indicator -->
+          <div class="home-bar" style="opacity:0.85;"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Android · Light</div>
+      </div>
+
+      <!-- ====== Phone: Android · Dark ====== -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone theme-dark" data-screen-label="16 Install · Android · Dark">
+          <div class="notch"></div>
+
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+
+          <div class="absolute inset-0 pt-[54px] flex flex-col">
+            <div class="px-5 pt-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-[12px] font-medium" style="color: hsl(var(--muted-foreground));">五月 18 · 週一</div>
+                  <div class="mt-0.5 text-[26px] font-extrabold tracking-[-0.025em]">嗨, Alex</div>
+                </div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold" style="background: hsl(var(--secondary));">A</div>
+              </div>
+
+              <div class="mt-6 eyebrow"><span class="dot"></span>今天 · WK 03</div>
+
+              <div class="mt-2 rounded-[14px] p-5" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <div class="text-[20px] font-bold tracking-[-0.02em]">Push Day</div>
+                    <div class="mt-0.5 text-[13px]" style="color: hsl(var(--muted-foreground));">胸三頭 · <span class="num">5</span> 動作 · <span class="num">52</span> 分</div>
+                  </div>
+                  <span class="ico-20" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim"></div>
+
+          <div class="sheet">
+            <div class="pt-2.5 pb-1 flex justify-center"><div class="handle"></div></div>
+
+            <div class="sheet-pad">
+              <div class="flex justify-center pt-4">
+                <div class="app-icon-wrap">
+                  <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="80" rx="20" fill="hsl(var(--primary))"/>
+                    <g fill="hsl(var(--primary-foreground))">
+                      <rect x="9" y="32" width="5" height="16" rx="1.5"/>
+                      <rect x="16" y="26" width="11" height="28" rx="2.5"/>
+                      <rect x="27" y="36" width="26" height="8" rx="1"/>
+                      <rect x="53" y="26" width="11" height="28" rx="2.5"/>
+                      <rect x="66" y="32" width="5" height="16" rx="1.5"/>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+
+              <h3 class="mt-5 text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">
+                裝到主畫面、訓練時更快開
+              </h3>
+              <p class="mt-2 text-[14px] text-center leading-[1.55] px-2" style="color: hsl(var(--muted-foreground));">
+                離線可用、安裝後像 native app 一樣秒開
+              </p>
+
+              <ul class="mt-5 space-y-2.5 px-1">
+                <li class="flex items-start gap-3 rounded-md py-1">
+                  <span class="mt-0.5 ico-16 flex-shrink-0" style="color: hsl(var(--success));"><i data-lucide="check"></i></span>
+                  <span class="text-[14px] leading-[1.45]">訓練中可完全離線</span>
+                </li>
+                <li class="flex items-start gap-3 rounded-md py-1">
+                  <span class="mt-0.5 ico-16 flex-shrink-0" style="color: hsl(var(--success));"><i data-lucide="check"></i></span>
+                  <span class="text-[14px] leading-[1.45]">桌面 icon、不用每次找瀏覽器</span>
+                </li>
+              </ul>
+
+              <button class="mt-7 w-full rounded-[10px] font-bold text-[15px] inline-flex items-center justify-center gap-2 transition-all duration-200 ease-forge"
+                style="height: 52px; background: hsl(var(--primary)); color: hsl(var(--primary-foreground));">
+                <span class="ico-18"><i data-lucide="download"></i></span>立即安裝
+              </button>
+              <button class="mt-1 w-full h-11 rounded-md font-semibold text-[14px]" style="background: transparent; color: hsl(var(--muted-foreground));">
+                之後再說
+              </button>
+            </div>
+          </div>
+
+          <div class="home-bar"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Android · Dark</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================== -->
+  <!-- VARIANT B — iOS                                        -->
+  <!-- ====================================================== -->
+  <div class="max-w-[1120px] mx-auto px-8 mt-12">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">Variant B</span>
+      <h2 class="text-[24px] font-bold tracking-[-0.02em]">iOS · Safari</h2>
+      <span class="text-[13.5px] text-[#5a5b66]">iOS 不開放 install prompt、改顯示三步教學 + 縮圖示意</span>
+    </div>
+
+    <div class="mt-7 grid grid-cols-2 gap-10 place-items-center pb-10">
+
+      <!-- ====== Phone: iOS · Light ====== -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone" data-screen-label="16 Install · iOS · Light">
+          <div class="notch"></div>
+
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+
+          <div class="absolute inset-0 pt-[54px] flex flex-col">
+            <div class="px-5 pt-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-[12px] font-medium" style="color: hsl(var(--muted-foreground));">五月 18 · 週一</div>
+                  <div class="mt-0.5 text-[26px] font-extrabold tracking-[-0.025em]">嗨, Alex</div>
+                </div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold" style="background: hsl(var(--secondary));">A</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim"></div>
+
+          <div class="sheet">
+            <div class="pt-2.5 pb-1 flex justify-center"><div class="handle"></div></div>
+
+            <div class="sheet-pad">
+              <div class="flex justify-center pt-3">
+                <div class="app-icon-wrap">
+                  <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="80" rx="20" fill="hsl(var(--primary))"/>
+                    <g fill="hsl(var(--primary-foreground))">
+                      <rect x="9" y="32" width="5" height="16" rx="1.5"/>
+                      <rect x="16" y="26" width="11" height="28" rx="2.5"/>
+                      <rect x="27" y="36" width="26" height="8" rx="1"/>
+                      <rect x="53" y="26" width="11" height="28" rx="2.5"/>
+                      <rect x="66" y="32" width="5" height="16" rx="1.5"/>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+
+              <h3 class="mt-4 text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">
+                裝到主畫面、訓練時更快開
+              </h3>
+              <p class="mt-1.5 text-[14px] text-center leading-[1.55] px-2" style="color: hsl(var(--muted-foreground));">
+                離線可用、安裝後像 native app 一樣秒開
+              </p>
+
+              <!-- Divider label -->
+              <div class="mt-5 div-label">
+                <div class="line"></div>
+                <div class="lbl">Safari · 3 步 · 約 10 秒</div>
+                <div class="line"></div>
+              </div>
+
+              <!-- Steps -->
+              <ol class="mt-4 space-y-3">
+                <li class="flex items-start gap-3">
+                  <span class="step-num">1</span>
+                  <span class="text-[14px] leading-[1.55] pt-[3px]">
+                    點 Safari 底部的
+                    <span class="share-pill" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 15"/><path d="M7 8 L12 3 L17 8"/><path d="M5 12 L5 19 A2 2 0 0 0 7 21 L17 21 A2 2 0 0 0 19 19 L19 12"/></svg>
+                    </span>
+                    分享按鈕
+                  </span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="step-num">2</span>
+                  <span class="text-[14px] leading-[1.55] pt-[3px]">
+                    往下滑、選 <strong class="font-bold">「加到主畫面」</strong>
+                  </span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="step-num">3</span>
+                  <span class="text-[14px] leading-[1.55] pt-[3px]">
+                    點右上角 <strong class="font-bold">「新增」</strong>、完成
+                  </span>
+                </li>
+              </ol>
+
+              <!-- iOS share sheet illustration -->
+              <div class="mt-4 mx-auto rounded-[12px] p-3 max-w-[296px]" style="background: hsl(var(--muted)); border: 1px solid hsl(var(--border));">
+                <div class="flex justify-center"><div style="width:32px;height:3px;border-radius:999px;background:hsl(var(--border));"></div></div>
+                <!-- Page header preview -->
+                <div class="mt-2 flex items-center gap-2 px-1">
+                  <div class="w-7 h-7 rounded-md flex items-center justify-center" style="background: hsl(var(--primary));">
+                    <svg width="20" height="20" viewBox="0 0 80 80"><g fill="hsl(var(--primary-foreground))"><rect x="9" y="32" width="5" height="16" rx="1.5"/><rect x="16" y="26" width="11" height="28" rx="2.5"/><rect x="27" y="36" width="26" height="8" rx="1"/><rect x="53" y="26" width="11" height="28" rx="2.5"/><rect x="66" y="32" width="5" height="16" rx="1.5"/></g></svg>
+                  </div>
+                  <div class="leading-tight">
+                    <div class="text-[10.5px] font-semibold">FitForge</div>
+                    <div class="mono text-[9px]" style="color: hsl(var(--muted-foreground));">fitforge.app</div>
+                  </div>
+                </div>
+                <!-- Action rows -->
+                <div class="mt-2 rounded-md overflow-hidden" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                  <div class="flex items-center justify-between px-2.5 py-1.5" style="border-bottom: 1px solid hsl(var(--border));">
+                    <span class="text-[11px] font-medium">加入閱讀列表</span>
+                    <span class="ico-14" style="color: hsl(var(--muted-foreground));"><i data-lucide="glasses"></i></span>
+                  </div>
+                  <div class="flex items-center justify-between px-2.5 py-1.5" style="border-bottom: 1px solid hsl(var(--border));">
+                    <span class="text-[11px] font-medium">加入書籤</span>
+                    <span class="ico-14" style="color: hsl(var(--muted-foreground));"><i data-lucide="bookmark"></i></span>
+                  </div>
+                  <!-- HIGHLIGHT -->
+                  <div class="flex items-center justify-between px-2.5 py-2" style="background: hsl(var(--accent)); border-bottom: 1px solid hsl(var(--border)); box-shadow: inset 2px 0 0 hsl(var(--primary));">
+                    <span class="text-[11.5px] font-bold" style="color: hsl(var(--accent-foreground));">加到主畫面</span>
+                    <span class="ico-16" style="color: hsl(var(--primary));"><i data-lucide="plus-square"></i></span>
+                  </div>
+                  <div class="flex items-center justify-between px-2.5 py-1.5">
+                    <span class="text-[11px] font-medium">拷貝</span>
+                    <span class="ico-14" style="color: hsl(var(--muted-foreground));"><i data-lucide="copy"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <button class="mt-4 w-full h-11 rounded-md font-semibold text-[14px]" style="background: transparent; color: hsl(var(--muted-foreground));">
+                之後再說
+              </button>
+            </div>
+          </div>
+
+          <div class="home-bar" style="opacity:0.85;"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">iOS · Light</div>
+      </div>
+
+      <!-- ====== Phone: iOS · Dark ====== -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone theme-dark" data-screen-label="16 Install · iOS · Dark">
+          <div class="notch"></div>
+
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+
+          <div class="absolute inset-0 pt-[54px] flex flex-col">
+            <div class="px-5 pt-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-[12px] font-medium" style="color: hsl(var(--muted-foreground));">五月 18 · 週一</div>
+                  <div class="mt-0.5 text-[26px] font-extrabold tracking-[-0.025em]">嗨, Alex</div>
+                </div>
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold" style="background: hsl(var(--secondary));">A</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim"></div>
+
+          <div class="sheet">
+            <div class="pt-2.5 pb-1 flex justify-center"><div class="handle"></div></div>
+
+            <div class="sheet-pad">
+              <div class="flex justify-center pt-3">
+                <div class="app-icon-wrap">
+                  <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="80" rx="20" fill="hsl(var(--primary))"/>
+                    <g fill="hsl(var(--primary-foreground))">
+                      <rect x="9" y="32" width="5" height="16" rx="1.5"/>
+                      <rect x="16" y="26" width="11" height="28" rx="2.5"/>
+                      <rect x="27" y="36" width="26" height="8" rx="1"/>
+                      <rect x="53" y="26" width="11" height="28" rx="2.5"/>
+                      <rect x="66" y="32" width="5" height="16" rx="1.5"/>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+
+              <h3 class="mt-4 text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">
+                裝到主畫面、訓練時更快開
+              </h3>
+              <p class="mt-1.5 text-[14px] text-center leading-[1.55] px-2" style="color: hsl(var(--muted-foreground));">
+                離線可用、安裝後像 native app 一樣秒開
+              </p>
+
+              <div class="mt-5 div-label">
+                <div class="line"></div>
+                <div class="lbl">Safari · 3 步 · 約 10 秒</div>
+                <div class="line"></div>
+              </div>
+
+              <ol class="mt-4 space-y-3">
+                <li class="flex items-start gap-3">
+                  <span class="step-num">1</span>
+                  <span class="text-[14px] leading-[1.55] pt-[3px]">
+                    點 Safari 底部的
+                    <span class="share-pill" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 15"/><path d="M7 8 L12 3 L17 8"/><path d="M5 12 L5 19 A2 2 0 0 0 7 21 L17 21 A2 2 0 0 0 19 19 L19 12"/></svg>
+                    </span>
+                    分享按鈕
+                  </span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="step-num">2</span>
+                  <span class="text-[14px] leading-[1.55] pt-[3px]">
+                    往下滑、選 <strong class="font-bold">「加到主畫面」</strong>
+                  </span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="step-num">3</span>
+                  <span class="text-[14px] leading-[1.55] pt-[3px]">
+                    點右上角 <strong class="font-bold">「新增」</strong>、完成
+                  </span>
+                </li>
+              </ol>
+
+              <div class="mt-4 mx-auto rounded-[12px] p-3 max-w-[296px]" style="background: hsl(var(--muted)); border: 1px solid hsl(var(--border));">
+                <div class="flex justify-center"><div style="width:32px;height:3px;border-radius:999px;background:hsl(var(--border));"></div></div>
+                <div class="mt-2 flex items-center gap-2 px-1">
+                  <div class="w-7 h-7 rounded-md flex items-center justify-center" style="background: hsl(var(--primary));">
+                    <svg width="20" height="20" viewBox="0 0 80 80"><g fill="hsl(var(--primary-foreground))"><rect x="9" y="32" width="5" height="16" rx="1.5"/><rect x="16" y="26" width="11" height="28" rx="2.5"/><rect x="27" y="36" width="26" height="8" rx="1"/><rect x="53" y="26" width="11" height="28" rx="2.5"/><rect x="66" y="32" width="5" height="16" rx="1.5"/></g></svg>
+                  </div>
+                  <div class="leading-tight">
+                    <div class="text-[10.5px] font-semibold">FitForge</div>
+                    <div class="mono text-[9px]" style="color: hsl(var(--muted-foreground));">fitforge.app</div>
+                  </div>
+                </div>
+                <div class="mt-2 rounded-md overflow-hidden" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                  <div class="flex items-center justify-between px-2.5 py-1.5" style="border-bottom: 1px solid hsl(var(--border));">
+                    <span class="text-[11px] font-medium">加入閱讀列表</span>
+                    <span class="ico-14" style="color: hsl(var(--muted-foreground));"><i data-lucide="glasses"></i></span>
+                  </div>
+                  <div class="flex items-center justify-between px-2.5 py-1.5" style="border-bottom: 1px solid hsl(var(--border));">
+                    <span class="text-[11px] font-medium">加入書籤</span>
+                    <span class="ico-14" style="color: hsl(var(--muted-foreground));"><i data-lucide="bookmark"></i></span>
+                  </div>
+                  <div class="flex items-center justify-between px-2.5 py-2" style="background: hsl(var(--accent)); border-bottom: 1px solid hsl(var(--border)); box-shadow: inset 2px 0 0 hsl(var(--primary));">
+                    <span class="text-[11.5px] font-bold" style="color: hsl(var(--accent-foreground));">加到主畫面</span>
+                    <span class="ico-16" style="color: hsl(var(--primary));"><i data-lucide="plus-square"></i></span>
+                  </div>
+                  <div class="flex items-center justify-between px-2.5 py-1.5">
+                    <span class="text-[11px] font-medium">拷貝</span>
+                    <span class="ico-14" style="color: hsl(var(--muted-foreground));"><i data-lucide="copy"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <button class="mt-4 w-full h-11 rounded-md font-semibold text-[14px]" style="background: transparent; color: hsl(var(--muted-foreground));">
+                之後再說
+              </button>
+            </div>
+          </div>
+
+          <div class="home-bar"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">iOS · Dark</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================== -->
+  <!-- NOTES & SPEC                                           -->
+  <!-- ====================================================== -->
+  <div class="max-w-[1120px] mx-auto px-8 pb-20">
+    <div class="grid md:grid-cols-3 gap-3">
+
+      <div class="rounded-[14px] p-5" style="background: white; border: 1px solid #E1DDD7;">
+        <div class="eyebrow-page"><span class="dot"></span>觸發邏輯</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.55]">
+          <li>· <span class="mono text-[12.5px]">visit_count ≥ 3</span></li>
+          <li>· <span class="mono text-[12.5px]">last_dismiss_at &lt; 7d ago</span> → 不出</li>
+          <li>· Android: <span class="mono text-[12.5px]">beforeinstallprompt</span> 已 fire</li>
+          <li>· iOS: <span class="mono text-[12.5px]">standalone === false</span> + Safari UA</li>
+          <li>· 訓練進行中絕不出 — 不打斷</li>
+        </ul>
+      </div>
+
+      <div class="rounded-[14px] p-5" style="background: white; border: 1px solid #E1DDD7;">
+        <div class="eyebrow-page"><span class="dot"></span>動畫</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.55]">
+          <li>· dim fade in · <span class="mono text-[12.5px]">200ms</span></li>
+          <li>· sheet slide-up · <span class="mono text-[12.5px]">300ms forge</span></li>
+          <li>· 收起：<span class="mono text-[12.5px]">200ms</span> · slide-down + fade</li>
+          <li>· 尊重 <span class="mono text-[12.5px]">prefers-reduced-motion</span></li>
+        </ul>
+      </div>
+
+      <div class="rounded-[14px] p-5" style="background: white; border: 1px solid #E1DDD7;">
+        <div class="eyebrow-page"><span class="dot"></span>文案決策</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.55]">
+          <li>· 主標講 benefit 不講 feature — 「更快開」不是「PWA」</li>
+          <li>· 兩個 bullet 各打一個痛點：離線 / 入口</li>
+          <li>· 沒有「✕」按鈕、避免羞辱式中止 — 用 ghost text 退出</li>
+          <li>· iOS 步驟用「你」、不教學語氣</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  </script>
+</body>
+</html>
