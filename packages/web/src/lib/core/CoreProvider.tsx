@@ -100,8 +100,14 @@ function BootSplash() {
   return (
     <div className="flex h-full items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-xl font-extrabold text-primary-foreground shadow-ds-md">
-          F
+        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary shadow-ds-md">
+          <svg viewBox="0 0 64 64" width="36" height="36" fill="#FFFFFF" aria-label="FitForge">
+            <rect x="16" y="11" width="14" height="46" rx="7" />
+            <rect x="16" y="11" width="24" height="14" rx="7" />
+            <circle cx="45" cy="18" r="8.5" />
+            <rect x="16" y="28" width="20" height="12" rx="6" />
+            <circle cx="40" cy="34" r="7" />
+          </svg>
         </div>
         <div className="text-sm font-medium text-muted-foreground">啟動中...</div>
       </div>

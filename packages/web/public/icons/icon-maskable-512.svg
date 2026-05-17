@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="FitForge">
+  <!-- Full bleed primary background (Android maskable spec — system crops to circle/squircle) -->
+  <rect width="512" height="512" fill="#E14B36"/>
+  <!-- Mark within ~80% safe area (76px inset = 70% safe zone, more padding for masking) -->
+  <g fill="#FFFFFF" transform="translate(76 76) scale(5.625)">
+    <rect x="16" y="11" width="14" height="46" rx="7"/>
+    <rect x="16" y="11" width="24" height="14" rx="7"/>
+    <circle cx="45" cy="18" r="8.5"/>
+    <rect x="16" y="28" width="20" height="12" rx="6"/>
+    <circle cx="40" cy="34" r="7"/>
+  </g>
+</svg>

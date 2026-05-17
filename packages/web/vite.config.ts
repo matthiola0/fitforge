@@ -29,12 +29,12 @@ export default defineConfig({
         start_url: '/today',
         scope: '/',
         icons: [
-          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/icons/icon-192.svg', sizes: '192x192', type: 'image/svg+xml' },
+          { src: '/icons/icon-512.svg', sizes: '512x512', type: 'image/svg+xml' },
           {
-            src: '/icons/icon-maskable-512.png',
+            src: '/icons/icon-maskable-512.svg',
             sizes: '512x512',
-            type: 'image/png',
+            type: 'image/svg+xml',
             purpose: 'maskable',
           },
         ],
@@ -58,5 +58,40 @@ export default defineConfig({
   build: {
     target: 'es2022',
     sourcemap: true,
+    // Push first-paint smaller by splitting heavy deps + the AdminUI canvas helpers
+    // into their own chunks. Routes are React.lazy in lib/router/routes.tsx.
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (!id.includes('node_modules')) return undefined;
+          // RxDB + RxJS are the heaviest combo (~250KB raw)
+          if (id.includes('rxdb') || id.includes('rxjs') || id.includes('dexie')) {
+            return 'vendor-rxdb';
+          }
+          // React core
+          if (
+            id.includes('react-dom') ||
+            id.includes('/react/') ||
+            id.includes('scheduler') ||
+            id.includes('react-router')
+          ) {
+            return 'vendor-react';
+          }
+          // Lucide icons — tree-shaken but still chunky
+          if (id.includes('lucide-react')) return 'vendor-icons';
+          // Zod / nanoid / date-fns — small but logical group
+          if (
+            id.includes('/zod/') ||
+            id.includes('/nanoid/') ||
+            id.includes('/date-fns/')
+          ) {
+            return 'vendor-utils';
+          }
+          // Everything else under node_modules
+          return 'vendor';
+        },
+      },
+    },
   },
 });
