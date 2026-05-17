@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · Onboarding · 選擇訓練經驗</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'ds-sm': '0 1px 2px 0 hsl(0 0% 0% / 0.06)',
+            'ds-md': '0 8px 24px -6px hsl(0 0% 0% / 0.12), 0 2px 6px -2px hsl(0 0% 0% / 0.08)',
+            'ds-primary': '0 10px 28px -8px hsl(var(--primary) / 0.45), 0 4px 10px -4px hsl(var(--primary) / 0.30)',
+          },
+          transitionTimingFunction: {
+            forge: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          },
+        }
+      }
+    };
+  </script>
+  <style>
+    .theme-light {
+      --background: 30 25% 99%;
+      --foreground: 240 12% 10%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 12% 10%;
+      --primary: 8 78% 55%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 30 12% 94%;
+      --secondary-foreground: 240 12% 18%;
+      --muted: 30 8% 95%;
+      --muted-foreground: 240 5% 45%;
+      --border: 30 10% 88%;
+      --ring: 8 78% 55%;
+    }
+    .theme-dark {
+      --background: 240 10% 7%;
+      --foreground: 30 20% 95%;
+      --card: 240 8% 10%;
+      --card-foreground: 30 20% 95%;
+      --primary: 8 85% 62%;
+      --primary-foreground: 240 30% 8%;
+      --secondary: 240 6% 16%;
+      --secondary-foreground: 30 20% 92%;
+      --muted: 240 6% 14%;
+      --muted-foreground: 240 5% 64%;
+      --border: 240 6% 20%;
+      --ring: 8 85% 62%;
+    }
+    html, body {
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #E5E0D6;
+    }
+    .stage-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.8px;
+      text-transform: uppercase; color: #6B6D77;
+    }
+    .stage-eyebrow .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: #E14B36; vertical-align: 1px; margin-right: 8px;
+    }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+    .phone {
+      width: 375px; height: 812px;
+      border-radius: 54px; padding: 8px;
+      background: #15161B;
+      box-shadow:
+        0 50px 100px -28px rgba(0,0,0,0.32),
+        0 22px 44px -12px rgba(0,0,0,0.22),
+        inset 0 0 0 1.5px #2A2B33;
+      flex-shrink: 0;
+    }
+    .phone .screen {
+      width: 100%; height: 100%;
+      border-radius: 46px; overflow: hidden;
+      position: relative; background: hsl(var(--background));
+    }
+    .screen-dynamic-island {
+      position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 36px; border-radius: 20px;
+      background: #000; z-index: 30;
+    }
+
+    /* Emoji rendering — use Apple's color emoji where available; fall back gracefully */
+    .emoji {
+      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+                   "Twemoji Mozilla", "EmojiOne Color", system-ui, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    @keyframes tap-pulse {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
+    .tap-pulse { animation: tap-pulse 320ms cubic-bezier(0.16,1,0.3,1); }
+
+    @keyframes haptic-ring {
+      0%   { transform: scale(0.4); opacity: 0.55; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .haptic-ring {
+      position: absolute; inset: 0;
+      border-radius: 24px;
+      box-shadow: 0 0 0 2px hsl(var(--primary));
+      pointer-events: none;
+      animation: haptic-ring 520ms cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    /* Celebration burst for the final 完成 button */
+    @keyframes done-burst {
+      0%   { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.55), 0 10px 28px -8px hsl(var(--primary) / 0.45); }
+      40%  { transform: scale(1.04); box-shadow: 0 0 0 22px hsl(var(--primary) / 0), 0 18px 40px -8px hsl(var(--primary) / 0.55); }
+      100% { transform: scale(1);    box-shadow: 0 0 0 0 hsl(var(--primary) / 0), 0 10px 28px -8px hsl(var(--primary) / 0.45); }
+    }
+    .done-burst { animation: done-burst 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+    /* Confetti-like sparkle dots that pop above the CTA on click */
+    @keyframes sparkle-up {
+      0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
+      20%  { opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; }
+    }
+    .sparkle {
+      position: absolute; left: 50%; bottom: 50%;
+      width: 6px; height: 6px; border-radius: 3px;
+      background: hsl(var(--primary));
+      animation: sparkle-up 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============== PAGE CHROME ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-14 pb-12">
+    <div class="stage-eyebrow"><span class="dot"></span>FITFORGE · ONBOARDING · STEP 4 OF 4 · FINAL</div>
+    <h1 class="mt-3 text-[36px] md:text-[44px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      選擇訓練經驗<span class="text-[#E14B36]">.</span>
+    </h1>
+    <p class="mt-3 text-[15px] leading-[1.55] text-[#6B6D77] max-w-[58ch]">
+      最後一步。植物 emoji 對應「成長階段」隱喻 — 從 🌱 萌芽到 🌳 大樹。點任一卡片再按「完成」、觀察 CTA 的 spring + glow 慶祝動畫。
+    </p>
+  </div>
+
+  <!-- ============== PHONE STAGE ============== -->
+  <div id="root" class="px-6 pb-20 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== NOTES ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>EMOJI · 例外允許</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">設計系統規定「避免裝飾 emoji」、但植物 emoji 在這裡是<strong>功能性 iconography</strong> — 🌱→🌿→🌳 直接傳達「成長階段」的隱喻、不需任何文字輔助。一個 emoji 一張卡、不重複、不堆疊。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>CTA · 「完成」 ≠ 「下一步」</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">最後一步 CTA 文字換成「完成」、加 sparkles icon。點擊瞬間觸發 spring scale + primary glow burst (對應設計系統 §07 「PR / 完成」動畫規範) + 6 顆 confetti-like sparkle 散開。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>EMOJI 容器顏色</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">圖示區用 <code class="mono text-[11.5px] bg-[#F0EEEA] px-1.5 py-0.5 rounded">bg-secondary</code> 中性灰底 — selected 時不翻 primary 橘 (與植物綠 emoji 會撞色)、改加 ring + 卡片整體狀態變化。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const LEVELS = [
+      { id: 'novice',  emoji: '🌱', title: '完全新手',   desc: '從來沒練過 / 不滿 1 個月' },
+      { id: 'casual',  emoji: '🌿', title: '練過一陣子', desc: '1–6 個月、知道幾個動作' },
+      { id: 'inter',   emoji: '🌳', title: '有點經驗',   desc: '6 個月以上、想優化訓練' },
+    ];
+
+    function StatusBar() {
+      return (
+        <div className="absolute top-0 inset-x-0 h-[54px] z-20 flex items-end justify-between px-7 pb-1.5 pointer-events-none">
+          <div className="text-foreground text-[15px] font-semibold tracking-[-0.01em]" style={{fontFeatureSettings: '"tnum"'}}>9:41</div>
+          <div className="flex items-center gap-1.5 text-foreground">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor">
+              <rect x="0" y="7" width="3" height="4" rx="0.5"/>
+              <rect x="4.5" y="5" width="3" height="6" rx="0.5"/>
+              <rect x="9" y="3" width="3" height="8" rx="0.5"/>
+              <rect x="13.5" y="0" width="3" height="11" rx="0.5"/>
+            </svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+              <path d="M1 4 A11 11 0 0 1 15 4"/>
+              <path d="M3 6.5 A7.5 7.5 0 0 1 13 6.5"/>
+              <path d="M5.3 9 A4 4 0 0 1 10.7 9"/>
+              <circle cx="8" cy="10.2" r="0.7" fill="currentColor" stroke="none"/>
+            </svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none">
+              <rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="currentColor" strokeOpacity="0.5"/>
+              <rect x="2" y="2" width="19" height="8" rx="1.5" fill="currentColor"/>
+              <rect x="23" y="4" width="2" height="4" rx="1" fill="currentColor" fillOpacity="0.5"/>
+            </svg>
+          </div>
+        </div>
+      );
+    }
+
+    function ProgressDots({ step = 4, total = 4 }) {
+      return (
+        <div className="flex items-center gap-1.5">
+          {Array.from({ length: total }, (_, i) => {
+            const idx = i + 1;
+            const active = idx === step;
+            const done = idx < step;
+            return (
+              <div key={i}
+                   className="rounded-full transition-all duration-300 ease-forge"
+                   style={{
+                     width: active ? 28 : 8,
+                     height: 8,
+                     background: active
+                       ? 'hsl(var(--primary))'
+                       : (done ? 'hsl(var(--primary) / 0.45)' : 'hsl(var(--border))'),
+                   }}/>
+            );
+          })}
+        </div>
+      );
+    }
+
+    function LevelCard({ level, selected, onSelect }) {
+      const [hapticKey, setHapticKey] = useState(0);
+      const [pulsing, setPulsing] = useState(false);
+
+      const handleClick = () => {
+        if (!selected) {
+          setHapticKey(k => k + 1);
+          setPulsing(true);
+          setTimeout(() => setPulsing(false), 320);
+        }
+        onSelect(level.id);
+      };
+
+      useEffect(() => {
+        if (window.lucide) window.lucide.createIcons();
+      });
+
+      return (
+        <button
+          type="button"
+          onClick={handleClick}
+          aria-pressed={selected}
+          className={`relative w-full text-left p-4 flex items-center gap-4
+            outline-none focus-visible:ring-4 focus-visible:ring-ring/25
+            transition-all duration-200 ease-forge
+            ${pulsing ? 'tap-pulse' : ''}
+            ${selected ? 'bg-primary/[0.06]' : 'bg-card hover:scale-[1.02] hover:shadow-ds-md'}`}
+          style={{
+            borderRadius: 24,
+            boxShadow: selected
+              ? 'inset 0 0 0 2px hsl(var(--primary))'
+              : 'inset 0 0 0 1px hsl(var(--border))',
+          }}
+        >
+          {hapticKey > 0 && <span key={hapticKey} className="haptic-ring" aria-hidden />}
+
+          {/* emoji block */}
+          <div
+            className="shrink-0 grid place-items-center transition-all duration-200 ease-forge"
+            style={{
+              width: 64, height: 64, borderRadius: 18,
+              background: selected ? 'hsl(var(--primary) / 0.14)' : 'hsl(var(--secondary))',
+              boxShadow: selected ? 'inset 0 0 0 1px hsl(var(--primary) / 0.30)' : 'none',
+            }}
+          >
+            <span className="emoji" style={{ fontSize: 36 }}>{level.emoji}</span>
+          </div>
+
+          {/* text */}
+          <div className="flex-1 min-w-0">
+            <div className="text-[18px] font-bold tracking-[-0.015em] text-foreground">{level.title}</div>
+            <div className="mt-0.5 text-[13.5px] leading-[1.45] text-muted-foreground" style={{textWrap:'pretty'}}>
+              {level.desc}
+            </div>
+          </div>
+
+          {/* trailing check */}
+          <div
+            className="shrink-0 grid place-items-center transition-all duration-300 ease-forge"
+            style={{
+              width: 24, height: 24,
+              opacity: selected ? 1 : 0,
+              transform: selected ? 'scale(1)' : 'scale(0.7)',
+              color: 'hsl(var(--primary))',
+            }}
+          >
+            <i data-lucide="check-circle-2" style={{ width: 24, height: 24 }}></i>
+          </div>
+        </button>
+      );
+    }
+
+    function FinishButton({ selected }) {
+      const [bursting, setBursting] = useState(false);
+      const [sparks, setSparks] = useState([]);
+
+      const handleClick = () => {
+        if (!selected) return;
+        setBursting(true);
+        setTimeout(() => setBursting(false), 700);
+
+        // 6 sparkles flying out
+        const SP = Array.from({ length: 6 }, (_, i) => {
+          const angle = (-90 + (i - 2.5) * 22) * Math.PI / 180; // spread upward
+          const dist = 38 + (i % 2) * 12;
+          return {
+            key: Date.now() + i,
+            dx: Math.cos(angle) * dist,
+            dy: Math.sin(angle) * dist,
+          };
+        });
+        setSparks(SP);
+        setTimeout(() => setSparks([]), 760);
+      };
+
+      return (
+        <div className="relative">
+          {/* sparks */}
+          <div className="pointer-events-none absolute inset-0 overflow-visible">
+            {sparks.map(s => (
+              <span key={s.key} className="sparkle"
+                    style={{
+                      '--dx': `${s.dx}px`,
+                      '--dy': `${s.dy}px`,
+                    }}
+              />
+            ))}
+          </div>
+          <button
+            onClick={handleClick}
+            disabled={!selected}
+            className={`relative w-full inline-flex items-center justify-center gap-2
+              rounded-2xl font-bold text-[15.5px] tracking-[0.01em]
+              transition-all duration-200 ease-forge
+              ${selected
+                ? `bg-primary text-primary-foreground hover:opacity-95 active:scale-[0.99] shadow-ds-primary ${bursting ? 'done-burst' : ''}`
+                : 'bg-muted text-muted-foreground/60 cursor-not-allowed'}`}
+            style={{ height: 56 }}
+          >
+            <i data-lucide="sparkles" style={{ width: 18, height: 18 }}></i>
+            完成
+          </button>
+        </div>
+      );
+    }
+
+    function OnboardingStep4() {
+      const [selected, setSelected] = useState(null);
+
+      useEffect(() => {
+        if (window.lucide) window.lucide.createIcons();
+      }, [selected]);
+
+      return (
+        <div className="absolute inset-0 flex flex-col" style={{ background: 'hsl(var(--background))' }}>
+          <div className="screen-dynamic-island"></div>
+          <StatusBar />
+
+          {/* top bar */}
+          <div className="pt-[68px] px-5 flex items-center justify-between">
+            <button className="inline-flex items-center gap-1 px-2 py-1 -ml-2 text-[13.5px] font-semibold text-muted-foreground hover:text-foreground transition-colors duration-200 ease-forge">
+              <i data-lucide="chevron-left" style={{ width: 16, height: 16, strokeWidth: 2.4 }}></i>
+              上一步
+            </button>
+            <ProgressDots step={4} total={4} />
+            <div className="w-[70px]"></div>
+          </div>
+
+          {/* hero copy */}
+          <div className="px-6 mt-7">
+            <h1 className="text-[28px] font-extrabold tracking-[-0.025em] leading-[1.15] text-foreground">
+              健身經驗如何？
+            </h1>
+            <p className="mt-2.5 text-[14.5px] leading-[1.5] text-muted-foreground" style={{textWrap: 'pretty'}}>
+              實話實說 — 會給你最適合的開始。
+            </p>
+          </div>
+
+          {/* cards */}
+          <div className="mt-7 px-6 flex flex-col gap-3">
+            {LEVELS.map(lv => (
+              <LevelCard
+                key={lv.id}
+                level={lv}
+                selected={selected === lv.id}
+                onSelect={setSelected}
+              />
+            ))}
+          </div>
+
+          {/* gentle reassurance */}
+          <div className="mt-6 px-6">
+            <div className="text-center text-[12px] leading-[1.55] text-muted-foreground inline-flex items-start gap-1.5 w-full justify-center">
+              <i data-lucide="info" style={{ width: 13, height: 13, marginTop: 2 }}></i>
+              <span>無論選哪個、訓練量都會從你能完成的重量開始。</span>
+            </div>
+          </div>
+
+          {/* spacer */}
+          <div className="flex-1"></div>
+
+          {/* footer — final CTA */}
+          <div className="px-6 pb-9">
+            <FinishButton selected={selected} />
+            <div className="mt-6 mx-auto rounded-full bg-foreground/30" style={{ width: 134, height: 5 }}></div>
+          </div>
+        </div>
+      );
+    }
+
+    function Phone({ theme }) {
+      return (
+        <div className="flex flex-col items-center gap-4">
+          <div className="stage-eyebrow flex items-center gap-2">
+            <span className="dot"></span>{theme === 'light' ? 'LIGHT MODE' : 'DARK MODE'}
+            <span className="mono text-[10.5px] text-[#9F9FA8]">· 375 × 812</span>
+          </div>
+          <div className={`phone theme-${theme}`}>
+            <div className="screen">
+              <OnboardingStep4 />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <>
+          <Phone theme="light" />
+          <Phone theme="dark" />
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

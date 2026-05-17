@@ -1,0 +1,25 @@
+%% Sequence: Log a Set
+%% 對應 02-system-architecture.md §4.2
+
+sequenceDiagram
+    actor User as 用戶
+    participant UI as SetLoggerInput
+    participant Hook as useLogSet
+    participant Engine as WorkoutEngine
+    participant Store as sessionStore
+    participant Repo as WorkoutRepository
+    participant Timer as RestTimer
+    participant DB as RxDB
+
+    User->>UI: 輸入 60kg x 10、按完成
+    UI->>Hook: logSet({weight: 60, reps: 10, rpe: 7})
+    Hook->>Engine: completeCurrentSet(...)
+    Engine->>Engine: 驗證 + 計算 next set
+    Engine->>Repo: appendSet(sessionId, setData)
+    Repo->>DB: update document
+    DB-->>Repo: ok
+    Engine->>Store: advanceToNext()
+    Engine->>Timer: start(restSeconds)
+    Engine-->>Hook: { nextSet, restSeconds }
+    Hook-->>UI: 顯示倒數 + 下一組預覽
+    Timer-->>UI: tick (via Zustand subscription)

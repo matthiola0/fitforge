@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · 首頁狀態變體</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'ds-sm': '0 1px 2px 0 hsl(0 0% 0% / 0.06)',
+            'ds-md': '0 8px 24px -6px hsl(0 0% 0% / 0.10), 0 2px 6px -2px hsl(0 0% 0% / 0.06)',
+            'ds-primary': '0 12px 30px -8px hsl(var(--primary) / 0.45), 0 4px 10px -4px hsl(var(--primary) / 0.30)',
+          },
+          transitionTimingFunction: {
+            forge: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          },
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="home-today.css" />
+  <style>
+    /* ============ Variant-specific animations ============ */
+    @keyframes live-pulse {
+      0%, 100% { opacity: 1;    transform: scale(1);   box-shadow: 0 0 0 0 hsl(var(--primary) / 0.55); }
+      50%      { opacity: 0.55; transform: scale(0.92); box-shadow: 0 0 0 6px hsl(var(--primary) / 0); }
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 4px;
+      background: hsl(var(--primary));
+      animation: live-pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes bar-shimmer {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(280%); }
+    }
+    .bar-shimmer {
+      position: absolute; top: 0; bottom: 0; width: 36%;
+      background: linear-gradient(90deg,
+        hsl(var(--primary-foreground) / 0) 0%,
+        hsl(var(--primary-foreground) / 0.35) 50%,
+        hsl(var(--primary-foreground) / 0) 100%);
+      animation: bar-shimmer 2.4s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+    }
+
+    @keyframes spark-float {
+      0%, 100% { transform: translateY(0);   opacity: 0.85; }
+      50%      { transform: translateY(-4px); opacity: 1; }
+    }
+    .spark-1 { animation: spark-float 2.6s ease-in-out 0s    infinite; transform-origin: center; }
+    .spark-2 { animation: spark-float 2.6s ease-in-out 0.5s  infinite; transform-origin: center; }
+    .spark-3 { animation: spark-float 2.6s ease-in-out 1.0s  infinite; transform-origin: center; }
+  </style>
+</head>
+<body>
+
+  <!-- ============== PAGE CHROME ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-14 pb-12">
+    <div class="stage-eyebrow"><span class="dot"></span>FITFORGE · HOME · STATE VARIANTS</div>
+    <h1 class="mt-3 text-[36px] md:text-[44px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      首頁兩個變體<span class="text-[#E14B36]">.</span>
+    </h1>
+    <p class="mt-3 text-[15px] leading-[1.55] text-[#6B6D77] max-w-[62ch]">
+      Hero card 是首頁的「狀態指示器」 — 不換結構、只換內容。同樣 padding、同樣 radius、同樣位置。
+      A：訓練進行中 (resume)。B：還沒選課表 (empty state)。其餘區塊不變。
+    </p>
+  </div>
+
+  <!-- ============== VARIANT A ============== -->
+  <div class="max-w-[1100px] mx-auto px-6">
+    <div class="rounded-lg bg-white border border-[#E1DDD7] p-5 mb-6">
+      <div class="stage-eyebrow"><span class="dot"></span>VARIANT A · 訓練進行中 · RESUME STATE</div>
+      <p class="mt-2 text-[14px] leading-[1.55] text-[#17181F]">
+        用戶離開 app 時訓練還沒結束 — 回來時 hero 顯示恢復點。<strong>進度條</strong> + <strong>live pulsing dot</strong>，
+        次要連結「放棄訓練」用 muted 色 — 不嚇人、但需要兩次點擊 (有 confirm dialog)。
+      </p>
+    </div>
+  </div>
+  <div id="root-a" class="px-6 pb-12 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== VARIANT B ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-6">
+    <div class="rounded-lg bg-white border border-[#E1DDD7] p-5 mb-6">
+      <div class="stage-eyebrow"><span class="dot"></span>VARIANT B · 還沒選課表 · EMPTY STATE</div>
+      <p class="mt-2 text-[14px] leading-[1.55] text-[#17181F]">
+        Onboarding 跳過 / 用戶取消當前 plan 時。<strong>線條藝術插圖</strong> 取代 plan 資訊：
+        bar + plate + spark (3 顆漂浮 dot)，呼應品牌 mark 但是 line-art 表現。次要連結 「先逛逛動作庫」給好奇心 / 還沒準備好決定的人一條出路。
+      </p>
+    </div>
+  </div>
+  <div id="root-b" class="px-6 pb-20 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== NOTES ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>「放棄」/「跳過」· 用 LINK 不用 BUTTON</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">負向動作降到 text link 級別、muted 色、小字、置中於主 CTA 下方。<strong>不用 destructive 紅</strong> — 沒練完不是錯誤、不需要紅燈。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>進度條 · SHIMMER 表達「進行中」</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">填滿部分有 highlight 從左掃到右 (2.4s 一輪)。低成本、不誇張、但讓「現在還在進行」這個事實在視覺層具現化。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>SPACE 不空 · 替換不擴張</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">三個變體的 hero card 都用相同 height range — 不會因為「空狀態」就把整屏放空。維持版面節奏一致、下面的「本週節奏 / 最近訓練」也都顯示。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <script type="text/babel" src="home-variants.jsx"></script>
+</body>
+</html>

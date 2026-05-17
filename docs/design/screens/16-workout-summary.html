@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FitForge · 訓練摘要</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          background: 'hsl(var(--background) / <alpha-value>)',
+          foreground: 'hsl(var(--foreground) / <alpha-value>)',
+          card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+          primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+          secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+          accent: { DEFAULT: 'hsl(var(--accent) / <alpha-value>)', foreground: 'hsl(var(--accent-foreground) / <alpha-value>)' },
+          muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+          destructive: { DEFAULT: 'hsl(var(--destructive) / <alpha-value>)', foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)' },
+          success: { DEFAULT: 'hsl(var(--success) / <alpha-value>)', foreground: 'hsl(var(--success-foreground) / <alpha-value>)' },
+          warning: { DEFAULT: 'hsl(var(--warning) / <alpha-value>)', foreground: 'hsl(var(--warning-foreground) / <alpha-value>)' },
+          border: 'hsl(var(--border) / <alpha-value>)',
+          input: 'hsl(var(--input) / <alpha-value>)',
+          ring: 'hsl(var(--ring) / <alpha-value>)',
+        },
+        borderRadius: { sm: '6px', md: '10px', lg: '14px', xl: '20px' },
+        fontFamily: {
+          sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+        boxShadow: {
+          'ds-sm': '0 1px 2px 0 hsl(var(--shadow-color) / 0.06), 0 1px 1px 0 hsl(var(--shadow-color) / 0.04)',
+          'ds-md': '0 4px 12px -2px hsl(var(--shadow-color) / 0.10), 0 2px 4px -1px hsl(var(--shadow-color) / 0.06)',
+          'ds-lg': '0 20px 40px -12px hsl(var(--shadow-color) / 0.18), 0 8px 16px -6px hsl(var(--shadow-color) / 0.10)',
+          'ds-glow': '0 0 0 1px hsl(var(--primary) / 0.40), 0 8px 24px -2px hsl(var(--primary) / 0.45), 0 0 32px -4px hsl(var(--primary) / 0.55)',
+        },
+        transitionTimingFunction: { forge: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      }
+    }
+  };
+</script>
+<style>
+  /* ===== DS tokens ===== */
+  :root {
+    --background: 30 25% 99%;
+    --foreground: 240 12% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 12% 10%;
+    --primary: 8 78% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 12% 94%;
+    --secondary-foreground: 240 12% 18%;
+    --accent: 15 100% 96%;
+    --accent-foreground: 8 78% 38%;
+    --muted: 30 8% 95%;
+    --muted-foreground: 240 5% 45%;
+    --destructive: 0 78% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 150 62% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 94% 50%;
+    --warning-foreground: 30 30% 12%;
+    --border: 30 10% 88%;
+    --input: 30 10% 90%;
+    --ring: 8 78% 55%;
+    --shadow-color: 240 30% 12%;
+    --radius: 12px;
+  }
+  .dark {
+    --background: 240 10% 7%;
+    --foreground: 30 20% 95%;
+    --card: 240 8% 10%;
+    --card-foreground: 30 20% 95%;
+    --primary: 8 85% 62%;
+    --primary-foreground: 240 30% 8%;
+    --secondary: 240 6% 16%;
+    --secondary-foreground: 30 20% 92%;
+    --accent: 240 6% 18%;
+    --accent-foreground: 8 85% 72%;
+    --muted: 240 6% 14%;
+    --muted-foreground: 240 5% 64%;
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 150 58% 50%;
+    --success-foreground: 240 30% 8%;
+    --warning: 38 90% 56%;
+    --warning-foreground: 240 30% 8%;
+    --border: 240 6% 20%;
+    --input: 240 6% 22%;
+    --ring: 8 85% 62%;
+    --shadow-color: 0 0% 0%;
+  }
+  html, body {
+    font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #efece6;
+  }
+  .num { font-variant-numeric: tabular-nums lining-nums; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .eyebrow {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .ico-14 svg { width: 14px; height: 14px; stroke-width: 2; }
+  .ico-16 svg { width: 16px; height: 16px; stroke-width: 2; }
+  .ico-20 svg { width: 20px; height: 20px; stroke-width: 2; }
+  .ico-24 svg { width: 24px; height: 24px; stroke-width: 2; }
+  .ico-28 svg { width: 28px; height: 28px; stroke-width: 2; }
+
+  /* ===== Phone bezel ===== */
+  .phone {
+    width: 390px;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    border-radius: 44px;
+    box-shadow:
+      0 0 0 8px #0c0c12,
+      0 0 0 9px #25252e,
+      0 30px 60px -20px hsl(240 30% 30% / 0.35),
+      0 12px 30px -12px hsl(240 30% 30% / 0.25);
+    overflow: hidden;
+    position: relative;
+  }
+  .phone-screen { position: relative; }
+  .status-bar {
+    height: 44px;
+    padding: 0 26px 0 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 15px; font-weight: 600;
+    letter-spacing: -0.02em;
+    color: hsl(var(--foreground));
+    font-variant-numeric: tabular-nums;
+  }
+  .status-bar .right { display: flex; align-items: center; gap: 6px; }
+  .notch {
+    position: absolute;
+    top: 11px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 32px;
+    background: #0c0c12;
+    border-radius: 22px;
+    z-index: 5;
+  }
+  .home-indicator {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 134px; height: 5px;
+    background: hsl(var(--foreground) / 0.85);
+    border-radius: 3px;
+    opacity: 0.6;
+  }
+
+  /* ===== Confetti / sparkle ===== */
+  @keyframes sparkle {
+    0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+    45%      { opacity: 1; transform: scale(1)  rotate(25deg); }
+    55%      { opacity: 1; transform: scale(1)  rotate(25deg); }
+  }
+  .sparkle {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: hsl(var(--primary));
+    clip-path: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0% 50%, 42% 42%);
+    animation: sparkle 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    pointer-events: none;
+  }
+  .sparkle.sm { width: 6px; height: 6px; }
+  .sparkle.xs { width: 4px; height: 4px; opacity: 0.7; }
+
+  /* PR card gradient — the ONE sanctioned warm wash */
+  .pr-bg-light {
+    background:
+      radial-gradient(120% 80% at 20% 0%, hsl(15 100% 92%) 0%, transparent 60%),
+      radial-gradient(110% 80% at 100% 100%, hsl(38 90% 88%) 0%, transparent 55%),
+      hsl(15 100% 96%);
+  }
+  .pr-bg-dark {
+    background:
+      radial-gradient(120% 80% at 20% 0%, hsl(8 50% 22%) 0%, transparent 60%),
+      radial-gradient(110% 80% at 100% 100%, hsl(38 30% 18%) 0%, transparent 55%),
+      hsl(240 6% 12%);
+  }
+  .pr-glow {
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.30),
+      0 16px 32px -8px hsl(var(--primary) / 0.30),
+      0 0 40px -8px hsl(var(--primary) / 0.45);
+  }
+
+  /* hero numbers — scale-aware */
+  .stat-num {
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  .stat-num.lg { font-size: 36px; }
+
+  /* set-row stripe for PR */
+  .set-row { display: grid; grid-template-columns: 38px 1fr 56px; align-items: center; gap: 12px; padding: 6px 0; }
+  .set-row + .set-row { border-top: 1px solid hsl(var(--border) / 0.6); }
+
+  /* page chrome ===== */
+  .page-eyebrow {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px;
+    text-transform: uppercase;
+    color: hsl(8 78% 38%);
+  }
+  .page-eyebrow .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+    background: hsl(8 78% 55%); vertical-align: 1px; margin-right: 8px;
+  }
+  .lab {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.6px;
+    text-transform: uppercase; color: #6B6D77;
+  }
+  .lab .pill {
+    display: inline-block; padding: 3px 8px; border-radius: 999px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid #d6d2c8;
+    color: #17181F; font-size: 10.5px; margin-right: 6px;
+  }
+  .lab .pill.dark-pill {
+    background: #17181F; color: #f4f1ea; border-color: #2c2c36;
+  }
+</style>
+</head>
+<body class="antialiased">
+
+  <!-- ====== Page header ====== -->
+  <div class="max-w-[1840px] mx-auto px-10 pt-14 pb-6">
+    <div class="page-eyebrow"><span class="dot"></span>FITFORGE · §16 · WORKOUT SUMMARY</div>
+    <h1 class="mt-3 text-[42px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      訓練結束的<span class="text-[hsl(8_78%_55%)]">成就感頁</span>
+    </h1>
+    <div class="mt-4 max-w-[60ch] text-[15px] leading-[1.6] text-[#54565f]">
+      Takeover 結算頁（不含 BottomNav、不在 tab flow）。兩個 variant：含 PR 慶祝、不含 PR。
+      Sparkle 動畫每 2.8s 一輪、不喧囂；PR 卡是整份設計系統裡唯一被允許使用 glow + 微漸層的元件。
+    </div>
+    <div class="mt-5 flex flex-wrap items-center gap-2 text-[12px] text-[#54565f]">
+      <span class="px-2.5 py-1 rounded-md bg-[#fdfcfa] border border-[#e1ddd7] font-semibold">390 × content</span>
+      <span class="px-2.5 py-1 rounded-md bg-[#fdfcfa] border border-[#e1ddd7] font-semibold">light + dark</span>
+      <span class="px-2.5 py-1 rounded-md bg-[#fdfcfa] border border-[#e1ddd7] font-semibold">with PR / no PR</span>
+      <span class="px-2.5 py-1 rounded-md bg-[#fdfcfa] border border-[#e1ddd7] font-mono">scrollable · sticky CTA</span>
+    </div>
+  </div>
+
+  <!-- ====== VARIANT A: with PR ====== -->
+  <div class="max-w-[1840px] mx-auto px-10 pt-6">
+    <div class="lab"><span class="pill">A</span>含 PR 慶祝 · with personal record</div>
+
+    <div class="mt-5 flex flex-wrap gap-10 items-start">
+
+      <!-- ----- LIGHT · with PR ----- -->
+      <div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-screen bg-background text-foreground">
+
+            <!-- status bar -->
+            <div class="status-bar">
+              <span>9:41</span>
+              <span class="right">
+                <span class="ico-14"><i data-lucide="signal"></i></span>
+                <span class="ico-14"><i data-lucide="wifi"></i></span>
+                <span class="ico-16"><i data-lucide="battery-full"></i></span>
+              </span>
+            </div>
+
+            <!-- top action bar -->
+            <div class="px-5 pt-1 pb-3 flex items-center justify-between">
+              <span class="eyebrow"><span style="display:inline-block;width:6px;height:6px;border-radius:3px;background:hsl(var(--primary));vertical-align:1px;margin-right:6px;"></span>WORKOUT COMPLETE</span>
+              <button class="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200 ease-forge">
+                <span class="ico-20"><i data-lucide="x"></i></span>
+              </button>
+            </div>
+
+            <!-- hero -->
+            <div class="px-5 pt-4 pb-6 text-center relative">
+              <!-- sparkles around title -->
+              <span class="sparkle" style="top:14px; left:38px; animation-delay:0s;"></span>
+              <span class="sparkle sm" style="top:4px; left:96px; animation-delay:.6s;"></span>
+              <span class="sparkle xs" style="top:36px; left:62px; animation-delay:1.1s;"></span>
+              <span class="sparkle" style="top:12px; right:42px; animation-delay:.3s;"></span>
+              <span class="sparkle sm" style="top:38px; right:96px; animation-delay:.9s;"></span>
+              <span class="sparkle xs" style="top:6px; right:70px; animation-delay:1.4s;"></span>
+
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
+                <span class="ico-28"><i data-lucide="check-circle-2"></i></span>
+              </div>
+              <h1 class="text-primary" style="font-weight: 800; font-size: 36px; letter-spacing: -0.03em; line-height: 1.05;">訓練完成</h1>
+              <div class="mt-2 text-[13px] text-muted-foreground">
+                Push Day · 胸三頭 <span class="opacity-50 mx-1">·</span> 5 月 16 日 週六
+              </div>
+            </div>
+
+            <!-- stat grid 3-col -->
+            <div class="px-5">
+              <div class="rounded-lg border border-border bg-card p-4 grid grid-cols-3 gap-2 divide-x divide-border">
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground">45:32</div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">時長</div>
+                </div>
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground flex items-baseline justify-center gap-1">
+                    <span>4,250</span>
+                    <span class="text-[12px] font-semibold text-muted-foreground">kg</span>
+                  </div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">總噸位</div>
+                </div>
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground">18<span class="text-muted-foreground/60 mx-0.5">/</span>18</div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">完成組數</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PR card -->
+            <div class="px-5 mt-4">
+              <div class="relative rounded-lg pr-bg-light pr-glow p-5 overflow-hidden">
+                <!-- corner sparkles inside card -->
+                <span class="sparkle xs" style="top:10px; right:14px; animation-delay:.2s;"></span>
+                <span class="sparkle sm" style="bottom:18px; right:24px; animation-delay:1.2s;"></span>
+                <span class="sparkle xs" style="top:30px; right:90px; animation-delay:1.8s;"></span>
+
+                <div class="flex items-center gap-1.5 text-primary">
+                  <span class="ico-20"><i data-lucide="flame"></i></span>
+                  <span class="text-[11px] font-extrabold tracking-[2px] uppercase">PERSONAL RECORD</span>
+                </div>
+                <div class="mt-2 text-primary" style="font-weight:800; font-size:24px; letter-spacing:-0.02em;">新紀錄</div>
+                <div class="mt-3 pt-3 border-t border-primary/15">
+                  <div class="text-[15px] font-semibold text-foreground">Back Squat 槓鈴深蹲</div>
+                  <div class="mt-1.5 num flex items-baseline gap-2 text-primary" style="font-weight:800; letter-spacing:-0.03em;">
+                    <span style="font-size:40px; line-height:1;">100</span>
+                    <span class="text-[15px] font-semibold text-muted-foreground">kg</span>
+                    <span class="text-muted-foreground/50 mx-0.5" style="font-size:20px; font-weight:500;">×</span>
+                    <span style="font-size:40px; line-height:1;">5</span>
+                    <span class="text-[15px] font-semibold text-muted-foreground">reps</span>
+                  </div>
+                  <div class="mt-2 flex items-center gap-1.5 text-[12px] num">
+                    <span class="ico-14 text-primary"><i data-lucide="trending-up"></i></span>
+                    <span class="text-primary font-bold">+5 kg</span>
+                    <span class="text-muted-foreground">vs 上次 95 kg × 5（2 週前）</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- exercise summary list -->
+            <div class="px-5 mt-6">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[15px] font-bold tracking-[-0.01em]">動作摘要</h3>
+                <span class="eyebrow">5 動作 · 18 組</span>
+              </div>
+
+              <!-- ex 1 with PR set -->
+              <div class="rounded-lg border border-border bg-card p-4">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="mono num text-muted-foreground text-[11px]">01</span>
+                      <span class="text-[15px] font-semibold">Back Squat</span>
+                    </div>
+                    <div class="text-[12px] text-muted-foreground mt-0.5">槓鈴深蹲</div>
+                  </div>
+                  <span class="inline-flex items-center gap-1 rounded-sm bg-primary text-primary-foreground px-1.5 py-0.5 text-[9.5px] font-bold tracking-[1.2px] uppercase">
+                    <span class="ico-14"><i data-lucide="flame"></i></span>PR
+                  </span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">90</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">95</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">95</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8.5</span>
+                  </div>
+                  <div class="set-row" style="background: hsl(var(--accent)); margin: 4px -8px 0; padding: 8px; border-radius: 8px; border: none;">
+                    <span class="mono num text-primary text-[11px] font-bold">SET 4</span>
+                    <span class="num text-primary font-bold text-[14px]"><span class="mono">100</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-primary text-[11px] text-right font-bold">PR</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">8.1</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,950 kg</span>
+                </div>
+              </div>
+
+              <!-- ex 2 -->
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center gap-2">
+                  <span class="mono num text-muted-foreground text-[11px]">02</span>
+                  <span class="text-[15px] font-semibold">Bench Press</span>
+                  <span class="text-[12px] text-muted-foreground">· 槓鈴臥推</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">80</span> kg × <span class="mono">10</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">80</span> kg × <span class="mono">10</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7.5</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">80</span> kg × <span class="mono">&nbsp;9</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 4</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">80</span> kg × <span class="mono">&nbsp;8</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8.5</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.8</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 2,960 kg</span>
+                </div>
+              </div>
+
+              <!-- ex 3 -->
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center gap-2">
+                  <span class="mono num text-muted-foreground text-[11px]">03</span>
+                  <span class="text-[15px] font-semibold">Incline DB Press</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">28</span> kg × <span class="mono">10</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">28</span> kg × <span class="mono">10</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7.5</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">28</span> kg × <span class="mono">&nbsp;9</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.5</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,624 kg</span>
+                </div>
+              </div>
+
+              <!-- ex 4 collapsed -->
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">04</span>
+                    <span class="text-[15px] font-semibold">Cable Fly</span>
+                  </div>
+                  <span class="num mono text-muted-foreground text-[11.5px]">3 sets · 20 kg</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.2</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 720 kg</span>
+                </div>
+              </div>
+
+              <!-- ex 5 collapsed -->
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">05</span>
+                    <span class="text-[15px] font-semibold">Tricep Pushdown</span>
+                  </div>
+                  <span class="num mono text-muted-foreground text-[11.5px]">3 sets · 30 kg</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.0</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,080 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- coach line -->
+            <div class="px-5 mt-6">
+              <div class="rounded-lg border border-dashed border-border bg-card p-4 flex gap-3">
+                <span class="ico-20 text-primary mt-0.5 shrink-0"><i data-lucide="message-circle"></i></span>
+                <p class="text-[13.5px] leading-[1.55] text-foreground">
+                  深蹲新紀錄 — 持續就是進步。下次 Push Day 試試臥推 <span class="num text-foreground font-bold">82.5 kg</span>。
+                </p>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="px-5 pt-6 pb-2 sticky bottom-0 bg-gradient-to-t from-background via-background to-transparent">
+              <button class="w-full h-12 rounded-md border border-border bg-card text-foreground font-semibold text-[14px] inline-flex items-center justify-center gap-1.5 transition-colors duration-200 ease-forge hover:bg-secondary">
+                <span class="ico-16"><i data-lucide="share-2"></i></span>產生分享圖
+              </button>
+              <button style="height:52px;" class="mt-2.5 w-full rounded-md bg-primary text-primary-foreground font-bold text-[15px] inline-flex items-center justify-center gap-1.5 transition-colors duration-200 ease-forge hover:opacity-90">
+                回首頁 <span class="ico-16"><i data-lucide="arrow-right"></i></span>
+              </button>
+            </div>
+
+            <div style="height:24px;"></div>
+            <div class="home-indicator" style="background: hsl(var(--foreground) / 0.8);"></div>
+          </div>
+        </div>
+        <div class="mt-3 lab text-center">Light · with PR</div>
+      </div>
+
+      <!-- ----- DARK · with PR ----- -->
+      <div class="dark">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-screen bg-background text-foreground">
+
+            <div class="status-bar">
+              <span>9:41</span>
+              <span class="right">
+                <span class="ico-14"><i data-lucide="signal"></i></span>
+                <span class="ico-14"><i data-lucide="wifi"></i></span>
+                <span class="ico-16"><i data-lucide="battery-full"></i></span>
+              </span>
+            </div>
+
+            <div class="px-5 pt-1 pb-3 flex items-center justify-between">
+              <span class="eyebrow"><span style="display:inline-block;width:6px;height:6px;border-radius:3px;background:hsl(var(--primary));vertical-align:1px;margin-right:6px;"></span>WORKOUT COMPLETE</span>
+              <button class="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200 ease-forge">
+                <span class="ico-20"><i data-lucide="x"></i></span>
+              </button>
+            </div>
+
+            <div class="px-5 pt-4 pb-6 text-center relative">
+              <span class="sparkle" style="top:14px; left:38px; animation-delay:0s;"></span>
+              <span class="sparkle sm" style="top:4px; left:96px; animation-delay:.6s;"></span>
+              <span class="sparkle xs" style="top:36px; left:62px; animation-delay:1.1s;"></span>
+              <span class="sparkle" style="top:12px; right:42px; animation-delay:.3s;"></span>
+              <span class="sparkle sm" style="top:38px; right:96px; animation-delay:.9s;"></span>
+              <span class="sparkle xs" style="top:6px; right:70px; animation-delay:1.4s;"></span>
+
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/15 text-primary mb-3">
+                <span class="ico-28"><i data-lucide="check-circle-2"></i></span>
+              </div>
+              <h1 class="text-primary" style="font-weight: 800; font-size: 36px; letter-spacing: -0.03em; line-height: 1.05;">訓練完成</h1>
+              <div class="mt-2 text-[13px] text-muted-foreground">
+                Push Day · 胸三頭 <span class="opacity-50 mx-1">·</span> 5 月 16 日 週六
+              </div>
+            </div>
+
+            <div class="px-5">
+              <div class="rounded-lg border border-border bg-card p-4 grid grid-cols-3 gap-2 divide-x divide-border">
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground">45:32</div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">時長</div>
+                </div>
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground flex items-baseline justify-center gap-1">
+                    <span>4,250</span>
+                    <span class="text-[12px] font-semibold text-muted-foreground">kg</span>
+                  </div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">總噸位</div>
+                </div>
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground">18<span class="text-muted-foreground/60 mx-0.5">/</span>18</div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">完成組數</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 mt-4">
+              <div class="relative rounded-lg pr-bg-dark pr-glow p-5 overflow-hidden">
+                <span class="sparkle xs" style="top:10px; right:14px; animation-delay:.2s;"></span>
+                <span class="sparkle sm" style="bottom:18px; right:24px; animation-delay:1.2s;"></span>
+                <span class="sparkle xs" style="top:30px; right:90px; animation-delay:1.8s;"></span>
+
+                <div class="flex items-center gap-1.5 text-primary">
+                  <span class="ico-20"><i data-lucide="flame"></i></span>
+                  <span class="text-[11px] font-extrabold tracking-[2px] uppercase">PERSONAL RECORD</span>
+                </div>
+                <div class="mt-2 text-primary" style="font-weight:800; font-size:24px; letter-spacing:-0.02em;">新紀錄</div>
+                <div class="mt-3 pt-3 border-t border-primary/20">
+                  <div class="text-[15px] font-semibold text-foreground">Back Squat 槓鈴深蹲</div>
+                  <div class="mt-1.5 num flex items-baseline gap-2 text-primary" style="font-weight:800; letter-spacing:-0.03em;">
+                    <span style="font-size:40px; line-height:1;">100</span>
+                    <span class="text-[15px] font-semibold text-muted-foreground">kg</span>
+                    <span class="text-muted-foreground/50 mx-0.5" style="font-size:20px; font-weight:500;">×</span>
+                    <span style="font-size:40px; line-height:1;">5</span>
+                    <span class="text-[15px] font-semibold text-muted-foreground">reps</span>
+                  </div>
+                  <div class="mt-2 flex items-center gap-1.5 text-[12px] num">
+                    <span class="ico-14 text-primary"><i data-lucide="trending-up"></i></span>
+                    <span class="text-primary font-bold">+5 kg</span>
+                    <span class="text-muted-foreground">vs 上次 95 kg × 5（2 週前）</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 mt-6">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[15px] font-bold tracking-[-0.01em]">動作摘要</h3>
+                <span class="eyebrow">5 動作 · 18 組</span>
+              </div>
+
+              <div class="rounded-lg border border-border bg-card p-4">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="mono num text-muted-foreground text-[11px]">01</span>
+                      <span class="text-[15px] font-semibold">Back Squat</span>
+                    </div>
+                    <div class="text-[12px] text-muted-foreground mt-0.5">槓鈴深蹲</div>
+                  </div>
+                  <span class="inline-flex items-center gap-1 rounded-sm bg-primary text-primary-foreground px-1.5 py-0.5 text-[9.5px] font-bold tracking-[1.2px] uppercase">
+                    <span class="ico-14"><i data-lucide="flame"></i></span>PR
+                  </span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">90</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">95</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">95</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8.5</span>
+                  </div>
+                  <div class="set-row" style="background: hsl(var(--primary) / 0.16); margin: 4px -8px 0; padding: 8px; border-radius: 8px; border: none;">
+                    <span class="mono num text-primary text-[11px] font-bold">SET 4</span>
+                    <span class="num text-primary font-bold text-[14px]"><span class="mono">100</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-primary text-[11px] text-right font-bold">PR</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">8.1</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,950 kg</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center gap-2">
+                  <span class="mono num text-muted-foreground text-[11px]">02</span>
+                  <span class="text-[15px] font-semibold">Bench Press</span>
+                  <span class="text-[12px] text-muted-foreground">· 槓鈴臥推</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">80</span> kg × <span class="mono">10</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">80</span> kg × <span class="mono">10</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7.5</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">80</span> kg × <span class="mono">&nbsp;9</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 4</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">80</span> kg × <span class="mono">&nbsp;8</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8.5</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.8</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 2,960 kg</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center gap-2">
+                  <span class="mono num text-muted-foreground text-[11px]">03</span>
+                  <span class="text-[15px] font-semibold">Incline DB Press</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">28</span> kg × <span class="mono">10</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">28</span> kg × <span class="mono">10</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7.5</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">28</span> kg × <span class="mono">&nbsp;9</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.5</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,624 kg</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">04</span>
+                    <span class="text-[15px] font-semibold">Cable Fly</span>
+                  </div>
+                  <span class="num mono text-muted-foreground text-[11.5px]">3 sets · 20 kg</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.2</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 720 kg</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">05</span>
+                    <span class="text-[15px] font-semibold">Tricep Pushdown</span>
+                  </div>
+                  <span class="num mono text-muted-foreground text-[11.5px]">3 sets · 30 kg</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.0</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,080 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 mt-6">
+              <div class="rounded-lg border border-dashed border-border bg-card p-4 flex gap-3">
+                <span class="ico-20 text-primary mt-0.5 shrink-0"><i data-lucide="message-circle"></i></span>
+                <p class="text-[13.5px] leading-[1.55] text-foreground">
+                  深蹲新紀錄 — 持續就是進步。下次 Push Day 試試臥推 <span class="num text-foreground font-bold">82.5 kg</span>。
+                </p>
+              </div>
+            </div>
+
+            <div class="px-5 pt-6 pb-2">
+              <button class="w-full h-12 rounded-md border border-border bg-card text-foreground font-semibold text-[14px] inline-flex items-center justify-center gap-1.5 transition-colors duration-200 ease-forge hover:bg-secondary">
+                <span class="ico-16"><i data-lucide="share-2"></i></span>產生分享圖
+              </button>
+              <button style="height:52px;" class="mt-2.5 w-full rounded-md bg-primary text-primary-foreground font-bold text-[15px] inline-flex items-center justify-center gap-1.5 transition-colors duration-200 ease-forge hover:opacity-90">
+                回首頁 <span class="ico-16"><i data-lucide="arrow-right"></i></span>
+              </button>
+            </div>
+
+            <div style="height:24px;"></div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+        <div class="mt-3 lab text-center"><span class="pill dark-pill">DARK</span>Dark · with PR</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== VARIANT B: no PR ====== -->
+  <div class="max-w-[1840px] mx-auto px-10 pt-20 pb-24">
+    <div class="lab"><span class="pill">B</span>無 PR · steady work day</div>
+
+    <div class="mt-5 flex flex-wrap gap-10 items-start">
+
+      <!-- ----- LIGHT · no PR ----- -->
+      <div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-screen bg-background text-foreground">
+
+            <div class="status-bar">
+              <span>9:41</span>
+              <span class="right">
+                <span class="ico-14"><i data-lucide="signal"></i></span>
+                <span class="ico-14"><i data-lucide="wifi"></i></span>
+                <span class="ico-16"><i data-lucide="battery-full"></i></span>
+              </span>
+            </div>
+
+            <div class="px-5 pt-1 pb-3 flex items-center justify-between">
+              <span class="eyebrow"><span style="display:inline-block;width:6px;height:6px;border-radius:3px;background:hsl(var(--primary));vertical-align:1px;margin-right:6px;"></span>WORKOUT COMPLETE</span>
+              <button class="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200 ease-forge">
+                <span class="ico-20"><i data-lucide="x"></i></span>
+              </button>
+            </div>
+
+            <div class="px-5 pt-4 pb-6 text-center relative">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
+                <span class="ico-28"><i data-lucide="check-circle-2"></i></span>
+              </div>
+              <h1 class="text-primary" style="font-weight: 800; font-size: 36px; letter-spacing: -0.03em; line-height: 1.05;">訓練完成</h1>
+              <div class="mt-2 text-[13px] text-muted-foreground">
+                Pull Day · 背二頭 <span class="opacity-50 mx-1">·</span> 5 月 14 日 週四
+              </div>
+            </div>
+
+            <div class="px-5">
+              <div class="rounded-lg border border-border bg-card p-4 grid grid-cols-3 gap-2 divide-x divide-border">
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground">38:14</div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">時長</div>
+                </div>
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground flex items-baseline justify-center gap-1">
+                    <span>3,180</span>
+                    <span class="text-[12px] font-semibold text-muted-foreground">kg</span>
+                  </div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">總噸位</div>
+                </div>
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground">15<span class="text-muted-foreground/60 mx-0.5">/</span>16</div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">完成組數</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- in place of PR: progress recap -->
+            <div class="px-5 mt-4">
+              <div class="rounded-lg border border-border bg-secondary/60 p-4">
+                <div class="flex items-center gap-1.5 text-muted-foreground">
+                  <span class="ico-16"><i data-lucide="bar-chart-3"></i></span>
+                  <span class="text-[10.5px] font-extrabold tracking-[2px] uppercase">本週累計</span>
+                </div>
+                <div class="mt-3 grid grid-cols-3 gap-3">
+                  <div>
+                    <div class="num mono text-foreground" style="font-weight:700; font-size:18px; letter-spacing:-0.02em;">3<span class="text-muted-foreground/60 mx-0.5">/</span>4</div>
+                    <div class="text-[11px] text-muted-foreground mt-0.5">本週訓練</div>
+                  </div>
+                  <div>
+                    <div class="num mono text-foreground" style="font-weight:700; font-size:18px; letter-spacing:-0.02em;">9,820 <span class="text-[11px] font-semibold text-muted-foreground">kg</span></div>
+                    <div class="text-[11px] text-muted-foreground mt-0.5">累計噸位</div>
+                  </div>
+                  <div>
+                    <div class="num mono text-foreground" style="font-weight:700; font-size:18px; letter-spacing:-0.02em;">12 <span class="text-[11px] font-semibold text-muted-foreground">天</span></div>
+                    <div class="text-[11px] text-muted-foreground mt-0.5">連續訓練</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 mt-6">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[15px] font-bold tracking-[-0.01em]">動作摘要</h3>
+                <span class="eyebrow">4 動作 · 15 組</span>
+              </div>
+
+              <div class="rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center gap-2">
+                  <span class="mono num text-muted-foreground text-[11px]">01</span>
+                  <span class="text-[15px] font-semibold">Deadlift</span>
+                  <span class="text-[12px] text-muted-foreground">· 硬舉</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">110</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">110</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7.5</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">110</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.5</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,650 kg</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">02</span>
+                    <span class="text-[15px] font-semibold">Pull-Up</span>
+                    <span class="text-[12px] text-muted-foreground">· 引體向上</span>
+                  </div>
+                  <span class="inline-flex items-center gap-1 rounded-sm bg-secondary text-secondary-foreground px-1.5 py-0.5 text-[9.5px] font-bold tracking-[1.2px] uppercase">
+                    <span class="ico-14"><i data-lucide="alert-triangle"></i></span>跳過 1 組
+                  </span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]">BW × <span class="mono">8</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]">BW × <span class="mono">7</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8.5</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]">BW × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 9</span>
+                  </div>
+                  <div class="set-row" style="opacity:0.5;">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 4</span>
+                    <span class="num text-muted-foreground text-[13px] italic">跳過</span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">—</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">8.5</span></span>
+                  <span class="text-muted-foreground num mono">3 / 4 sets</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">03</span>
+                    <span class="text-[15px] font-semibold">Barbell Row</span>
+                  </div>
+                  <span class="num mono text-muted-foreground text-[11.5px]">4 sets · 60 kg</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.3</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,920 kg</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">04</span>
+                    <span class="text-[15px] font-semibold">DB Bicep Curl</span>
+                  </div>
+                  <span class="num mono text-muted-foreground text-[11.5px]">4 sets · 12 kg</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.0</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 480 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 mt-6">
+              <div class="rounded-lg border border-dashed border-border bg-card p-4 flex gap-3">
+                <span class="ico-20 text-primary mt-0.5 shrink-0"><i data-lucide="message-circle"></i></span>
+                <p class="text-[13.5px] leading-[1.55] text-foreground">
+                  穩定的一天 — 持續就是進步。引體第 4 組跳過、下次先休 3 分鐘再上。
+                </p>
+              </div>
+            </div>
+
+            <div class="px-5 pt-6 pb-2">
+              <button class="w-full h-12 rounded-md border border-border bg-card text-foreground font-semibold text-[14px] inline-flex items-center justify-center gap-1.5 transition-colors duration-200 ease-forge hover:bg-secondary">
+                <span class="ico-16"><i data-lucide="share-2"></i></span>產生分享圖
+              </button>
+              <button style="height:52px;" class="mt-2.5 w-full rounded-md bg-primary text-primary-foreground font-bold text-[15px] inline-flex items-center justify-center gap-1.5 transition-colors duration-200 ease-forge hover:opacity-90">
+                回首頁 <span class="ico-16"><i data-lucide="arrow-right"></i></span>
+              </button>
+            </div>
+
+            <div style="height:24px;"></div>
+            <div class="home-indicator" style="background: hsl(var(--foreground) / 0.8);"></div>
+          </div>
+        </div>
+        <div class="mt-3 lab text-center">Light · no PR</div>
+      </div>
+
+      <!-- ----- DARK · no PR ----- -->
+      <div class="dark">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-screen bg-background text-foreground">
+
+            <div class="status-bar">
+              <span>9:41</span>
+              <span class="right">
+                <span class="ico-14"><i data-lucide="signal"></i></span>
+                <span class="ico-14"><i data-lucide="wifi"></i></span>
+                <span class="ico-16"><i data-lucide="battery-full"></i></span>
+              </span>
+            </div>
+
+            <div class="px-5 pt-1 pb-3 flex items-center justify-between">
+              <span class="eyebrow"><span style="display:inline-block;width:6px;height:6px;border-radius:3px;background:hsl(var(--primary));vertical-align:1px;margin-right:6px;"></span>WORKOUT COMPLETE</span>
+              <button class="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200 ease-forge">
+                <span class="ico-20"><i data-lucide="x"></i></span>
+              </button>
+            </div>
+
+            <div class="px-5 pt-4 pb-6 text-center relative">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/15 text-primary mb-3">
+                <span class="ico-28"><i data-lucide="check-circle-2"></i></span>
+              </div>
+              <h1 class="text-primary" style="font-weight: 800; font-size: 36px; letter-spacing: -0.03em; line-height: 1.05;">訓練完成</h1>
+              <div class="mt-2 text-[13px] text-muted-foreground">
+                Pull Day · 背二頭 <span class="opacity-50 mx-1">·</span> 5 月 14 日 週四
+              </div>
+            </div>
+
+            <div class="px-5">
+              <div class="rounded-lg border border-border bg-card p-4 grid grid-cols-3 gap-2 divide-x divide-border">
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground">38:14</div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">時長</div>
+                </div>
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground flex items-baseline justify-center gap-1">
+                    <span>3,180</span>
+                    <span class="text-[12px] font-semibold text-muted-foreground">kg</span>
+                  </div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">總噸位</div>
+                </div>
+                <div class="text-center px-1">
+                  <div class="num mono stat-num text-foreground">15<span class="text-muted-foreground/60 mx-0.5">/</span>16</div>
+                  <div class="mt-2 text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">完成組數</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 mt-4">
+              <div class="rounded-lg border border-border bg-secondary/60 p-4">
+                <div class="flex items-center gap-1.5 text-muted-foreground">
+                  <span class="ico-16"><i data-lucide="bar-chart-3"></i></span>
+                  <span class="text-[10.5px] font-extrabold tracking-[2px] uppercase">本週累計</span>
+                </div>
+                <div class="mt-3 grid grid-cols-3 gap-3">
+                  <div>
+                    <div class="num mono text-foreground" style="font-weight:700; font-size:18px; letter-spacing:-0.02em;">3<span class="text-muted-foreground/60 mx-0.5">/</span>4</div>
+                    <div class="text-[11px] text-muted-foreground mt-0.5">本週訓練</div>
+                  </div>
+                  <div>
+                    <div class="num mono text-foreground" style="font-weight:700; font-size:18px; letter-spacing:-0.02em;">9,820 <span class="text-[11px] font-semibold text-muted-foreground">kg</span></div>
+                    <div class="text-[11px] text-muted-foreground mt-0.5">累計噸位</div>
+                  </div>
+                  <div>
+                    <div class="num mono text-foreground" style="font-weight:700; font-size:18px; letter-spacing:-0.02em;">12 <span class="text-[11px] font-semibold text-muted-foreground">天</span></div>
+                    <div class="text-[11px] text-muted-foreground mt-0.5">連續訓練</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 mt-6">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[15px] font-bold tracking-[-0.01em]">動作摘要</h3>
+                <span class="eyebrow">4 動作 · 15 組</span>
+              </div>
+
+              <div class="rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center gap-2">
+                  <span class="mono num text-muted-foreground text-[11px]">01</span>
+                  <span class="text-[15px] font-semibold">Deadlift</span>
+                  <span class="text-[12px] text-muted-foreground">· 硬舉</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">110</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">110</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 7.5</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]"><span class="mono">110</span> kg × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.5</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,650 kg</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">02</span>
+                    <span class="text-[15px] font-semibold">Pull-Up</span>
+                    <span class="text-[12px] text-muted-foreground">· 引體向上</span>
+                  </div>
+                  <span class="inline-flex items-center gap-1 rounded-sm bg-secondary text-secondary-foreground px-1.5 py-0.5 text-[9.5px] font-bold tracking-[1.2px] uppercase">
+                    <span class="ico-14"><i data-lucide="alert-triangle"></i></span>跳過 1 組
+                  </span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border">
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 1</span>
+                    <span class="num text-foreground font-semibold text-[14px]">BW × <span class="mono">8</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 2</span>
+                    <span class="num text-foreground font-semibold text-[14px]">BW × <span class="mono">7</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 8.5</span>
+                  </div>
+                  <div class="set-row">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 3</span>
+                    <span class="num text-foreground font-semibold text-[14px]">BW × <span class="mono">5</span></span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">RPE 9</span>
+                  </div>
+                  <div class="set-row" style="opacity:0.5;">
+                    <span class="mono num text-muted-foreground text-[11px]">SET 4</span>
+                    <span class="num text-muted-foreground text-[13px] italic">跳過</span>
+                    <span class="num mono text-muted-foreground text-[11px] text-right">—</span>
+                  </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">8.5</span></span>
+                  <span class="text-muted-foreground num mono">3 / 4 sets</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">03</span>
+                    <span class="text-[15px] font-semibold">Barbell Row</span>
+                  </div>
+                  <span class="num mono text-muted-foreground text-[11.5px]">4 sets · 60 kg</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.3</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 1,920 kg</span>
+                </div>
+              </div>
+
+              <div class="mt-2.5 rounded-lg border border-border bg-card p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="mono num text-muted-foreground text-[11px]">04</span>
+                    <span class="text-[15px] font-semibold">DB Bicep Curl</span>
+                  </div>
+                  <span class="num mono text-muted-foreground text-[11.5px]">4 sets · 12 kg</span>
+                </div>
+                <div class="mt-3 pt-3 border-t border-border flex items-center justify-between text-[11.5px]">
+                  <span class="text-muted-foreground">avg RPE <span class="num mono text-foreground font-semibold">7.0</span></span>
+                  <span class="text-muted-foreground num mono">tonnage 480 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 mt-6">
+              <div class="rounded-lg border border-dashed border-border bg-card p-4 flex gap-3">
+                <span class="ico-20 text-primary mt-0.5 shrink-0"><i data-lucide="message-circle"></i></span>
+                <p class="text-[13.5px] leading-[1.55] text-foreground">
+                  穩定的一天 — 持續就是進步。引體第 4 組跳過、下次先休 3 分鐘再上。
+                </p>
+              </div>
+            </div>
+
+            <div class="px-5 pt-6 pb-2">
+              <button class="w-full h-12 rounded-md border border-border bg-card text-foreground font-semibold text-[14px] inline-flex items-center justify-center gap-1.5 transition-colors duration-200 ease-forge hover:bg-secondary">
+                <span class="ico-16"><i data-lucide="share-2"></i></span>產生分享圖
+              </button>
+              <button style="height:52px;" class="mt-2.5 w-full rounded-md bg-primary text-primary-foreground font-bold text-[15px] inline-flex items-center justify-center gap-1.5 transition-colors duration-200 ease-forge hover:opacity-90">
+                回首頁 <span class="ico-16"><i data-lucide="arrow-right"></i></span>
+              </button>
+            </div>
+
+            <div style="height:24px;"></div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+        <div class="mt-3 lab text-center"><span class="pill dark-pill">DARK</span>Dark · no PR</div>
+      </div>
+    </div>
+
+    <!-- design notes -->
+    <div class="mt-16 max-w-[920px] rounded-lg border border-[#e1ddd7] bg-[#fdfcfa] p-6">
+      <div class="page-eyebrow"><span class="dot"></span>DESIGN NOTES</div>
+      <ul class="mt-4 space-y-2.5 text-[14px] leading-[1.6] text-[#17181F]">
+        <li><strong>Hero：</strong>「訓練完成」用 primary 色、check-circle-2 icon 取代用戶 prompt 的 💪 emoji — 沿用 §08 PR 範例「兩個字 + Lucide 圖示」的成熟慣例。</li>
+        <li><strong>Stat grid：</strong>3-col 等分、用 <code class="mono text-[12px] bg-[#f0eeea] px-1.5 rounded">divide-x</code> 區隔；mono + tabular-nums 確保數字不抖。</li>
+        <li><strong>PR 卡：</strong>整份系統裡<strong>唯一</strong>同時用 glow + 微漸層的元件 — peach radial wash + primary ring + primary glow。Sparkle 4-6 顆四角星、錯開 0~1.8s 動畫，2.8s loop。</li>
+        <li><strong>PR set row：</strong>整列換 accent / primary/.16 底色 + primary 文字、PR badge — 沿用 §02 set tracker 慣例。</li>
+        <li><strong>無 PR variant：</strong>把 PR 卡位置換成「本週累計」recap，給沒拿 PR 的訓練日一個正向 anchor — 連續訓練、累計噸位、本週進度。</li>
+        <li><strong>Coach 一句話：</strong>底部 dashed border 卡片、像教練留紙條。PR 版「持續就是進步 + 下次 +2.5kg 建議」；無 PR 版「穩定 + 跳過組的修正建議」。不誇張、不罵人。</li>
+        <li><strong>CTA：</strong>outline「產生分享圖」(48h) + primary「回首頁」(52h CTA size)、stacked。Light 版 sticky 在 viewport 底（向下捲時 CTA 仍可見）；mockup 為求展示完整內容暫關 sticky。</li>
+        <li><strong>沒做的事：</strong>沒放 BottomNav（takeover 結算頁，不在 tab flow）；沒放純綠色 success 圖標（primary 已經承擔「完成」語意，色彩焦點只有一個）。</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+</html>

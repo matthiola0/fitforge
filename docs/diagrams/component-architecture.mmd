@@ -1,0 +1,90 @@
+%% C4 Level 3 — Component Architecture
+%% 對應 02-system-architecture.md §3
+
+graph TB
+    subgraph WebApp["packages/web (React PWA)"]
+        subgraph Pages["Pages /src/app"]
+            P_Today["TodayPage<br/>/today"]
+            P_Plans["PlansPage<br/>/plans"]
+            P_PlanEdit["PlanEditorPage<br/>/plans/:id/edit"]
+            P_Exercises["ExercisesPage<br/>/exercises"]
+            P_ExerciseDetail["ExerciseDetailPage<br/>/exercises/:id"]
+            P_Workout["WorkoutSessionPage<br/>/workout/:sessionId"]
+            P_History["HistoryPage<br/>/history"]
+            P_Settings["SettingsPage<br/>/settings"]
+            P_Onboarding["OnboardingPages<br/>/onboard/*"]
+        end
+
+        subgraph Features["Features /src/features"]
+            F_Workout["workout/<br/>useWorkout, RestTimer, SetLogger"]
+            F_Plans["plans/<br/>usePlans, PlanCard, PlanEditor"]
+            F_Exercises["exercises/<br/>useExercises, ExerciseCard, LottiePlayer"]
+            F_History["history/<br/>useHistory, HistoryItem"]
+            F_Onboarding["onboarding/<br/>useOnboarding, steps"]
+            F_Settings["settings/<br/>useSettings"]
+        end
+
+        subgraph SharedUI["UI /src/ui"]
+            U_Shadcn["shadcn primitives<br/>Button, Dialog, Input..."]
+            U_Layout["layout/<br/>AppShell, BottomNav, Header"]
+        end
+
+        subgraph Stores["Stores /src/stores"]
+            S_UI["uiStore (Zustand)<br/>theme, modal, draft"]
+            S_Session["sessionStore (Zustand)<br/>當前 workout session 暫存"]
+        end
+    end
+
+    subgraph Core["packages/core"]
+        subgraph DomainSvc["domain/"]
+            D_Engine["WorkoutEngine<br/>狀態機 + 規則"]
+            D_Plan["PlanService"]
+            D_Stats["StatsService"]
+        end
+        subgraph DataSvc["data/"]
+            R_Plan["PlanRepository"]
+            R_Ex["ExerciseRepository"]
+            R_Workout["WorkoutRepository"]
+            R_Settings["SettingsRepository"]
+            DB["DatabaseFactory<br/>建立 RxDB instance"]
+        end
+        subgraph PortSvc["ports/"]
+            Port_AI["AIPort<br/>V2 預留"]
+            Port_Clock["ClockPort"]
+            Port_Id["IdPort"]
+        end
+    end
+
+    P_Today --> F_Workout
+    P_Workout --> F_Workout
+    P_Plans --> F_Plans
+    P_PlanEdit --> F_Plans
+    P_Exercises --> F_Exercises
+    P_ExerciseDetail --> F_Exercises
+    P_History --> F_History
+    P_Settings --> F_Settings
+    P_Onboarding --> F_Onboarding
+
+    F_Workout --> S_Session
+    F_Workout --> D_Engine
+    F_Plans --> R_Plan
+    F_Exercises --> R_Ex
+    F_History --> R_Workout
+    F_History --> D_Stats
+    F_Settings --> R_Settings
+    F_Onboarding --> R_Settings
+
+    D_Engine --> Port_Clock
+    D_Engine --> R_Workout
+    D_Plan --> R_Plan
+    D_Stats --> R_Workout
+
+    R_Plan --> DB
+    R_Ex --> DB
+    R_Workout --> DB
+    R_Settings --> DB
+
+    style WebApp fill:#e3f2fd
+    style Core fill:#fff4e1
+    style Pages fill:#bbdefb
+    style Features fill:#90caf9

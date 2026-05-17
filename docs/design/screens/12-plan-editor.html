@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · 編輯課表</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            destructive: { DEFAULT: 'hsl(var(--destructive) / <alpha-value>)', foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)' },
+            success: { DEFAULT: 'hsl(var(--success) / <alpha-value>)', foreground: 'hsl(var(--success-foreground) / <alpha-value>)' },
+            warning: { DEFAULT: 'hsl(var(--warning) / <alpha-value>)', foreground: 'hsl(var(--warning-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          },
+          transitionTimingFunction: { forge: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="home-today.css" />
+  <style>
+    .theme-light { --destructive: 0 78% 52%; --destructive-foreground: 0 0% 100%; --success: 150 62% 38%; --success-foreground: 0 0% 100%; --warning: 38 94% 50%; --warning-foreground: 30 30% 12%; }
+    .theme-dark  { --destructive: 0 72% 58%; --destructive-foreground: 0 0% 100%; --success: 150 58% 50%; --success-foreground: 240 30% 8%; --warning: 38 90% 56%; --warning-foreground: 240 30% 8%; }
+
+    .head-blur {
+      background: hsl(var(--background) / 0.78);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+    }
+
+    /* Form field common styles */
+    .field-label {
+      font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px;
+      text-transform: uppercase; color: hsl(var(--muted-foreground));
+    }
+    .field-input {
+      width: 100%;
+      background: transparent;
+      color: hsl(var(--foreground));
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+      padding: 6px 0;
+    }
+    .field-input::placeholder { color: hsl(var(--muted-foreground) / 0.55); font-weight: 500; }
+
+    /* Stepper */
+    .stepper-btn {
+      width: 22px; height: 22px; border-radius: 7px;
+      display: grid; place-items: center;
+      background: hsl(var(--secondary));
+      color: hsl(var(--foreground));
+      border: none; cursor: pointer;
+      transition: background 200ms cubic-bezier(0.16,1,0.3,1), transform 120ms ease;
+    }
+    .stepper-btn:hover { background: hsl(var(--muted)); }
+    .stepper-btn:active { transform: scale(0.9); }
+    .stepper-val {
+      min-width: 18px; text-align: center;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-weight: 800;
+      font-size: 13px;
+      color: hsl(var(--foreground));
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Sheet animations */
+    @keyframes sheet-up {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .sheet-up { animation: sheet-up 360ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+    @keyframes backdrop-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .backdrop-in { animation: backdrop-in 220ms ease-out both; }
+
+    /* dirty indicator pulse */
+    @keyframes dirty-pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.55; }
+    }
+    .dirty-dot {
+      width: 6px; height: 6px; border-radius: 3px;
+      background: hsl(var(--warning));
+      animation: dirty-pulse 1.8s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============== PAGE CHROME ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-14 pb-12">
+    <div class="stage-eyebrow"><span class="dot"></span>FITFORGE · CUSTOM PLAN · EDITOR</div>
+    <h1 class="mt-3 text-[36px] md:text-[44px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      編輯課表<span class="text-[#E14B36]">.</span>
+    </h1>
+    <p class="mt-3 text-[15px] leading-[1.55] text-[#6B6D77] max-w-[64ch]">
+      V1 最複雜的表單。Sticky header + sticky save bar 之間是可滾動表單區。Inline editable day name、可拖拉重排的 exercise row、緊湊 stepper、bottom sheet 加動作。
+    </p>
+  </div>
+
+  <!-- ============== MAIN STATE ============== -->
+  <div class="max-w-[1100px] mx-auto px-6">
+    <div class="rounded-lg bg-white border border-[#E1DDD7] p-5 mb-6">
+      <div class="stage-eyebrow"><span class="dot"></span>STATE A · 編輯主畫面 (DIRTY)</div>
+      <p class="mt-2 text-[14px] leading-[1.55] text-[#17181F]">有未儲存變更時、儲存按鈕亮起 primary glow、header 出現「已修改」warning dot 提示。取消按下後若 dirty 會彈 confirm modal (本頁不展開 modal、只示意 sticky bar)。</p>
+    </div>
+  </div>
+  <div id="root-main" class="px-6 pb-12 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== SHEET STATE ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-6">
+    <div class="rounded-lg bg-white border border-[#E1DDD7] p-5 mb-6">
+      <div class="stage-eyebrow"><span class="dot"></span>STATE B · 加動作 BOTTOM SHEET 展開</div>
+      <p class="mt-2 text-[14px] leading-[1.55] text-[#17181F]">點 「+ 新增動作」開啟。Sheet 從底部滑上、約 85% 螢幕高、頂部 drag handle 可拖回。搜尋輸入 + 肌群篩選 chip + 動作 list。點動作 row 把它加入當前 day 並關閉 sheet。</p>
+    </div>
+  </div>
+  <div id="root-sheet" class="px-6 pb-20 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== NOTES ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>STEPPER · COMPACT 22PX</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">22 × 22 -/+ 按鈕、中間 mono tabular 數字。三組 stepper (sets / reps / rest) 在一行內顯示。不用文字輸入、降低錯字機會、新手友善。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>DIRTY 狀態指示</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">標題後 warning 色脈動 dot + 儲存按鈕 primary glow。返回時觸發 confirm modal (本頁示意、不展開)。dirty 用 warning 色 而非 destructive — 「需要注意」、不是「錯誤」。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>BOTTOM SHEET · iOS PATTERN</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">不彈 modal、改用 bottom sheet — 拇指可及、context 不被覆蓋。Drag handle pill + 搜尋 + 篩選 + list 是 iOS / shadcn-vaul 標準。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <script type="text/babel" src="plan-editor.jsx"></script>
+</body>
+</html>

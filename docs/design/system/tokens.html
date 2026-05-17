@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="zh-Hant" class="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            accent: { DEFAULT: 'hsl(var(--accent) / <alpha-value>)', foreground: 'hsl(var(--accent-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            destructive: { DEFAULT: 'hsl(var(--destructive) / <alpha-value>)', foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)' },
+            success: { DEFAULT: 'hsl(var(--success) / <alpha-value>)', foreground: 'hsl(var(--success-foreground) / <alpha-value>)' },
+            warning: { DEFAULT: 'hsl(var(--warning) / <alpha-value>)', foreground: 'hsl(var(--warning-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            input: 'hsl(var(--input) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          borderRadius: {
+            sm: '6px', md: '10px', lg: '14px', xl: '20px',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          boxShadow: {
+            'ds-sm': '0 1px 2px 0 hsl(var(--shadow-color) / 0.06), 0 1px 1px 0 hsl(var(--shadow-color) / 0.04)',
+            'ds-md': '0 4px 12px -2px hsl(var(--shadow-color) / 0.10), 0 2px 4px -1px hsl(var(--shadow-color) / 0.06)',
+            'ds-lg': '0 20px 40px -12px hsl(var(--shadow-color) / 0.18), 0 8px 16px -6px hsl(var(--shadow-color) / 0.10)',
+            'ds-glow': '0 0 0 1px hsl(var(--primary) / 0.40), 0 8px 24px -2px hsl(var(--primary) / 0.45), 0 0 32px -4px hsl(var(--primary) / 0.55)',
+          },
+          transitionTimingFunction: {
+            forge: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          },
+        }
+      }
+    };
+  </script>
+  <style>
+    /* ========== shadcn-style design tokens (HSL space-separated) ========== */
+    :root {
+      --background: 30 25% 99%;       /* warm paper #FDFCFA */
+      --foreground: 240 12% 10%;      /* near-black #17181F */
+      --card: 0 0% 100%;
+      --card-foreground: 240 12% 10%;
+
+      --primary: 8 78% 55%;            /* orange-red #E14B36 — forge ember */
+      --primary-foreground: 0 0% 100%;
+
+      --secondary: 30 12% 94%;         /* warm grey */
+      --secondary-foreground: 240 12% 18%;
+
+      --accent: 15 100% 96%;           /* soft peach wash */
+      --accent-foreground: 8 78% 38%;
+
+      --muted: 30 8% 95%;
+      --muted-foreground: 240 5% 45%;
+
+      --destructive: 0 78% 52%;
+      --destructive-foreground: 0 0% 100%;
+
+      --success: 150 62% 38%;
+      --success-foreground: 0 0% 100%;
+
+      --warning: 38 94% 50%;
+      --warning-foreground: 30 30% 12%;
+
+      --border: 30 10% 88%;
+      --input: 30 10% 90%;
+      --ring: 8 78% 55%;
+
+      --shadow-color: 240 30% 12%;
+      --radius: 12px;
+    }
+    .dark {
+      --background: 240 10% 7%;        /* warm carbon #10101A */
+      --foreground: 30 20% 95%;        /* warm white */
+      --card: 240 8% 10%;
+      --card-foreground: 30 20% 95%;
+
+      --primary: 8 85% 62%;            /* punchier in dark */
+      --primary-foreground: 240 30% 8%;
+
+      --secondary: 240 6% 16%;
+      --secondary-foreground: 30 20% 92%;
+
+      --accent: 240 6% 18%;
+      --accent-foreground: 8 85% 72%;
+
+      --muted: 240 6% 14%;
+      --muted-foreground: 240 5% 64%;
+
+      --destructive: 0 72% 58%;
+      --destructive-foreground: 0 0% 100%;
+
+      --success: 150 58% 50%;
+      --success-foreground: 240 30% 8%;
+
+      --warning: 38 90% 56%;
+      --warning-foreground: 240 30% 8%;
+
+      --border: 240 6% 20%;
+      --input: 240 6% 22%;
+      --ring: 8 85% 62%;
+
+      --shadow-color: 0 0% 0%;
+    }
+    html, body {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .num { font-variant-numeric: tabular-nums lining-nums; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+    /* eyebrow */
+    .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: hsl(var(--muted-foreground));
+    }
+    .eyebrow .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: hsl(var(--primary)); vertical-align: 1px; margin-right: 8px;
+    }
+    .h-num {
+      display: inline-block; min-width: 42px;
+      font-weight: 800; color: hsl(var(--primary));
+      font-variant-numeric: tabular-nums;
+    }
+    code.tok {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; padding: 1px 6px; border-radius: 4px;
+      background: hsl(var(--muted)); color: hsl(var(--foreground));
+      border: 1px solid hsl(var(--border));
+    }
+    /* swatch */
+    .swatch {
+      border: 1px solid hsl(var(--border));
+      border-radius: 10px;
+      overflow: hidden;
+      background: hsl(var(--card));
+    }
+    .swatch .chip { height: 64px; }
+    .swatch .meta { padding: 10px 12px; }
+    .swatch .nm { font-size: 12.5px; font-weight: 700; letter-spacing: -0.1px; color: hsl(var(--card-foreground)); }
+    .swatch .vl { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: hsl(var(--muted-foreground)); margin-top: 3px; }
+
+    /* motion demo */
+    @keyframes pr-burst {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.5); }
+      40% { transform: scale(1.08); box-shadow: 0 0 0 16px hsl(var(--primary) / 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+    }
+    .pr-anim { animation: pr-burst 700ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+    @keyframes slide-in-right {
+      from { transform: translateX(24%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .slide-anim { animation: slide-in-right 500ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+    /* lucide icon sizing helpers */
+    .ico-16 svg { width: 16px; height: 16px; stroke-width: 2; }
+    .ico-20 svg { width: 20px; height: 20px; stroke-width: 2; }
+    .ico-24 svg { width: 24px; height: 24px; stroke-width: 2; }
+
+    /* hairline under section nav */
+    .anchor-target { scroll-margin-top: 80px; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- ========== STICKY THEME TOGGLE ========== -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-2 rounded-lg border border-border bg-card/80 backdrop-blur px-2 py-2 shadow-ds-sm">
+    <button id="toggle-light" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-semibold transition-colors ease-forge duration-200" type="button">
+      <span class="ico-16"><i data-lucide="sun"></i></span>
+      <span>Light</span>
+    </button>
+    <button id="toggle-dark" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-semibold transition-colors ease-forge duration-200" type="button">
+      <span class="ico-16"><i data-lucide="moon"></i></span>
+      <span>Dark</span>
+    </button>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 md:px-9 pt-16 pb-24">
+
+    <!-- ========== MASTHEAD ========== -->
+    <div class="eyebrow"><span class="dot"></span>FITFORGE · DESIGN SYSTEM v1</div>
+    <h1 class="mt-3 text-[44px] md:text-[56px] font-extrabold tracking-[-0.04em] leading-[1.02]">為新手鍛造的<br /><span class="text-primary">第一個重訓夥伴</span>。</h1>
+    <div class="mt-6 py-3.5 border-t border-b border-border flex flex-wrap justify-between gap-3 text-[12px] text-muted-foreground">
+      <span><strong class="text-foreground font-bold">產品</strong> · FitForge — 健身入門 PWA</span>
+      <span><strong class="text-foreground font-bold">使用者</strong> · 18–35 歲 · 健身新手</span>
+      <span><strong class="text-foreground font-bold">版本</strong> · v1 · 可以開工</span>
+      <span class="mono">2026.05.16</span>
+    </div>
+
+    <p class="mt-7 text-[19px] leading-[1.55] tracking-[-0.01em] text-foreground/90 max-w-[60ch]">
+      下面所有 token、字級、間距、元件都是 <strong class="text-primary font-bold">已決定</strong>。<br />
+      照著做就會看起來像 FitForge — 專業但不嚇人、有運動感但不像男廁、簡潔但不像冰箱。
+    </p>
+
+    <!-- ========== 00 · MOOD ========== -->
+    <section id="mood" class="anchor-target mt-16">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">00</span>品牌 Mood</h2>
+      <div class="mt-6 grid md:grid-cols-3 gap-3">
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>三個形容詞</div>
+          <div class="mt-3 flex flex-wrap gap-1.5">
+            <span class="px-2.5 py-1 rounded-md bg-primary text-primary-foreground text-[12px] font-bold tracking-[0.4px]">堅定 Resolute</span>
+            <span class="px-2.5 py-1 rounded-md bg-secondary text-secondary-foreground text-[12px] font-bold tracking-[0.4px]">溫暖 Warm</span>
+            <span class="px-2.5 py-1 rounded-md bg-secondary text-secondary-foreground text-[12px] font-bold tracking-[0.4px]">鼓舞 Encouraging</span>
+          </div>
+          <p class="mt-3.5 text-[13.5px] leading-[1.55] text-muted-foreground">三個字一起念是「像個剛認識的好教練」— 不是嚴肅學長、也不是迪士尼吉祥物。</p>
+        </div>
+
+        <div class="rounded-lg border border-border bg-card p-5 md:col-span-2">
+          <div class="eyebrow"><span class="dot"></span>一句話比喻</div>
+          <p class="mt-3 text-[20px] leading-[1.4] tracking-[-0.015em] text-foreground font-medium">
+            像一個剛認識的私人教練 — <span class="text-primary font-bold">他知道你的手在抖</span>，<br class="hidden md:inline" />但不會嘲笑你、也不會放你過。
+          </p>
+          <p class="mt-3 text-[13.5px] leading-[1.55] text-muted-foreground">這個比喻同時規範了 voice、視覺密度、互動回饋的強度。永遠以這個人為標準回去問：「他會這樣說嗎？他會這樣設計嗎？」</p>
+        </div>
+      </div>
+
+      <div class="mt-3 grid md:grid-cols-3 gap-3">
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow">Visual Keyword 01</div>
+          <div class="mt-2.5 text-[22px] font-extrabold tracking-[-0.02em]">Forge-warm</div>
+          <p class="mt-1.5 text-[13px] leading-[1.5] text-muted-foreground">不是冷的銀灰、不是螢光綠 — 暖色主導、像爐火、像鑄鐵時的橘紅光。</p>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow">Visual Keyword 02</div>
+          <div class="mt-2.5 text-[22px] font-extrabold tracking-[-0.02em]">Disciplined</div>
+          <p class="mt-1.5 text-[13px] leading-[1.5] text-muted-foreground">骨架清楚、字級分明、留白夠多。每屏只允許 1 個主色焦點。</p>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow">Visual Keyword 03</div>
+          <div class="mt-2.5 text-[22px] font-extrabold tracking-[-0.02em]">Human</div>
+          <p class="mt-1.5 text-[13px] leading-[1.5] text-muted-foreground">圓角不是 0，是 12。文案用「你」不用「使用者」。錯誤訊息不罵人。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 01 · COLOR TOKENS ========== -->
+    <section id="color" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">01</span>Color Tokens</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">命名遵循 shadcn/ui。Light 與 Dark 同 token 名、不同值。HSL 採 space-separated 寫法，可直接餵 Tailwind <code class="tok">hsl(var(--primary))</code>。</p>
+
+      <!-- HERO — primary -->
+      <div class="mt-6 grid md:grid-cols-[1.4fr_1fr] gap-4">
+        <div class="rounded-xl p-7 md:p-8 bg-primary text-primary-foreground flex flex-col justify-between min-h-[200px]">
+          <div>
+            <div class="eyebrow" style="color: hsl(var(--primary-foreground) / 0.7);"><span class="dot" style="background: hsl(var(--primary-foreground) / 0.85);"></span>PRIMARY · CTA</div>
+            <div class="mt-2 text-[34px] md:text-[38px] font-extrabold tracking-[-0.03em] leading-[1.05]">Forge Ember</div>
+            <div class="mt-1.5 mono text-[12.5px] opacity-80">light · #E14B36 · hsl(8 78% 55%)</div>
+            <div class="mt-0.5 mono text-[12.5px] opacity-80">dark · #EE6A52 · hsl(8 85% 62%)</div>
+          </div>
+          <div class="text-[13px] leading-[1.55] font-medium opacity-90 max-w-[42ch]">
+            用在 <strong>CTA · 完成回饋 · PR 慶祝 · 強調數字</strong>。<br />每屏最多 3 處、絕不漸層、絕不裝飾。
+          </div>
+        </div>
+
+        <div class="rounded-xl p-7 md:p-8 bg-card border border-border flex flex-col justify-between min-h-[200px]">
+          <div>
+            <div class="eyebrow"><span class="dot"></span>BASE · CANVAS</div>
+            <div class="mt-2 text-[34px] md:text-[38px] font-extrabold tracking-[-0.03em] leading-[1.05]">Paper × Carbon</div>
+            <div class="mt-1.5 mono text-[12.5px] text-muted-foreground">light bg · #FDFCFA</div>
+            <div class="mt-0.5 mono text-[12.5px] text-muted-foreground">dark  bg · #10101A</div>
+          </div>
+          <p class="text-[13px] leading-[1.55] text-muted-foreground">不是純白、不是純黑 — 偏暖。純黑太冷像 cal ai、純白太硬像醫院。</p>
+        </div>
+      </div>
+
+      <!-- Token grid — categorized -->
+      <h3 class="mt-9 text-[15px] font-bold tracking-[-0.01em]">Surfaces</h3>
+      <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2.5">
+        <div class="swatch">
+          <div class="chip" style="background:#FDFCFA"></div>
+          <div class="meta"><div class="nm">background</div><div class="vl">30 25% 99% / #FDFCFA</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#FFFFFF; border-bottom:1px solid hsl(var(--border))"></div>
+          <div class="meta"><div class="nm">card</div><div class="vl">0 0% 100% / #FFFFFF</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#10101A"></div>
+          <div class="meta"><div class="nm">background · dark</div><div class="vl">240 10% 7% / #10101A</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#171720"></div>
+          <div class="meta"><div class="nm">card · dark</div><div class="vl">240 8% 10% / #171720</div></div>
+        </div>
+      </div>
+
+      <h3 class="mt-7 text-[15px] font-bold tracking-[-0.01em]">Foreground (text on surface)</h3>
+      <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2.5">
+        <div class="swatch">
+          <div class="chip" style="background:#17181F"></div>
+          <div class="meta"><div class="nm">foreground</div><div class="vl">240 12% 10% / #17181F</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#6B6D77"></div>
+          <div class="meta"><div class="nm">muted-foreground</div><div class="vl">240 5% 45% / #6B6D77</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#F4F1EA"></div>
+          <div class="meta"><div class="nm">foreground · dark</div><div class="vl">30 20% 95% / #F4F1EA</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#9F9FA8"></div>
+          <div class="meta"><div class="nm">muted-fg · dark</div><div class="vl">240 5% 64% / #9F9FA8</div></div>
+        </div>
+      </div>
+
+      <h3 class="mt-7 text-[15px] font-bold tracking-[-0.01em]">Brand · Accents</h3>
+      <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2.5">
+        <div class="swatch">
+          <div class="chip" style="background:#E14B36"></div>
+          <div class="meta"><div class="nm">primary</div><div class="vl">8 78% 55% / #E14B36</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#EE6A52"></div>
+          <div class="meta"><div class="nm">primary · dark</div><div class="vl">8 85% 62% / #EE6A52</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#FFEBE5"></div>
+          <div class="meta"><div class="nm">accent (peach wash)</div><div class="vl">15 100% 96% / #FFEBE5</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#F0EEEA"></div>
+          <div class="meta"><div class="nm">secondary</div><div class="vl">30 12% 94% / #F0EEEA</div></div>
+        </div>
+      </div>
+
+      <h3 class="mt-7 text-[15px] font-bold tracking-[-0.01em]">State · Semantic</h3>
+      <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2.5">
+        <div class="swatch">
+          <div class="chip" style="background:#229861"></div>
+          <div class="meta"><div class="nm">success (完成 / PR)</div><div class="vl">150 62% 38% / #229861</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#F4A106"></div>
+          <div class="meta"><div class="nm">warning (RPE 過高)</div><div class="vl">38 94% 50% / #F4A106</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#DC2A2A"></div>
+          <div class="meta"><div class="nm">destructive</div><div class="vl">0 78% 52% / #DC2A2A</div></div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#E1DDD7"></div>
+          <div class="meta"><div class="nm">border / input</div><div class="vl">30 10% 88% / #E1DDD7</div></div>
+        </div>
+      </div>
+
+      <!-- semantic preview chips -->
+      <div class="mt-6 rounded-lg border border-border bg-card p-5">
+        <div class="eyebrow"><span class="dot"></span>SEMANTIC IN CONTEXT</div>
+        <div class="mt-3.5 flex flex-wrap gap-2">
+          <span class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[12px] font-bold bg-success text-success-foreground">
+            <span class="ico-16"><i data-lucide="check"></i></span>完成 5×5 · PR
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[12px] font-bold bg-warning text-warning-foreground">
+            <span class="ico-16"><i data-lucide="alert-triangle"></i></span>RPE 9.5 · 太重
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[12px] font-bold bg-destructive text-destructive-foreground">
+            <span class="ico-16"><i data-lucide="x"></i></span>無法儲存
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[12px] font-bold bg-accent text-accent-foreground border border-primary/20">
+            <span class="ico-16"><i data-lucide="sparkles"></i></span>新手提示
+          </span>
+        </div>
+      </div>
+
+      <!-- Don't use other accents -->
+      <div class="mt-5 rounded-lg p-4 border border-border bg-muted/50">
+        <div class="eyebrow"><span class="dot"></span>RULE</div>
+        <p class="mt-1.5 text-[13.5px] leading-[1.55] text-foreground">delta（重量、體重變化）一律用文字色階表達、不要用紅綠燈。primary 只代表「達成 / 焦點」，destructive 只用在真正破壞性的動作（刪除訓練、清除歷史）。</p>
+      </div>
+    </section>
+
+    <!-- ========== 02 · TYPOGRAPHY ========== -->
+    <section id="type" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">02</span>Typography</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">英文 <strong class="text-foreground">Inter</strong>、中文 <strong class="text-foreground">Noto Sans TC</strong>。同 font-stack、瀏覽器自動依字符切換。數字一律 <code class="tok">tabular-nums</code>。</p>
+
+      <div class="mt-6 rounded-lg border border-border bg-card overflow-hidden">
+        <!-- scale rows -->
+        <div class="grid grid-cols-[100px_120px_1fr] gap-x-5 px-5 py-4 items-baseline border-b border-border">
+          <div class="eyebrow">H1</div>
+          <div class="mono text-[11px] text-muted-foreground">700 · 32 / 1.2 / -0.02em</div>
+          <div style="font-weight: 700; font-size: 32px; line-height: 1.2; letter-spacing: -0.02em;">準備好了嗎？開始今天的訓練</div>
+        </div>
+        <div class="grid grid-cols-[100px_120px_1fr] gap-x-5 px-5 py-4 items-baseline border-b border-border">
+          <div class="eyebrow">H2</div>
+          <div class="mono text-[11px] text-muted-foreground">700 · 24 / 1.2 / -0.02em</div>
+          <div style="font-weight: 700; font-size: 24px; line-height: 1.2; letter-spacing: -0.02em;">Push Day · 胸三頭</div>
+        </div>
+        <div class="grid grid-cols-[100px_120px_1fr] gap-x-5 px-5 py-4 items-baseline border-b border-border">
+          <div class="eyebrow">H3</div>
+          <div class="mono text-[11px] text-muted-foreground">600 · 20 / 1.2 / -0.02em</div>
+          <div style="font-weight: 600; font-size: 20px; line-height: 1.2; letter-spacing: -0.02em;">本週訓練</div>
+        </div>
+        <div class="grid grid-cols-[100px_120px_1fr] gap-x-5 px-5 py-4 items-baseline border-b border-border">
+          <div class="eyebrow">H4</div>
+          <div class="mono text-[11px] text-muted-foreground">600 · 18 / 1.2 / -0.02em</div>
+          <div style="font-weight: 600; font-size: 18px; line-height: 1.2; letter-spacing: -0.02em;">Bench Press 槓鈴臥推</div>
+        </div>
+        <div class="grid grid-cols-[100px_120px_1fr] gap-x-5 px-5 py-4 items-baseline border-b border-border">
+          <div class="eyebrow">BODY</div>
+          <div class="mono text-[11px] text-muted-foreground">500 · 16 / 1.5</div>
+          <div style="font-weight: 500; font-size: 16px; line-height: 1.5; color: hsl(var(--foreground) / 0.85);">每組之間休息 90 秒。專注在向心收縮、不要把槓鈴反彈胸口。</div>
+        </div>
+        <div class="grid grid-cols-[100px_120px_1fr] gap-x-5 px-5 py-4 items-baseline border-b border-border">
+          <div class="eyebrow">SMALL</div>
+          <div class="mono text-[11px] text-muted-foreground">500 · 14 / 1.5</div>
+          <div style="font-weight: 500; font-size: 14px; line-height: 1.5; color: hsl(var(--muted-foreground));">5 個動作 · 預估 52 分鐘 · 上次 2 天前</div>
+        </div>
+        <div class="grid grid-cols-[100px_120px_1fr] gap-x-5 px-5 py-4 items-baseline">
+          <div class="eyebrow">CAPTION</div>
+          <div class="mono text-[11px] text-muted-foreground">500 · 12 / 1.4</div>
+          <div style="font-weight: 500; font-size: 12px; line-height: 1.4; color: hsl(var(--muted-foreground));">Week 03 · #12 · 自上次 PR +5kg</div>
+        </div>
+      </div>
+
+      <!-- Number display — the hero typography moment -->
+      <div class="mt-5 grid md:grid-cols-[1.2fr_1fr] gap-4">
+        <div class="rounded-lg border border-border bg-card p-7">
+          <div class="eyebrow"><span class="dot"></span>NUMBER · TABULAR-NUMS</div>
+          <p class="mt-2 text-[13.5px] text-muted-foreground">展示重量數字。<code class="tok">font-variant-numeric: tabular-nums</code> — 每一位數字寬度等寬、計時器與 set tracker 不會跳。</p>
+          <div class="mt-5 num flex items-baseline gap-2.5 flex-wrap">
+            <span class="text-foreground" style="font-weight: 800; font-size: 64px; letter-spacing: -0.035em; line-height: 1;">80</span>
+            <span class="text-muted-foreground" style="font-weight: 600; font-size: 22px;">kg</span>
+            <span class="text-muted-foreground/60 mx-1" style="font-weight: 500; font-size: 32px;">×</span>
+            <span class="text-foreground" style="font-weight: 800; font-size: 64px; letter-spacing: -0.035em; line-height: 1;">10</span>
+            <span class="text-muted-foreground" style="font-weight: 600; font-size: 22px;">reps</span>
+          </div>
+          <div class="mt-4 num flex items-baseline gap-1.5 text-primary">
+            <span class="ico-16"><i data-lucide="trending-up"></i></span>
+            <span class="text-[13px] font-bold">較上次 +5 kg</span>
+          </div>
+        </div>
+
+        <div class="rounded-lg border border-border bg-card p-7">
+          <div class="eyebrow"><span class="dot"></span>SET TRACKER</div>
+          <p class="mt-2 text-[13.5px] text-muted-foreground">組數列。等寬數字 + Inter Medium。</p>
+          <div class="mt-5 space-y-2.5">
+            <div class="flex items-center justify-between py-1.5 border-b border-border">
+              <span class="mono num text-muted-foreground text-[12px]">SET 1</span>
+              <span class="num text-foreground font-semibold text-[15px]">80 kg × 10</span>
+              <span class="num mono text-muted-foreground text-[12px]">RPE 7</span>
+            </div>
+            <div class="flex items-center justify-between py-1.5 border-b border-border">
+              <span class="mono num text-muted-foreground text-[12px]">SET 2</span>
+              <span class="num text-foreground font-semibold text-[15px]">80 kg × 10</span>
+              <span class="num mono text-muted-foreground text-[12px]">RPE 7.5</span>
+            </div>
+            <div class="flex items-center justify-between py-1.5 border-b border-border">
+              <span class="mono num text-muted-foreground text-[12px]">SET 3</span>
+              <span class="num text-foreground font-semibold text-[15px]">80 kg ×  9</span>
+              <span class="num mono text-muted-foreground text-[12px]">RPE 8</span>
+            </div>
+            <div class="flex items-center justify-between py-1.5">
+              <span class="mono num text-primary text-[12px] font-bold">SET 4</span>
+              <span class="num text-primary font-bold text-[15px]">85 kg ×  6</span>
+              <span class="num mono text-primary text-[12px] font-bold">PR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 03 · SPACING ========== -->
+    <section id="spacing" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">03</span>Spacing</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">基於 <strong class="text-foreground">4px</strong> 的非線性比例。Tailwind 對應 <code class="tok">space-1</code>～<code class="tok">space-24</code>。</p>
+
+      <div class="mt-6 rounded-lg border border-border bg-card p-5 md:p-6">
+        <div class="space-y-3">
+          <!-- ruler rows -->
+          <!-- We'll JS-render these -->
+          <div id="spacing-scale" class="space-y-2.5"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 04 · RADIUS ========== -->
+    <section id="radius" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">04</span>Radius</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">全域 <code class="tok">--radius: 12px</code>。<strong class="text-foreground">不要超過 20px</strong> — 超過就變 toy。</p>
+
+      <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="rounded-lg border border-border bg-card p-5 flex flex-col items-center text-center">
+          <div class="w-[68px] h-[68px] bg-primary" style="border-radius: 6px;"></div>
+          <div class="mt-3.5 text-[14px] font-bold">sm · 6px</div>
+          <div class="mt-1 text-[12px] text-muted-foreground">badge / chip / tag</div>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-5 flex flex-col items-center text-center">
+          <div class="w-[68px] h-[68px] bg-primary" style="border-radius: 10px;"></div>
+          <div class="mt-3.5 text-[14px] font-bold">md · 10px</div>
+          <div class="mt-1 text-[12px] text-muted-foreground">input / button</div>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-5 flex flex-col items-center text-center">
+          <div class="w-[68px] h-[68px] bg-primary" style="border-radius: 14px;"></div>
+          <div class="mt-3.5 text-[14px] font-bold">lg · 14px</div>
+          <div class="mt-1 text-[12px] text-muted-foreground">card · dialog</div>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-5 flex flex-col items-center text-center">
+          <div class="w-[68px] h-[68px] bg-primary" style="border-radius: 20px;"></div>
+          <div class="mt-3.5 text-[14px] font-bold">xl · 20px</div>
+          <div class="mt-1 text-[12px] text-muted-foreground">sheet · hero CTA</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 05 · SHADOW ========== -->
+    <section id="shadow" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">05</span>Shadow</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">節制使用。卡片預設只用 <code class="tok">hairline border</code>；shadow 只用在浮動元件、hover、modal、PR 慶祝。</p>
+
+      <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="rounded-lg bg-card p-5 shadow-ds-sm">
+          <div class="eyebrow">sm</div>
+          <div class="mt-2 text-[14px] font-bold">subtle card</div>
+          <div class="mt-1 text-[12px] text-muted-foreground mono">0 1px 2px / .06</div>
+        </div>
+        <div class="rounded-lg bg-card p-5 shadow-ds-md">
+          <div class="eyebrow">md</div>
+          <div class="mt-2 text-[14px] font-bold">hover state</div>
+          <div class="mt-1 text-[12px] text-muted-foreground mono">0 4px 12px / .10</div>
+        </div>
+        <div class="rounded-lg bg-card p-5 shadow-ds-lg">
+          <div class="eyebrow">lg</div>
+          <div class="mt-2 text-[14px] font-bold">modal / sheet</div>
+          <div class="mt-1 text-[12px] text-muted-foreground mono">0 20px 40px / .18</div>
+        </div>
+        <div class="rounded-lg bg-card p-5 shadow-ds-glow">
+          <div class="eyebrow" style="color: hsl(var(--primary));">glow</div>
+          <div class="mt-2 text-[14px] font-bold text-primary">PR celebration</div>
+          <div class="mt-1 text-[12px] text-muted-foreground mono">primary · 0 8px 24px</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 06 · ICONOGRAPHY ========== -->
+    <section id="icons" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">06</span>Iconography</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">採用 <strong class="text-foreground">Lucide</strong> 線條圖示。<code class="tok">stroke-width: 2</code>、尺寸 <code class="tok">16 / 20 / 24</code>。不要用實心圖示、不要混圖示家族。</p>
+
+      <div class="mt-6 rounded-lg border border-border bg-card p-6">
+        <div class="grid md:grid-cols-3 gap-7">
+          <div>
+            <div class="eyebrow"><span class="dot"></span>16px · inline</div>
+            <div class="mt-3.5 flex flex-wrap gap-3 text-foreground">
+              <span class="ico-16"><i data-lucide="dumbbell"></i></span>
+              <span class="ico-16"><i data-lucide="flame"></i></span>
+              <span class="ico-16"><i data-lucide="timer"></i></span>
+              <span class="ico-16"><i data-lucide="check-circle-2"></i></span>
+              <span class="ico-16"><i data-lucide="trending-up"></i></span>
+              <span class="ico-16"><i data-lucide="repeat"></i></span>
+              <span class="ico-16"><i data-lucide="chevron-right"></i></span>
+            </div>
+            <div class="mt-3 text-[12.5px] text-muted-foreground">用在 list row · badge · button 內標。</div>
+          </div>
+          <div>
+            <div class="eyebrow"><span class="dot"></span>20px · UI</div>
+            <div class="mt-3.5 flex flex-wrap gap-3.5 text-foreground">
+              <span class="ico-20"><i data-lucide="dumbbell"></i></span>
+              <span class="ico-20"><i data-lucide="flame"></i></span>
+              <span class="ico-20"><i data-lucide="timer"></i></span>
+              <span class="ico-20"><i data-lucide="check-circle-2"></i></span>
+              <span class="ico-20"><i data-lucide="trending-up"></i></span>
+              <span class="ico-20"><i data-lucide="repeat"></i></span>
+              <span class="ico-20"><i data-lucide="chevron-right"></i></span>
+            </div>
+            <div class="mt-3 text-[12.5px] text-muted-foreground">用在 nav · tab · 主要 button。</div>
+          </div>
+          <div>
+            <div class="eyebrow"><span class="dot"></span>24px · prominent</div>
+            <div class="mt-3.5 flex flex-wrap gap-4 text-foreground">
+              <span class="ico-24"><i data-lucide="dumbbell"></i></span>
+              <span class="ico-24"><i data-lucide="flame"></i></span>
+              <span class="ico-24"><i data-lucide="timer"></i></span>
+              <span class="ico-24"><i data-lucide="check-circle-2"></i></span>
+              <span class="ico-24"><i data-lucide="trending-up"></i></span>
+              <span class="ico-24"><i data-lucide="repeat"></i></span>
+              <span class="ico-24"><i data-lucide="chevron-right"></i></span>
+            </div>
+            <div class="mt-3 text-[12.5px] text-muted-foreground">empty state · onboarding · 大型 hero icon。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 07 · MOTION ========== -->
+    <section id="motion" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">07</span>Motion</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">預設 ease <code class="tok">cubic-bezier(0.16, 1, 0.3, 1)</code>（forge）— 起步快、收尾穩。三段 duration：<code class="tok">200ms / 300ms / 500ms</code>。</p>
+
+      <div class="mt-6 grid md:grid-cols-3 gap-3">
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>SMALL · 200MS</div>
+          <p class="mt-2 text-[13.5px] text-muted-foreground">hover、tap、icon swap、color transition。</p>
+          <button id="demo-small" class="mt-4 w-full h-11 rounded-md bg-secondary text-secondary-foreground font-semibold text-[14px] transition-all duration-200 ease-forge hover:bg-primary hover:text-primary-foreground">Hover me</button>
+          <div class="mt-3 mono text-[11px] text-muted-foreground">transition: all 200ms forge</div>
+        </div>
+
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>MEDIUM · 300MS</div>
+          <p class="mt-2 text-[13.5px] text-muted-foreground">頁面切換、sheet 展開、tooltip 進場。</p>
+          <button id="demo-slide" class="mt-4 w-full h-11 rounded-md bg-secondary text-secondary-foreground font-semibold text-[14px]">Slide-in →</button>
+          <div id="slide-target" class="mt-2.5 rounded-md bg-accent text-accent-foreground p-3 text-[13px] font-semibold hidden">
+            <span class="ico-16 inline-block align-[-3px] mr-1"><i data-lucide="check"></i></span>Workout saved
+          </div>
+          <div class="mt-3 mono text-[11px] text-muted-foreground">slide-in-right · 500ms</div>
+        </div>
+
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>SPRING · PR / 完成</div>
+          <p class="mt-2 text-[13.5px] text-muted-foreground">完成組 · PR · 結束訓練 — scale + glow burst。</p>
+          <button id="demo-pr" class="mt-4 w-full h-11 rounded-md bg-primary text-primary-foreground font-bold text-[14px]">Hit PR</button>
+          <div class="mt-3 mono text-[11px] text-muted-foreground">scale 1→1.08→1 · 700ms</div>
+        </div>
+      </div>
+
+      <div class="mt-5 rounded-lg p-4 border border-border bg-muted/50">
+        <div class="eyebrow"><span class="dot"></span>RULE</div>
+        <p class="mt-1.5 text-[13.5px] leading-[1.55] text-foreground">所有動畫尊重 <code class="tok">prefers-reduced-motion</code>。spring 動畫只用在「完成 / PR」這一刻 — 不是裝飾，是回饋。</p>
+      </div>
+    </section>
+
+    <!-- ========== 08 · VOICE & TONE ========== -->
+    <section id="voice" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">08</span>Voice &amp; Tone</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">直接、溫暖、像個友善但不油膩的私人教練。<strong class="text-foreground">不用「你超強！」、不用過度 emoji、不用驚嘆號連發。</strong></p>
+
+      <div class="mt-6 grid md:grid-cols-2 gap-3">
+        <!-- 1. CTA title -->
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>01 · 標題口吻</div>
+          <div class="mt-3 text-[20px] font-bold tracking-[-0.02em]">開始今天的訓練</div>
+          <div class="mt-3 pt-3 border-t border-dashed border-border">
+            <div class="flex items-start gap-2">
+              <span class="ico-16 text-success mt-0.5"><i data-lucide="check"></i></span>
+              <span class="text-[13px] text-foreground">「開始今天的訓練」— 動詞開頭、明確下一步</span>
+            </div>
+            <div class="mt-1.5 flex items-start gap-2">
+              <span class="ico-16 text-muted-foreground mt-0.5"><i data-lucide="x"></i></span>
+              <span class="text-[13px] text-muted-foreground line-through">「準備好了嗎？」— 把決定丟回給使用者</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. set complete -->
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>02 · 完成組</div>
+          <div class="mt-3 text-[20px] font-bold tracking-[-0.02em] text-primary">漂亮的一組。休息 90 秒。</div>
+          <div class="mt-3 pt-3 border-t border-dashed border-border">
+            <div class="flex items-start gap-2">
+              <span class="ico-16 text-success mt-0.5"><i data-lucide="check"></i></span>
+              <span class="text-[13px] text-foreground">肯定 + 下一步指示。不誇張、不喧囂。</span>
+            </div>
+            <div class="mt-1.5 flex items-start gap-2">
+              <span class="ico-16 text-muted-foreground mt-0.5"><i data-lucide="x"></i></span>
+              <span class="text-[13px] text-muted-foreground line-through">「太棒了！！你超強！🔥🔥」</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. error -->
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>03 · 錯誤訊息</div>
+          <div class="mt-3 text-[16px] font-semibold text-foreground">重量需要大於 0 才能存。試試 <span class="text-primary num">2.5 kg</span> 起跳？</div>
+          <div class="mt-3 pt-3 border-t border-dashed border-border">
+            <div class="flex items-start gap-2">
+              <span class="ico-16 text-success mt-0.5"><i data-lucide="check"></i></span>
+              <span class="text-[13px] text-foreground">說清楚問題 + 給一個可執行的建議。不罵人。</span>
+            </div>
+            <div class="mt-1.5 flex items-start gap-2">
+              <span class="ico-16 text-muted-foreground mt-0.5"><i data-lucide="x"></i></span>
+              <span class="text-[13px] text-muted-foreground line-through">「錯誤：欄位無效。」</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. empty state -->
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>04 · 空狀態</div>
+          <div class="mt-3 text-[16px] font-semibold text-foreground">還沒有訓練紀錄。<br />完成第一組之後，這裡會開始長出你的進度。</div>
+          <div class="mt-3 pt-3 border-t border-dashed border-border">
+            <div class="flex items-start gap-2">
+              <span class="ico-16 text-success mt-0.5"><i data-lucide="check"></i></span>
+              <span class="text-[13px] text-foreground">承認現狀 + 預告未來。給新手降低門檻感。</span>
+            </div>
+            <div class="mt-1.5 flex items-start gap-2">
+              <span class="ico-16 text-muted-foreground mt-0.5"><i data-lucide="x"></i></span>
+              <span class="text-[13px] text-muted-foreground line-through">「沒有資料。」</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. PR -->
+        <div class="rounded-lg border border-border bg-card p-5 relative overflow-hidden">
+          <div class="eyebrow"><span class="dot"></span>05 · PR 慶祝</div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-[28px] font-extrabold tracking-[-0.025em] text-primary">新紀錄</span>
+            <span class="ico-20 text-primary"><i data-lucide="flame"></i></span>
+          </div>
+          <div class="mt-1.5 text-[15px] font-semibold text-foreground num">深蹲 · 100 kg × 5</div>
+          <div class="mt-3 pt-3 border-t border-dashed border-border">
+            <div class="flex items-start gap-2">
+              <span class="ico-16 text-success mt-0.5"><i data-lucide="check"></i></span>
+              <span class="text-[13px] text-foreground">兩個字 + 客觀數字。事實本身就足夠激勵。</span>
+            </div>
+            <div class="mt-1.5 flex items-start gap-2">
+              <span class="ico-16 text-muted-foreground mt-0.5"><i data-lucide="x"></i></span>
+              <span class="text-[13px] text-muted-foreground line-through">「恭喜你達成新里程碑！🎉🎉🎉」</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. end confirm -->
+        <div class="rounded-lg border border-border bg-card p-5">
+          <div class="eyebrow"><span class="dot"></span>06 · 結束訓練</div>
+          <div class="mt-3 text-[16px] font-semibold text-foreground">結束本次訓練？</div>
+          <div class="mt-1 text-[13.5px] text-muted-foreground leading-[1.55]">已完成 <span class="num text-foreground font-semibold">4/5</span> 個動作。未完成的會留在歷史紀錄、下次可以接著做。</div>
+          <div class="mt-3 pt-3 border-t border-dashed border-border">
+            <div class="flex items-start gap-2">
+              <span class="ico-16 text-success mt-0.5"><i data-lucide="check"></i></span>
+              <span class="text-[13px] text-foreground">說後果 + 給選項。不威脅、不羞辱「你還沒做完」。</span>
+            </div>
+            <div class="mt-1.5 flex items-start gap-2">
+              <span class="ico-16 text-muted-foreground mt-0.5"><i data-lucide="x"></i></span>
+              <span class="text-[13px] text-muted-foreground line-through">「你確定要放棄訓練嗎？」</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 09 · COMPONENTS ========== -->
+    <section id="components" class="anchor-target mt-20">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">09</span>Components</h2>
+      <p class="mt-2 text-[15px] leading-[1.55] text-muted-foreground max-w-[64ch]">這些元件 = Tailwind class 對齊 shadcn/ui。複製、改 token、不要改結構。</p>
+
+      <!-- Buttons -->
+      <div class="mt-6">
+        <h3 class="text-[15px] font-bold tracking-[-0.01em]">Button</h3>
+        <div class="mt-3 rounded-lg border border-border bg-card p-6">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-md bg-primary text-primary-foreground font-bold text-[14px] tracking-[0.01em] transition-colors duration-200 ease-forge hover:opacity-90">
+              <span class="ico-16"><i data-lucide="dumbbell"></i></span>開始訓練
+            </button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-md bg-secondary text-secondary-foreground font-semibold text-[14px] transition-colors duration-200 ease-forge hover:bg-muted">
+              查看課表
+            </button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-md border border-border bg-transparent text-foreground font-semibold text-[14px] transition-colors duration-200 ease-forge hover:bg-secondary">
+              Outline
+            </button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-md bg-transparent text-muted-foreground font-semibold text-[14px] transition-colors duration-200 ease-forge hover:text-foreground hover:bg-secondary">
+              Ghost
+            </button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-md bg-destructive text-destructive-foreground font-bold text-[14px] transition-colors duration-200 ease-forge hover:opacity-90">
+              <span class="ico-16"><i data-lucide="trash-2"></i></span>刪除紀錄
+            </button>
+          </div>
+
+          <div class="mt-5 pt-5 border-t border-dashed border-border">
+            <div class="eyebrow"><span class="dot"></span>SIZES</div>
+            <div class="mt-3 flex flex-wrap items-center gap-2.5">
+              <button class="h-8 px-3 rounded-md bg-primary text-primary-foreground font-bold text-[12px]">SM · 32h</button>
+              <button class="h-11 px-5 rounded-md bg-primary text-primary-foreground font-bold text-[14px]">MD · 44h</button>
+              <button class="h-13 px-6 rounded-md bg-primary text-primary-foreground font-bold text-[15px]" style="height: 52px;">LG · 52h (CTA)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="mt-6">
+        <h3 class="text-[15px] font-bold tracking-[-0.01em]">Input</h3>
+        <div class="mt-3 rounded-lg border border-border bg-card p-6 grid md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-[13px] font-semibold mb-1.5">電子郵件</label>
+            <input type="email" placeholder="you@fitforge.app" class="w-full h-11 px-3.5 rounded-md border border-input bg-background text-foreground text-[14px] placeholder:text-muted-foreground/70 transition-colors duration-200 ease-forge focus:outline-none focus:border-ring focus:ring-2 focus:ring-ring/20" />
+            <div class="mt-1.5 text-[12px] text-muted-foreground">Default</div>
+          </div>
+          <div>
+            <label class="block text-[13px] font-semibold mb-1.5">當前體重</label>
+            <div class="relative">
+              <input type="text" value="72.4" class="num w-full h-11 px-3.5 pr-12 rounded-md border-2 border-ring bg-background text-foreground text-[14px] font-semibold ring-4 ring-ring/15 outline-none" />
+              <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-[12px] font-semibold text-muted-foreground">kg</span>
+            </div>
+            <div class="mt-1.5 text-[12px] text-primary font-semibold">Focused</div>
+          </div>
+          <div>
+            <label class="block text-[13px] font-semibold mb-1.5">重量</label>
+            <input type="text" value="-10" class="num w-full h-11 px-3.5 rounded-md border-2 border-destructive bg-background text-foreground text-[14px] font-semibold outline-none" />
+            <div class="mt-1.5 flex items-center gap-1 text-[12px] text-destructive font-semibold">
+              <span class="ico-16"><i data-lucide="alert-circle"></i></span>
+              重量需要大於 0
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="mt-6">
+        <h3 class="text-[15px] font-bold tracking-[-0.01em]">Card</h3>
+        <div class="mt-3 rounded-lg border border-border bg-card p-6">
+          <div class="grid md:grid-cols-2 gap-4">
+            <!-- session card -->
+            <div class="rounded-lg border border-border bg-card p-5 shadow-ds-sm">
+              <div class="flex items-center justify-between">
+                <span class="inline-flex items-center gap-1 rounded-sm bg-primary text-primary-foreground px-2 py-0.5 text-[10.5px] font-bold tracking-[1.2px] uppercase">
+                  <span style="width:5px;height:5px;border-radius:3px;background:hsl(var(--primary-foreground));"></span>Today
+                </span>
+                <span class="eyebrow">WK 03 · #12</span>
+              </div>
+              <div class="mt-3.5 text-[22px] font-bold tracking-[-0.02em]">Push Day · 胸三頭</div>
+              <div class="mt-1 text-[13px] text-muted-foreground num"><span>5</span> 個動作 · <span>52</span> 分鐘</div>
+              <div class="mt-4 pt-4 border-t border-border space-y-2">
+                <div class="flex items-center justify-between text-[13px]">
+                  <span class="flex items-center gap-2 text-foreground"><span class="mono num text-muted-foreground text-[11px]">01</span> Bench Press</span>
+                  <span class="num mono text-muted-foreground">80kg · 4×8</span>
+                </div>
+                <div class="flex items-center justify-between text-[13px]">
+                  <span class="flex items-center gap-2 text-foreground"><span class="mono num text-muted-foreground text-[11px]">02</span> Incline DB Press</span>
+                  <span class="num mono text-muted-foreground">28kg · 3×10</span>
+                </div>
+                <div class="flex items-center justify-between text-[13px]">
+                  <span class="flex items-center gap-2 text-foreground"><span class="mono num text-muted-foreground text-[11px]">03</span> Cable Fly</span>
+                  <span class="num mono text-muted-foreground">20kg · 3×12</span>
+                </div>
+              </div>
+              <button class="mt-4 w-full h-12 rounded-md bg-primary text-primary-foreground font-bold text-[14px] inline-flex items-center justify-center gap-1.5">
+                開始訓練 <span class="ico-16"><i data-lucide="arrow-right"></i></span>
+              </button>
+            </div>
+
+            <!-- stats card with shadow -->
+            <div class="rounded-lg bg-card p-5 shadow-ds-md border border-border">
+              <div class="eyebrow"><span class="dot"></span>THIS WEEK · VS AVG</div>
+              <div class="mt-4 grid grid-cols-3 gap-3">
+                <div>
+                  <div class="text-[10.5px] font-bold tracking-[1.2px] uppercase text-muted-foreground">Steps</div>
+                  <div class="num mt-1.5 text-[22px] font-extrabold tracking-[-0.02em]">7,842</div>
+                  <div class="num mono text-[11px] font-semibold text-primary mt-0.5">↑ 12%</div>
+                </div>
+                <div class="border-l border-border pl-3">
+                  <div class="text-[10.5px] font-bold tracking-[1.2px] uppercase text-muted-foreground">Volume</div>
+                  <div class="num mt-1.5 text-[22px] font-extrabold tracking-[-0.02em]">5.8K<span class="text-[11px] text-muted-foreground font-semibold align-top ml-0.5">kg</span></div>
+                  <div class="num mono text-[11px] font-semibold text-primary mt-0.5">↑ 8%</div>
+                </div>
+                <div class="border-l border-border pl-3">
+                  <div class="text-[10.5px] font-bold tracking-[1.2px] uppercase text-muted-foreground">Active</div>
+                  <div class="num mt-1.5 text-[22px] font-extrabold tracking-[-0.02em]">64<span class="text-[11px] text-muted-foreground font-semibold align-top ml-0.5">min</span></div>
+                  <div class="num mono text-[11px] font-semibold text-primary mt-0.5">↑ 14%</div>
+                </div>
+              </div>
+              <div class="mt-5 pt-4 border-t border-border">
+                <div class="text-[13.5px] leading-[1.55] text-foreground">
+                  上週你的訓練量增加了 <span class="text-primary font-bold num">+8%</span>，但休息天減少了。<br />
+                  <span class="text-muted-foreground">建議這週插一天完整 rest day。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badge -->
+      <div class="mt-6">
+        <h3 class="text-[15px] font-bold tracking-[-0.01em]">Badge</h3>
+        <div class="mt-3 rounded-lg border border-border bg-card p-6">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10.5px] font-bold tracking-[1.2px] uppercase bg-secondary text-secondary-foreground">Default</span>
+            <span class="inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10.5px] font-bold tracking-[1.2px] uppercase bg-success text-success-foreground">
+              <span class="ico-16"><i data-lucide="check"></i></span>Success · PR
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10.5px] font-bold tracking-[1.2px] uppercase bg-warning text-warning-foreground">
+              <span class="ico-16"><i data-lucide="alert-triangle"></i></span>Warning · RPE 9
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10.5px] font-bold tracking-[1.2px] uppercase border border-border text-muted-foreground">Outline · Wk 03</span>
+            <span class="inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10.5px] font-bold tracking-[1.2px] uppercase bg-primary text-primary-foreground">
+              <span style="width:5px;height:5px;border-radius:3px;background:hsl(var(--primary-foreground));"></span>Today
+            </span>
+            <span class="inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10.5px] font-bold tracking-[1.2px] uppercase bg-accent text-accent-foreground border border-primary/20">
+              <span class="ico-16"><i data-lucide="sparkles"></i></span>Coach hint
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dialog -->
+      <div class="mt-6">
+        <h3 class="text-[15px] font-bold tracking-[-0.01em]">Dialog (modal preview)</h3>
+        <div class="mt-3 rounded-lg border border-border bg-muted/40 p-6 md:p-10">
+          <!-- backdrop simulation -->
+          <div class="relative rounded-lg" style="background: hsl(var(--foreground) / 0.35); padding: 24px;">
+            <div class="mx-auto max-w-[420px] rounded-lg bg-card shadow-ds-lg p-6 border border-border">
+              <div class="flex items-start gap-3">
+                <div class="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-warning/15 text-warning grid place-items-center ico-20">
+                  <i data-lucide="alert-triangle"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="text-[17px] font-bold tracking-[-0.015em]">結束本次訓練？</div>
+                  <p class="mt-1.5 text-[13.5px] leading-[1.55] text-muted-foreground">
+                    已完成 <span class="num text-foreground font-semibold">4/5</span> 個動作。未完成的會留在歷史紀錄、下次可以接著做。
+                  </p>
+                </div>
+              </div>
+              <div class="mt-5 flex justify-end gap-2">
+                <button class="h-10 px-4 rounded-md bg-transparent text-muted-foreground font-semibold text-[13.5px] hover:bg-secondary transition-colors duration-200 ease-forge">繼續訓練</button>
+                <button class="h-10 px-4 rounded-md bg-primary text-primary-foreground font-bold text-[13.5px] hover:opacity-90 transition-opacity duration-200 ease-forge">結束並儲存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast -->
+      <div class="mt-6">
+        <h3 class="text-[15px] font-bold tracking-[-0.01em]">Toast</h3>
+        <div class="mt-3 rounded-lg border border-border bg-card p-6 space-y-2.5 max-w-[460px]">
+          <div class="flex items-start gap-3 rounded-md border border-border bg-card shadow-ds-md p-3.5">
+            <div class="shrink-0 mt-0.5 w-7 h-7 rounded-full bg-success/15 text-success grid place-items-center ico-16">
+              <i data-lucide="check"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[14px] font-bold text-foreground">紀錄已儲存</div>
+              <div class="text-[12.5px] text-muted-foreground mt-0.5">Push Day · 5 個動作 · 51 分鐘</div>
+            </div>
+            <button class="text-muted-foreground hover:text-foreground transition-colors"><span class="ico-16"><i data-lucide="x"></i></span></button>
+          </div>
+
+          <div class="flex items-start gap-3 rounded-md border border-destructive/30 bg-card shadow-ds-md p-3.5">
+            <div class="shrink-0 mt-0.5 w-7 h-7 rounded-full bg-destructive/15 text-destructive grid place-items-center ico-16">
+              <i data-lucide="alert-circle"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[14px] font-bold text-foreground">沒辦法同步到雲端</div>
+              <div class="text-[12.5px] text-muted-foreground mt-0.5">紀錄已存在本機。連上網會自動補上。</div>
+            </div>
+            <button class="text-muted-foreground hover:text-foreground transition-colors"><span class="ico-16"><i data-lucide="x"></i></span></button>
+          </div>
+
+          <div class="flex items-start gap-3 rounded-md border border-border bg-card shadow-ds-md p-3.5">
+            <div class="shrink-0 mt-0.5 w-7 h-7 rounded-full bg-accent text-accent-foreground grid place-items-center ico-16">
+              <i data-lucide="info"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[14px] font-bold text-foreground">明天是腿日</div>
+              <div class="text-[12.5px] text-muted-foreground mt-0.5">建議今晚多睡 30 分鐘。</div>
+            </div>
+            <button class="text-muted-foreground hover:text-foreground transition-colors"><span class="ico-16"><i data-lucide="x"></i></span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BottomNav -->
+      <div class="mt-6">
+        <h3 class="text-[15px] font-bold tracking-[-0.01em]">BottomNav · 4 tabs</h3>
+        <div class="mt-3 rounded-lg border border-border bg-card p-6 md:p-8">
+          <div class="mx-auto max-w-[393px] rounded-xl overflow-hidden border border-border" style="background: hsl(var(--background));">
+            <!-- preview content -->
+            <div class="px-5 pt-7 pb-6">
+              <div class="eyebrow"><span class="dot"></span>TUE · 12 MAY</div>
+              <div class="mt-2 text-[24px] font-bold tracking-[-0.02em]">早安，Alex.</div>
+              <div class="mt-4 rounded-lg border border-border bg-card p-4">
+                <div class="text-[10.5px] font-bold tracking-[1.2px] uppercase text-primary">Today · Session</div>
+                <div class="mt-2.5 text-[18px] font-bold tracking-[-0.015em]">Push Day · 胸三頭</div>
+                <div class="mt-0.5 text-[12.5px] text-muted-foreground num">5 個動作 · 52 分鐘</div>
+              </div>
+            </div>
+
+            <div class="border-t border-border bg-background flex items-stretch justify-around px-2 pt-2.5 pb-5">
+              <button class="flex-1 flex flex-col items-center gap-1 py-1 text-primary">
+                <span class="ico-24"><i data-lucide="calendar-check-2"></i></span>
+                <span class="text-[11px] font-bold tracking-[0.2px]">今天</span>
+              </button>
+              <button class="flex-1 flex flex-col items-center gap-1 py-1 text-muted-foreground hover:text-foreground transition-colors duration-200">
+                <span class="ico-24"><i data-lucide="list-checks"></i></span>
+                <span class="text-[11px] font-semibold tracking-[0.2px]">課表</span>
+              </button>
+              <button class="flex-1 flex flex-col items-center gap-1 py-1 text-muted-foreground hover:text-foreground transition-colors duration-200">
+                <span class="ico-24"><i data-lucide="dumbbell"></i></span>
+                <span class="text-[11px] font-semibold tracking-[0.2px]">動作</span>
+              </button>
+              <button class="flex-1 flex flex-col items-center gap-1 py-1 text-muted-foreground hover:text-foreground transition-colors duration-200">
+                <span class="ico-24"><i data-lucide="bar-chart-3"></i></span>
+                <span class="text-[11px] font-semibold tracking-[0.2px]">歷史</span>
+              </button>
+            </div>
+          </div>
+
+          <p class="mt-4 text-[12.5px] text-muted-foreground max-w-[60ch]">
+            底部 nav：hairline 上邊界、active tab 用 primary、其餘 muted。圖示 24px、文字 11px bold/semibold 切換。<strong class="text-foreground">沒有 floating pill、沒有膠囊背景</strong>。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <div class="mt-20 pt-5 border-t border-border text-[12px] text-muted-foreground leading-[1.55]">
+      FitForge Design System v1 · 2026.05.16<br />
+      這份是活的、加新元件就 append；但<strong class="text-foreground">顏色、字、間距、圓角這四件事不准改</strong>。
+    </div>
+  </div>
+
+  <script>
+    // ===== Spacing scale rendering =====
+    (function () {
+      const scale = [
+        { t: '1',  px: 4   },
+        { t: '2',  px: 8   },
+        { t: '3',  px: 12  },
+        { t: '4',  px: 16  },
+        { t: '6',  px: 24  },
+        { t: '8',  px: 32  },
+        { t: '12', px: 48  },
+        { t: '16', px: 64  },
+        { t: '24', px: 96  },
+      ];
+      const target = document.getElementById('spacing-scale');
+      const maxPx = 96;
+      scale.forEach(s => {
+        const row = document.createElement('div');
+        row.className = 'grid grid-cols-[60px_64px_1fr] items-center gap-4 py-1.5 border-b border-dashed border-border last:border-b-0';
+        row.innerHTML = `
+          <div class="flex items-baseline gap-1">
+            <span class="text-[11px] font-bold tracking-[1.2px] uppercase text-muted-foreground">space-</span>
+            <span class="text-[14px] font-extrabold num">${s.t}</span>
+          </div>
+          <div class="mono num text-[11.5px] text-muted-foreground">${s.px}px</div>
+          <div class="relative h-3 flex items-center">
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 h-2.5 rounded-sm bg-primary" style="width: ${s.px / maxPx * 100}%;"></div>
+          </div>
+        `;
+        target.appendChild(row);
+      });
+    })();
+
+    // ===== Theme toggle =====
+    (function () {
+      const root = document.documentElement;
+      const lb = document.getElementById('toggle-light');
+      const db = document.getElementById('toggle-dark');
+      const sync = () => {
+        const dark = root.classList.contains('dark');
+        lb.style.background = !dark ? 'hsl(var(--primary))' : 'transparent';
+        lb.style.color = !dark ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))';
+        db.style.background =  dark ? 'hsl(var(--primary))' : 'transparent';
+        db.style.color =  dark ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))';
+      };
+      const apply = (dark) => {
+        root.classList.toggle('dark', dark);
+        try { localStorage.setItem('fitforge-theme', dark ? 'dark' : 'light'); } catch (e) {}
+        sync();
+      };
+      lb.addEventListener('click', () => apply(false));
+      db.addEventListener('click', () => apply(true));
+      let saved = null;
+      try { saved = localStorage.getItem('fitforge-theme'); } catch (e) {}
+      apply(saved === 'dark');
+    })();
+
+    // ===== Motion demos =====
+    (function () {
+      const pr = document.getElementById('demo-pr');
+      pr.addEventListener('click', () => {
+        pr.classList.remove('pr-anim');
+        void pr.offsetWidth;
+        pr.classList.add('pr-anim');
+      });
+      const slide = document.getElementById('demo-slide');
+      const target = document.getElementById('slide-target');
+      slide.addEventListener('click', () => {
+        target.classList.remove('hidden', 'slide-anim');
+        void target.offsetWidth;
+        target.classList.add('slide-anim');
+        clearTimeout(window.__sl);
+        window.__sl = setTimeout(() => target.classList.add('hidden'), 2600);
+      });
+    })();
+
+    // ===== Lucide icons =====
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

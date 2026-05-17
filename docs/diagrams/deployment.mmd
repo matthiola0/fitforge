@@ -1,0 +1,12 @@
+%% V1 Deployment Pipeline
+%% 對應 02-system-architecture.md §8
+
+graph LR
+    Dev[開發者本機] -->|git push| GH[GitHub Repo]
+    GH -->|webhook| Vercel[Vercel Build]
+    Vercel -->|build pnpm + vite| Artifact[靜態檔案]
+    Artifact --> CDN[Vercel Edge CDN]
+    User[用戶瀏覽器] -->|HTTPS| CDN
+
+    style Vercel fill:#000,color:#fff
+    style CDN fill:#fff4e1

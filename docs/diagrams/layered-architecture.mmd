@@ -1,0 +1,51 @@
+%% Layered Architecture
+%% 對應 02-system-architecture.md §2
+
+graph TB
+    subgraph Presentation["Presentation Layer (packages/web/src/app)"]
+        Pages[Pages<br/>/today, /plans/:id, /workout/:id...]
+        Components[Components<br/>shadcn/ui + 業務組件]
+    end
+
+    subgraph Application["Application Layer (packages/web/src/features)"]
+        Hooks[React Hooks<br/>useWorkout, usePlans, useExercises]
+        UIStore[UI Store<br/>Zustand: theme, modal, draft form]
+    end
+
+    subgraph Domain["Domain Layer (packages/core/src/domain)"]
+        Services[Domain Services<br/>WorkoutEngine, PlanService, RestTimer]
+        Models[Domain Models<br/>Plan, Exercise, Workout, Set, SessionState]
+        Ports[Ports / Interfaces<br/>AIPort, ClockPort, IdPort]
+    end
+
+    subgraph Data["Data Layer (packages/core/src/data)"]
+        Repos[Repositories<br/>PlanRepo, ExerciseRepo, WorkoutRepo]
+        Schemas[RxDB Schemas<br/>+ validators]
+        Migrations[Migrations<br/>V1.0.0, V1.1.0...]
+    end
+
+    subgraph Infrastructure["Infrastructure"]
+        RxDB[(RxDB Instance<br/>Dexie storage adapter)]
+        IDB[(IndexedDB)]
+        CacheAPI[(Cache Storage)]
+        SW[Service Worker<br/>Workbox]
+    end
+
+    Pages --> Components
+    Pages --> Hooks
+    Components --> Hooks
+    Hooks --> UIStore
+    Hooks --> Services
+    Services --> Models
+    Services --> Repos
+    Services --> Ports
+    Repos --> Schemas
+    Schemas --> RxDB
+    RxDB --> IDB
+    SW --> CacheAPI
+
+    style Presentation fill:#e3f2fd
+    style Application fill:#fff3e0
+    style Domain fill:#f3e5f5
+    style Data fill:#e8f5e9
+    style Infrastructure fill:#fce4ec

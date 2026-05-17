@@ -1,0 +1,41 @@
+/**
+ * FitForge — Dark mode design tokens
+ *
+ * 從 docs/design/system/tokens.html 抽出。
+ * 直接貼入 packages/web/src/styles/globals.css 的 .dark 區塊。
+ */
+.dark {
+  /* Surfaces */
+  --background: 240 10% 7%;        /* #10101A — warm carbon */
+  --foreground: 30 20% 95%;        /* #F4F1EA — warm white */
+  --card: 240 8% 10%;              /* #171720 */
+  --card-foreground: 30 20% 95%;
+
+  /* Brand */
+  --primary: 8 85% 62%;            /* #EE6A52 — punchier in dark */
+  --primary-foreground: 240 30% 8%;
+
+  /* Surfaces (utility) */
+  --secondary: 240 6% 16%;
+  --secondary-foreground: 30 20% 92%;
+  --accent: 240 6% 18%;
+  --accent-foreground: 8 85% 72%;
+  --muted: 240 6% 14%;
+  --muted-foreground: 240 5% 64%;  /* #9F9FA8 */
+
+  /* Semantic */
+  --destructive: 0 72% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 150 58% 50%;
+  --success-foreground: 240 30% 8%;
+  --warning: 38 90% 56%;
+  --warning-foreground: 240 30% 8%;
+
+  /* UI */
+  --border: 240 6% 20%;
+  --input: 240 6% 22%;
+  --ring: 8 85% 62%;
+
+  /* Shadow */
+  --shadow-color: 0 0% 0%;
+}

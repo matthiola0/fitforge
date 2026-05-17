@@ -1,0 +1,115 @@
+%% Entity Relationship Diagram
+%% 對應 04-data-model.md §2
+
+erDiagram
+    USER ||--o{ PLAN : owns
+    USER ||--o{ WORKOUT : owns
+    USER ||--|| SETTINGS : has
+    USER ||--|| ONBOARDING_PROFILE : has
+
+    PLAN ||--o{ PLAN_DAY : contains
+    PLAN_DAY ||--o{ PLAN_EXERCISE : contains
+    PLAN_EXERCISE }o--|| EXERCISE : references
+
+    WORKOUT ||--o{ WORKOUT_EXERCISE : contains
+    WORKOUT_EXERCISE }o--|| EXERCISE : references
+    WORKOUT_EXERCISE ||--o{ SET : contains
+    WORKOUT }o--|| PLAN : "started from (nullable)"
+    WORKOUT }o--|| PLAN_DAY : "started from (nullable)"
+
+    EXERCISE {
+        string id PK
+        string nameZh
+        string nameEn
+        string slug UK
+        string[] muscleGroups
+        string[] equipment
+        string difficulty
+        string lottieAssetId
+        string description
+        string[] tips
+        string[] commonMistakes
+    }
+
+    PLAN {
+        string id PK
+        string userId FK
+        string name
+        string description
+        boolean isPreset
+        boolean isActive
+        string createdAt
+        string updatedAt
+        string deletedAt
+    }
+
+    PLAN_DAY {
+        string id PK
+        string planId FK
+        number order
+        string name
+        string focusMuscleGroups
+    }
+
+    PLAN_EXERCISE {
+        string id PK
+        string planDayId FK
+        string exerciseId FK
+        number order
+        number targetSets
+        number targetRepsMin
+        number targetRepsMax
+        number restSeconds
+        string notes
+    }
+
+    WORKOUT {
+        string id PK
+        string userId FK
+        string planId FK "nullable"
+        string planDayId FK "nullable"
+        string status
+        string startedAt
+        string endedAt
+        number durationSeconds
+        string notes
+    }
+
+    WORKOUT_EXERCISE {
+        string id PK
+        string workoutId FK
+        string exerciseId FK
+        number order
+    }
+
+    SET {
+        string id PK
+        string workoutExerciseId FK
+        number setNumber
+        number weight
+        string weightUnit
+        number reps
+        number rpe
+        boolean isWarmup
+        boolean isCompleted
+        string completedAt
+    }
+
+    SETTINGS {
+        string userId PK
+        string weightUnit
+        string theme
+        boolean hapticsEnabled
+        boolean soundEnabled
+        number defaultRestSeconds
+        string locale
+    }
+
+    ONBOARDING_PROFILE {
+        string userId PK
+        string goal
+        string trainingFrequency
+        string[] availableEquipment
+        string experienceLevel
+        string completedAt
+    }

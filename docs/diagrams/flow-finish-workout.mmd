@@ -1,0 +1,19 @@
+%% Sequence: Finish Workout
+%% 對應 02-system-architecture.md §4.3
+
+sequenceDiagram
+    actor User as 用戶
+    participant UI as WorkoutSessionPage
+    participant Hook as useFinishWorkout
+    participant Engine as WorkoutEngine
+    participant Stats as StatsService
+    participant Repo as WorkoutRepository
+
+    User->>UI: 點「結束訓練」
+    UI->>Hook: finishWorkout(sessionId)
+    Hook->>Engine: finalize(sessionId)
+    Engine->>Repo: update({status: 'completed', endedAt: now})
+    Engine->>Stats: computeSummary(session)
+    Stats-->>Engine: { duration, totalVolume, setCount }
+    Engine-->>Hook: summary
+    Hook-->>UI: navigate(/workout/:id/summary)

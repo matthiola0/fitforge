@@ -1,0 +1,20 @@
+%% C4 Level 1 — System Context
+%% 對應 SDD.md §2.1
+
+graph TB
+    User((健身新手<br/>用戶))
+    App[FitForge PWA<br/>瀏覽器中執行]
+    Browser[瀏覽器<br/>Service Worker + IndexedDB]
+    CDN[Vercel CDN<br/>靜態資源]
+    LottieCDN[LottieFiles CDN<br/>動作動畫]
+
+    User -->|安裝到主畫面/開啟| App
+    App -->|首載 / 更新| CDN
+    App -->|預載動畫| LottieCDN
+    App <-->|讀寫資料| Browser
+
+    style User fill:#ffe4b5
+    style App fill:#a8d8ea
+    style Browser fill:#d4f4dd
+    style CDN fill:#f4d4d4
+    style LottieCDN fill:#f4d4d4

@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · Logo & Icons</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #FDFCFA;
+      --fg: #17181F;
+      --muted: #6B6D77;
+      --border: #E1DDD7;
+      --card: #FFFFFF;
+      --primary: #E14B36;
+      --primary-fg: #FFFFFF;
+      --accent: #FFEBE5;
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .num { font-variant-numeric: tabular-nums lining-nums; }
+    .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.8px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .eyebrow .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: var(--primary); vertical-align: 1px; margin-right: 8px;
+    }
+    .h-num {
+      display: inline-block; min-width: 42px;
+      font-weight: 800; color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; }
+    code.tok {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; padding: 1px 6px; border-radius: 4px;
+      background: #F0EEEA; color: var(--fg);
+      border: 1px solid var(--border);
+    }
+    /* checker bg for transparent surfaces */
+    .checker {
+      background-image:
+        linear-gradient(45deg, #EEEAE3 25%, transparent 25%),
+        linear-gradient(-45deg, #EEEAE3 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #EEEAE3 75%),
+        linear-gradient(-45deg, transparent 75%, #EEEAE3 75%);
+      background-size: 12px 12px;
+      background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+      background-color: #F7F4ED;
+    }
+    .dark-stage {
+      background: #10101A;
+      color: #F4F1EA;
+    }
+    .ios-radius { border-radius: 22.37%; } /* iOS squircle approximation */
+    pre.svg-source {
+      background: #0F0F12;
+      color: #E8E4DA;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      line-height: 1.55;
+      padding: 18px 20px;
+      border-radius: 10px;
+      overflow-x: auto;
+      tab-size: 2;
+    }
+    pre.svg-source .tag { color: #F4A106; }
+    pre.svg-source .attr { color: #9F9FA8; }
+    pre.svg-source .val { color: #EE6A52; }
+    pre.svg-source .comment { color: #5F6068; font-style: italic; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- ================================================================
+       SVG DEFINITIONS — single source of truth for every mark
+       ================================================================ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+
+      <!-- The pure mark, no background. Composed from primitive shapes (stem + two arms + two plates)
+           so it scales crisply from 16px to 512px and the dumbbell read stays visible at every size.
+           Fill is left UNSET — the using <svg> sets `fill="..."` and it cascades into the shadow tree. -->
+      <symbol id="ff-mark" viewBox="0 0 64 64">
+        <!-- Stem (vertical pill) -->
+        <rect x="16" y="11" width="14" height="46" rx="7"/>
+        <!-- Top arm (extends right from stem, rounded right cap) -->
+        <rect x="16" y="11" width="24" height="14" rx="7"/>
+        <!-- Top dumbbell plate (sits proud of the arm to read as a weight) -->
+        <circle cx="45" cy="18" r="8.5"/>
+        <!-- Mid arm (shorter, classic F proportion) -->
+        <rect x="16" y="28" width="20" height="12" rx="6"/>
+        <!-- Mid dumbbell plate -->
+        <circle cx="40" cy="34" r="7"/>
+      </symbol>
+
+      <!-- Horizontal wordmark at native 32px height.
+           viewBox is 168x32 — 32px square mark + 8px gap + "FitForge" wordmark.
+           Inner <use> gets its own explicit fill so it doesn't depend on inherited color. -->
+      <symbol id="ff-wordmark" viewBox="0 0 168 32">
+        <use href="#ff-mark" width="32" height="32" fill="#E14B36"/>
+        <text x="40" y="22"
+              font-family="'Inter','Noto Sans TC',sans-serif"
+              font-weight="700"
+              font-size="22"
+              letter-spacing="-0.44"
+              fill="#17181F">FitForge</text>
+      </symbol>
+
+      <!-- Same wordmark but inverted for dark contexts -->
+      <symbol id="ff-wordmark-dark" viewBox="0 0 168 32">
+        <use href="#ff-mark" width="32" height="32" fill="#EE6A52"/>
+        <text x="40" y="22"
+              font-family="'Inter','Noto Sans TC',sans-serif"
+              font-weight="700"
+              font-size="22"
+              letter-spacing="-0.44"
+              fill="#F4F1EA">FitForge</text>
+      </symbol>
+
+      <!-- App icon — filled primary square, white mark centered with 12% safe area.
+           512x512 reference grid. 12% of 512 = 61.44 — mark area is 389x389 centered. -->
+      <symbol id="ff-app-icon" viewBox="0 0 512 512">
+        <rect width="512" height="512" fill="#E14B36"/>
+        <use href="#ff-mark" x="61.5" y="61.5" width="389" height="389" fill="#FFFFFF"/>
+      </symbol>
+
+      <!-- Maskable icon — same content scaled SMALLER so the 80% center region holds it.
+           Per PWA spec content must live within the central 80% (a 410x410 circle).
+           We fit the mark in 360x360 centered, leaving 76px on each side. -->
+      <symbol id="ff-maskable" viewBox="0 0 512 512">
+        <rect width="512" height="512" fill="#E14B36"/>
+        <use href="#ff-mark" x="76" y="76" width="360" height="360" fill="#FFFFFF"/>
+      </symbol>
+
+      <!-- Safe zone overlay for maskable preview (the 80% central circle + a 60% min-content circle) -->
+      <symbol id="ff-maskable-overlay" viewBox="0 0 512 512">
+        <use href="#ff-maskable"/>
+        <!-- 80% safe area boundary (PWA maskable spec) -->
+        <circle cx="256" cy="256" r="205"
+                fill="none" stroke="#FFFFFF" stroke-width="2"
+                stroke-dasharray="6 6" opacity="0.85"/>
+        <!-- inner 60% minimum content guarantee -->
+        <circle cx="256" cy="256" r="154"
+                fill="none" stroke="#FFFFFF" stroke-width="1.5"
+                stroke-dasharray="3 5" opacity="0.55"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="max-w-5xl mx-auto px-6 md:px-9 pt-16 pb-24">
+
+    <!-- MASTHEAD -->
+    <div class="eyebrow"><span class="dot"></span>FITFORGE · BRAND · LOGO & ICONS</div>
+    <h1 class="mt-3 text-[44px] md:text-[56px] font-extrabold tracking-[-0.04em] leading-[1.02]">
+      一個 mark、<br />
+      <span style="color: var(--primary);">六種尺寸都成立</span>。
+    </h1>
+    <div class="mt-6 py-3.5 border-t border-b border-border flex flex-wrap justify-between gap-3 text-[12px]" style="color: var(--muted);">
+      <span><strong style="color: var(--fg);">基底</strong> · 64×64 grid</span>
+      <span><strong style="color: var(--fg);">主色</strong> · #E14B36</span>
+      <span><strong style="color: var(--fg);">字型</strong> · Inter 700 / -0.02em</span>
+      <span class="mono">2026.05.16</span>
+    </div>
+
+    <!-- ============== WHY THIS DESIGN ============== -->
+    <section class="mt-12">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">00</span>為何選這個視覺</h2>
+      <div class="mt-5 grid md:grid-cols-[1.2fr_1fr] gap-4 items-stretch">
+        <div class="card p-7">
+          <p class="text-[20px] leading-[1.45] tracking-[-0.015em]">
+            <strong>「F」的兩根橫桿就是啞鈴</strong> — 圓形端點 = 槓片。<br />
+            放大看是啞鈴、縮到 16px 仍是清楚的 F。
+          </p>
+          <p class="mt-4 text-[14px] leading-[1.55]" style="color: var(--muted);">
+            字面意義（健身工具）＋ 字母（品牌）合而為一，不靠任何文字輔助。圓形端點同時呼應 forge 火星、爐火的暖意 — 對應品牌色橙紅。
+          </p>
+        </div>
+        <div class="card p-7 flex items-center justify-center">
+          <svg width="180" height="180" viewBox="0 0 64 64" fill="#E14B36">
+            <use href="#ff-mark"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 1. HORIZONTAL WORDMARK ============== -->
+    <section class="mt-16">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">01</span>Logo · 橫式 wordmark</h2>
+      <p class="mt-2 text-[15px] leading-[1.55]" style="color: var(--muted);">圖標 + 文字並排、總高 32px。Inter 700、字距 -0.02em、字級 22px。</p>
+
+      <!-- Light surface, native 32h -->
+      <div class="mt-5 card p-7">
+        <div class="eyebrow"><span class="dot"></span>NATIVE · 32H · LIGHT SURFACE</div>
+        <div class="mt-5 flex items-center" style="height: 96px;">
+          <svg width="168" height="32" viewBox="0 0 168 32"><use href="#ff-wordmark"/></svg>
+        </div>
+        <div class="mt-4 mono text-[11px]" style="color: var(--muted);">width auto · height 32 · color #E14B36 + #17181F</div>
+      </div>
+
+      <!-- Size scale -->
+      <div class="mt-3 card p-7">
+        <div class="eyebrow"><span class="dot"></span>SIZE SCALE</div>
+        <div class="mt-5 space-y-7">
+          <div class="flex items-center gap-6">
+            <div class="mono text-[11px] w-20" style="color: var(--muted);">h 48</div>
+            <svg width="252" height="48" viewBox="0 0 168 32" preserveAspectRatio="xMinYMid meet"><use href="#ff-wordmark"/></svg>
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="mono text-[11px] w-20" style="color: var(--muted);">h 32 · default</div>
+            <svg width="168" height="32" viewBox="0 0 168 32"><use href="#ff-wordmark"/></svg>
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="mono text-[11px] w-20" style="color: var(--muted);">h 24</div>
+            <svg width="126" height="24" viewBox="0 0 168 32"><use href="#ff-wordmark"/></svg>
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="mono text-[11px] w-20" style="color: var(--muted);">h 18 · min</div>
+            <svg width="95" height="18" viewBox="0 0 168 32"><use href="#ff-wordmark"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- On dark + on primary -->
+      <div class="mt-3 grid md:grid-cols-2 gap-3">
+        <div class="card overflow-hidden">
+          <div class="dark-stage p-7 flex items-center" style="height: 144px;">
+            <svg width="168" height="32" viewBox="0 0 168 32"><use href="#ff-wordmark-dark"/></svg>
+          </div>
+          <div class="p-4 border-t border-border eyebrow" style="background: var(--card);"><span class="dot"></span>ON DARK</div>
+        </div>
+        <div class="card overflow-hidden">
+          <div class="p-7 flex items-center" style="height: 144px; background: var(--primary);">
+            <svg width="168" height="32" viewBox="0 0 168 32">
+              <use href="#ff-mark" x="0" y="0" width="32" height="32" fill="#FFFFFF"/>
+              <text x="40" y="22" font-family="'Inter','Noto Sans TC',sans-serif" font-weight="700" font-size="22" letter-spacing="-0.44" fill="#FFFFFF">FitForge</text>
+            </svg>
+          </div>
+          <div class="p-4 border-t border-border eyebrow" style="background: var(--card);"><span class="dot"></span>ON PRIMARY (全白反白)</div>
+        </div>
+      </div>
+
+      <!-- Clearspace -->
+      <div class="mt-3 card p-7">
+        <div class="eyebrow"><span class="dot"></span>CLEARSPACE · = MARK 高度的 1/2 (16px)</div>
+        <div class="mt-5 inline-block relative">
+          <div class="absolute -inset-4 border border-dashed" style="border-color: var(--primary); opacity: 0.5;"></div>
+          <div class="absolute -top-[18px] left-1/2 -translate-x-1/2 mono text-[10px] px-1.5" style="color: var(--primary); background: var(--card);">16px</div>
+          <svg width="168" height="32" viewBox="0 0 168 32" class="relative"><use href="#ff-wordmark"/></svg>
+        </div>
+        <p class="mt-7 text-[13px]" style="color: var(--muted);">任何情況下 wordmark 周圍至少留 16px (= mark 高度的 50%)。</p>
+      </div>
+    </section>
+
+    <!-- ============== 2. SQUARE MARK ============== -->
+    <section class="mt-16">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">02</span>Logo · 純圖標方形</h2>
+      <p class="mt-2 text-[15px] leading-[1.55]" style="color: var(--muted);">用於 favicon、avatar、小空間。同一個 SVG、任意尺寸都銳利。</p>
+
+      <!-- Size matrix -->
+      <div class="mt-5 card p-7">
+        <div class="eyebrow"><span class="dot"></span>SIZES · LIVE SVG</div>
+        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-5">
+          <div class="flex flex-col items-center text-center">
+            <div class="checker p-3 rounded-md inline-block">
+              <svg width="192" height="192" viewBox="0 0 64 64" fill="#E14B36"><use href="#ff-mark"/></svg>
+            </div>
+            <div class="mt-3 text-[14px] font-bold num">192 × 192</div>
+            <div class="mono text-[11px]" style="color: var(--muted);">PWA · hi-res</div>
+          </div>
+          <div class="flex flex-col items-center text-center">
+            <div class="checker p-3 rounded-md inline-block flex items-center justify-center" style="min-height: 220px; min-width: 220px;">
+              <svg width="96" height="96" viewBox="0 0 64 64" fill="#E14B36"><use href="#ff-mark"/></svg>
+            </div>
+            <div class="mt-3 text-[14px] font-bold num">96 × 96</div>
+            <div class="mono text-[11px]" style="color: var(--muted);">retina header</div>
+          </div>
+          <div class="flex flex-col items-center text-center">
+            <div class="checker p-3 rounded-md inline-block flex items-center justify-center" style="min-height: 220px; min-width: 220px;">
+              <svg width="32" height="32" viewBox="0 0 64 64" fill="#E14B36"><use href="#ff-mark"/></svg>
+            </div>
+            <div class="mt-3 text-[14px] font-bold num">32 × 32</div>
+            <div class="mono text-[11px]" style="color: var(--muted);">favicon</div>
+          </div>
+          <div class="flex flex-col items-center text-center">
+            <div class="checker p-3 rounded-md inline-block flex items-center justify-center" style="min-height: 220px; min-width: 220px;">
+              <svg width="16" height="16" viewBox="0 0 64 64" fill="#E14B36" shape-rendering="geometricPrecision"><use href="#ff-mark"/></svg>
+            </div>
+            <div class="mt-3 text-[14px] font-bold num">16 × 16</div>
+            <div class="mono text-[11px]" style="color: var(--muted);">tab favicon · 仍可讀</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab strip mockup at 16px -->
+      <div class="mt-3 card p-7">
+        <div class="eyebrow"><span class="dot"></span>IN CONTEXT · BROWSER TAB · 16PX</div>
+        <div class="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-t-lg border border-b-0 max-w-[260px]" style="background: var(--card); border-color: var(--border);">
+          <svg width="16" height="16" viewBox="0 0 64 64" fill="#E14B36"><use href="#ff-mark"/></svg>
+          <span class="text-[13px] font-semibold truncate">FitForge · 開始你的第一次訓練</span>
+          <span class="ml-auto text-[14px] leading-none" style="color: var(--muted);">×</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 3. APP ICON ============== -->
+    <section class="mt-16">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">03</span>App Icon · iOS / Android</h2>
+      <p class="mt-2 text-[15px] leading-[1.55]" style="color: var(--muted);">512×512 + 192×192。背景 primary、白色主圖、12% safe area。設計時直接方形、iOS 自動套圓角。</p>
+
+      <div class="mt-5 grid md:grid-cols-2 gap-3">
+        <!-- 512 -->
+        <div class="card p-7 flex flex-col items-center">
+          <div class="eyebrow self-stretch"><span class="dot"></span>512 × 512 · SOURCE</div>
+          <div class="mt-5 grid grid-cols-2 gap-4 w-full">
+            <div class="flex flex-col items-center">
+              <svg width="200" height="200" viewBox="0 0 512 512" class="shadow-sm" style="border: 1px solid var(--border);"><use href="#ff-app-icon"/></svg>
+              <div class="mt-2.5 mono text-[10.5px]" style="color: var(--muted);">square · design master</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <svg width="200" height="200" viewBox="0 0 512 512" class="ios-radius shadow-sm"><use href="#ff-app-icon"/></svg>
+              <div class="mt-2.5 mono text-[10.5px]" style="color: var(--muted);">iOS squircle preview</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 192 -->
+        <div class="card p-7 flex flex-col items-center">
+          <div class="eyebrow self-stretch"><span class="dot"></span>192 × 192</div>
+          <div class="mt-5 flex items-center gap-7">
+            <div class="flex flex-col items-center">
+              <svg width="120" height="120" viewBox="0 0 512 512" class="shadow-sm" style="border: 1px solid var(--border);"><use href="#ff-app-icon"/></svg>
+              <div class="mt-2.5 mono text-[10.5px]" style="color: var(--muted);">192 native</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <svg width="64" height="64" viewBox="0 0 512 512" class="shadow-sm" style="border: 1px solid var(--border); border-radius: 14px;"><use href="#ff-app-icon"/></svg>
+              <div class="mt-2.5 mono text-[10.5px]" style="color: var(--muted);">launcher size</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home screen mockups -->
+      <div class="mt-3 grid md:grid-cols-2 gap-3">
+        <div class="card overflow-hidden">
+          <div class="p-7" style="background: linear-gradient(160deg, #2a3a55 0%, #1a2540 100%);">
+            <div class="grid grid-cols-4 gap-4 justify-items-center">
+              <!-- some neutral icons + FitForge -->
+              <div class="w-[60px] h-[60px] rounded-[14px] flex items-center justify-center text-white text-[10px] font-bold" style="background: linear-gradient(180deg,#0c84fe,#0a6bd9);">Phone</div>
+              <div class="w-[60px] h-[60px] rounded-[14px] flex items-center justify-center text-white text-[10px] font-bold" style="background: linear-gradient(180deg,#34c759,#28a745);">Mail</div>
+              <div class="w-[60px] h-[60px] rounded-[14px] flex items-center justify-center text-white text-[10px] font-bold" style="background: linear-gradient(180deg,#ff9500,#cc7700);">Notes</div>
+              <div class="flex flex-col items-center gap-1">
+                <svg width="60" height="60" viewBox="0 0 512 512" class="ios-radius"><use href="#ff-app-icon"/></svg>
+              </div>
+              <div class="w-[60px] h-[60px] rounded-[14px] flex items-center justify-center text-white text-[10px] font-bold" style="background: #1c1c1e;">Music</div>
+              <div class="w-[60px] h-[60px] rounded-[14px] flex items-center justify-center text-white text-[10px] font-bold" style="background: linear-gradient(180deg,#5856d6,#3634a3);">Calendar</div>
+              <div class="w-[60px] h-[60px] rounded-[14px] flex items-center justify-center text-white text-[10px] font-bold" style="background: #f2f2f7; color: #1c1c1e;">Photos</div>
+              <div class="w-[60px] h-[60px] rounded-[14px] flex items-center justify-center text-white text-[10px] font-bold" style="background: linear-gradient(180deg,#5ac8fa,#0091ff);">Maps</div>
+            </div>
+            <div class="mt-3 text-center text-[10px] font-semibold text-white/85">FitForge</div>
+          </div>
+          <div class="p-4 border-t border-border eyebrow" style="background: var(--card);"><span class="dot"></span>iOS HOME SCREEN</div>
+        </div>
+
+        <div class="card overflow-hidden">
+          <div class="p-7" style="background: linear-gradient(160deg, #2a4d3a 0%, #1a3525 100%);">
+            <div class="grid grid-cols-4 gap-4 justify-items-center">
+              <div class="w-[60px] h-[60px] rounded-full flex items-center justify-center text-white text-[10px] font-bold" style="background:#ea4335;">Gmail</div>
+              <div class="w-[60px] h-[60px] rounded-full flex items-center justify-center text-white text-[10px] font-bold" style="background:#1a73e8;">Chrome</div>
+              <div class="w-[60px] h-[60px] rounded-full flex items-center justify-center text-white text-[10px] font-bold" style="background:#0f9d58;">Pay</div>
+              <div class="flex flex-col items-center">
+                <svg width="60" height="60" viewBox="0 0 512 512" style="border-radius: 50%;"><use href="#ff-maskable"/></svg>
+              </div>
+              <div class="w-[60px] h-[60px] rounded-full flex items-center justify-center text-white text-[10px] font-bold" style="background:#ff0000;">YouTube</div>
+              <div class="w-[60px] h-[60px] rounded-full flex items-center justify-center text-white text-[10px] font-bold" style="background:#fbbc04; color:#202124;">Maps</div>
+              <div class="w-[60px] h-[60px] rounded-full flex items-center justify-center text-white text-[10px] font-bold" style="background:#202124;">Files</div>
+              <div class="w-[60px] h-[60px] rounded-full flex items-center justify-center text-white text-[10px] font-bold" style="background:#1da1f2;">Twitter</div>
+            </div>
+            <div class="mt-3 text-center text-[10px] font-semibold text-white/85">FitForge</div>
+          </div>
+          <div class="p-4 border-t border-border eyebrow" style="background: var(--card);"><span class="dot"></span>ANDROID (圓形 mask)</div>
+        </div>
+      </div>
+
+      <!-- Safe area diagram -->
+      <div class="mt-3 card p-7">
+        <div class="eyebrow"><span class="dot"></span>SAFE AREA · 12% INSET</div>
+        <div class="mt-5 grid grid-cols-1 md:grid-cols-[200px_1fr] gap-7 items-center">
+          <div class="flex justify-center md:justify-start">
+            <div class="relative" style="width: 200px; height: 200px;">
+              <svg width="200" height="200" viewBox="0 0 512 512" style="border: 1px solid var(--border); border-radius: 12px;"><use href="#ff-app-icon"/></svg>
+              <!-- 12% safe rect overlay -->
+              <div class="absolute pointer-events-none" style="left: 12%; top: 12%; right: 12%; bottom: 12%; border: 1.5px dashed rgba(255,255,255,0.85); border-radius: 4px;"></div>
+              <div class="absolute mono text-[9px] px-1 rounded-sm" style="left: 12%; top: 3px; color: #FFFFFF; background: rgba(0,0,0,.35);">12% safe</div>
+            </div>
+          </div>
+          <div>
+            <p class="text-[14px] leading-[1.55]">
+              主圖在中央 <strong class="num">76%</strong> 區域內 — 上下左右各留 <strong class="num">12%</strong>。<br />
+              iOS 與 Android launcher 的角落裁切都不會吃到 mark。
+            </p>
+            <p class="mt-3 text-[13.5px]" style="color: var(--muted);">背景純色、不用漸層、不用陰影 — iOS 與 Android 的系統 chrome 會自己處理。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 4. MASKABLE ICON ============== -->
+    <section class="mt-16">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">04</span>Maskable Icon · Android</h2>
+      <p class="mt-2 text-[15px] leading-[1.55]" style="color: var(--muted);">512×512、主圖在中央 80% 安全區內。Android 會以多種形狀裁切 — 圓形、squircle、teardrop。</p>
+
+      <div class="mt-5 card p-7">
+        <div class="eyebrow"><span class="dot"></span>SAFE ZONE OVERLAY</div>
+        <div class="mt-5 grid grid-cols-1 md:grid-cols-[260px_1fr] gap-7 items-center">
+          <!-- Master with overlay -->
+          <div class="flex justify-center md:justify-start">
+            <svg width="240" height="240" viewBox="0 0 512 512" style="border: 1px solid var(--border); border-radius: 12px;">
+              <use href="#ff-maskable-overlay"/>
+            </svg>
+          </div>
+          <div>
+            <p class="text-[14px] leading-[1.55]">
+              <span class="inline-block w-2.5 h-2.5 rounded-full mr-1 align-middle" style="background:#FFFFFF; border: 1px dashed #999;"></span>
+              <strong>外圈虛線 · 半徑 80%</strong> — 主要視覺絕對不能超過這條線。<br />
+              <span class="inline-block w-2.5 h-2.5 rounded-full mr-1 align-middle" style="background:#FFFFFF; border: 1px dotted #999; opacity: 0.7;"></span>
+              <strong>內圈點線 · 半徑 60%</strong> — 最緊裁切下也保證可見。
+            </p>
+            <p class="mt-3 text-[13.5px]" style="color: var(--muted);">
+              因為 maskable icon 會被任意形狀裁切、所以 mark 比 iOS app icon 縮得更小一點、用 <strong>15% 邊距</strong> 而不是 12%。
+            </p>
+          </div>
+        </div>
+
+        <!-- Mask preview row -->
+        <div class="mt-7 pt-6 border-t border-dashed border-border">
+          <div class="eyebrow"><span class="dot"></span>MASK PREVIEW · ANDROID 會用這些形狀裁切</div>
+          <div class="mt-5 grid grid-cols-2 md:grid-cols-4 gap-5">
+            <div class="flex flex-col items-center">
+              <svg width="120" height="120" viewBox="0 0 512 512" style="border-radius: 50%;"><use href="#ff-maskable"/></svg>
+              <div class="mt-2.5 text-[12px] font-bold">Circle</div>
+              <div class="mono text-[10px]" style="color: var(--muted);">Pixel · 多數機型</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <svg width="120" height="120" viewBox="0 0 512 512" style="border-radius: 28%;"><use href="#ff-maskable"/></svg>
+              <div class="mt-2.5 text-[12px] font-bold">Squircle</div>
+              <div class="mono text-[10px]" style="color: var(--muted);">Samsung One UI</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <svg width="120" height="120" viewBox="0 0 512 512" style="border-radius: 18% 18% 18% 50% / 18% 18% 18% 50%;"><use href="#ff-maskable"/></svg>
+              <div class="mt-2.5 text-[12px] font-bold">Teardrop</div>
+              <div class="mono text-[10px]" style="color: var(--muted);">舊版 launcher</div>
+            </div>
+            <div class="flex flex-col items-center">
+              <svg width="120" height="120" viewBox="0 0 512 512" style="border-radius: 14%;"><use href="#ff-maskable"/></svg>
+              <div class="mt-2.5 text-[12px] font-bold">Rounded square</div>
+              <div class="mono text-[10px]" style="color: var(--muted);">PWA splash</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 5. APPLE TOUCH ICON ============== -->
+    <section class="mt-16">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">05</span>Apple Touch Icon</h2>
+      <p class="mt-2 text-[15px] leading-[1.55]" style="color: var(--muted);">180×180、無圓角、iOS 自動套圓角。當使用者把 PWA 加到主畫面時使用。</p>
+
+      <div class="mt-5 card p-7">
+        <div class="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-7 items-center">
+          <div class="flex justify-center md:justify-start">
+            <svg width="180" height="180" viewBox="0 0 512 512" style="border: 1px solid var(--border);"><use href="#ff-app-icon"/></svg>
+          </div>
+          <div>
+            <p class="text-[14px] leading-[1.55]">
+              使用與 App Icon 完全相同的 master、輸出為 <strong>180 × 180 PNG</strong>。<br />
+              絕對不要自己加圓角 — iOS 會切壞。
+            </p>
+            <div class="mt-4 mono text-[11px] p-3 rounded-md" style="background: #F0EEEA; color: var(--fg); border: 1px solid var(--border);">
+              &lt;link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"&gt;
+            </div>
+          </div>
+        </div>
+
+        <!-- Added-to-homescreen mock -->
+        <div class="mt-7 pt-6 border-t border-dashed border-border">
+          <div class="eyebrow"><span class="dot"></span>ADDED TO HOME SCREEN</div>
+          <div class="mt-4 inline-flex items-center gap-3 px-4 py-3 rounded-lg" style="background: #1c1c1e;">
+            <svg width="48" height="48" viewBox="0 0 512 512" class="ios-radius"><use href="#ff-app-icon"/></svg>
+            <div class="text-[12px] font-semibold text-white">FitForge</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== 6. SVG SOURCE ============== -->
+    <section class="mt-16">
+      <h2 class="text-[26px] font-extrabold tracking-[-0.025em]"><span class="h-num">06</span>SVG 源碼</h2>
+      <p class="mt-2 text-[15px] leading-[1.55]" style="color: var(--muted);">
+        單一 mark · 64×64 grid · <code class="tok">fill="currentColor"</code> 可繼承 CSS 顏色。
+      </p>
+
+      <h3 class="mt-6 text-[15px] font-bold tracking-[-0.01em]">Mark (純圖標)</h3>
+<pre class="svg-source mt-3"><span class="comment">&lt;!-- FitForge mark · 64×64 grid · stem + 2 arms + 2 plates --&gt;</span>
+<span class="tag">&lt;svg</span> <span class="attr">xmlns</span>=<span class="val">"http://www.w3.org/2000/svg"</span>
+     <span class="attr">viewBox</span>=<span class="val">"0 0 64 64"</span>
+     <span class="attr">width</span>=<span class="val">"32"</span> <span class="attr">height</span>=<span class="val">"32"</span>
+     <span class="attr">fill</span>=<span class="val">"#E14B36"</span>
+     <span class="attr">role</span>=<span class="val">"img"</span> <span class="attr">aria-label</span>=<span class="val">"FitForge"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- stem --&gt;</span>
+  <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"11"</span> <span class="attr">width</span>=<span class="val">"14"</span> <span class="attr">height</span>=<span class="val">"46"</span> <span class="attr">rx</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- top arm + plate (the upper "dumbbell") --&gt;</span>
+  <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"11"</span> <span class="attr">width</span>=<span class="val">"24"</span> <span class="attr">height</span>=<span class="val">"14"</span> <span class="attr">rx</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;circle</span> <span class="attr">cx</span>=<span class="val">"45"</span> <span class="attr">cy</span>=<span class="val">"18"</span> <span class="attr">r</span>=<span class="val">"8.5"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- mid arm + plate (the lower "dumbbell") --&gt;</span>
+  <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"28"</span> <span class="attr">width</span>=<span class="val">"20"</span> <span class="attr">height</span>=<span class="val">"12"</span> <span class="attr">rx</span>=<span class="val">"6"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;circle</span> <span class="attr">cx</span>=<span class="val">"40"</span> <span class="attr">cy</span>=<span class="val">"34"</span> <span class="attr">r</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/svg&gt;</span></pre>
+
+      <h3 class="mt-7 text-[15px] font-bold tracking-[-0.01em]">Wordmark (橫式)</h3>
+<pre class="svg-source mt-3"><span class="tag">&lt;svg</span> <span class="attr">xmlns</span>=<span class="val">"http://www.w3.org/2000/svg"</span> <span class="attr">viewBox</span>=<span class="val">"0 0 168 32"</span> <span class="attr">height</span>=<span class="val">"32"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- mark, scaled 0.5 to fit 32 --&gt;</span>
+  <span class="tag">&lt;g</span> <span class="attr">fill</span>=<span class="val">"#E14B36"</span> <span class="attr">transform</span>=<span class="val">"scale(0.5)"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"11"</span> <span class="attr">width</span>=<span class="val">"14"</span> <span class="attr">height</span>=<span class="val">"46"</span> <span class="attr">rx</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"11"</span> <span class="attr">width</span>=<span class="val">"24"</span> <span class="attr">height</span>=<span class="val">"14"</span> <span class="attr">rx</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;circle</span> <span class="attr">cx</span>=<span class="val">"45"</span> <span class="attr">cy</span>=<span class="val">"18"</span> <span class="attr">r</span>=<span class="val">"8.5"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"28"</span> <span class="attr">width</span>=<span class="val">"20"</span> <span class="attr">height</span>=<span class="val">"12"</span> <span class="attr">rx</span>=<span class="val">"6"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;circle</span> <span class="attr">cx</span>=<span class="val">"40"</span> <span class="attr">cy</span>=<span class="val">"34"</span> <span class="attr">r</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;/g&gt;</span>
+  <span class="tag">&lt;text</span> <span class="attr">x</span>=<span class="val">"40"</span> <span class="attr">y</span>=<span class="val">"22"</span>
+        <span class="attr">font-family</span>=<span class="val">"Inter, sans-serif"</span>
+        <span class="attr">font-weight</span>=<span class="val">"700"</span> <span class="attr">font-size</span>=<span class="val">"22"</span>
+        <span class="attr">letter-spacing</span>=<span class="val">"-0.44"</span> <span class="attr">fill</span>=<span class="val">"#17181F"</span><span class="tag">&gt;</span>FitForge<span class="tag">&lt;/text&gt;</span>
+<span class="tag">&lt;/svg&gt;</span></pre>
+
+      <h3 class="mt-7 text-[15px] font-bold tracking-[-0.01em]">App Icon (512×512)</h3>
+<pre class="svg-source mt-3"><span class="tag">&lt;svg</span> <span class="attr">xmlns</span>=<span class="val">"http://www.w3.org/2000/svg"</span> <span class="attr">viewBox</span>=<span class="val">"0 0 512 512"</span><span class="tag">&gt;</span>
+  <span class="comment">&lt;!-- primary background, full bleed --&gt;</span>
+  <span class="tag">&lt;rect</span> <span class="attr">width</span>=<span class="val">"512"</span> <span class="attr">height</span>=<span class="val">"512"</span> <span class="attr">fill</span>=<span class="val">"#E14B36"</span><span class="tag">/&gt;</span>
+  <span class="comment">&lt;!-- mark inset 12% on each side, scaled to 389×389 --&gt;</span>
+  <span class="tag">&lt;g</span> <span class="attr">transform</span>=<span class="val">"translate(61.5 61.5) scale(6.08)"</span> <span class="attr">fill</span>=<span class="val">"#FFFFFF"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"11"</span> <span class="attr">width</span>=<span class="val">"14"</span> <span class="attr">height</span>=<span class="val">"46"</span> <span class="attr">rx</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"11"</span> <span class="attr">width</span>=<span class="val">"24"</span> <span class="attr">height</span>=<span class="val">"14"</span> <span class="attr">rx</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;circle</span> <span class="attr">cx</span>=<span class="val">"45"</span> <span class="attr">cy</span>=<span class="val">"18"</span> <span class="attr">r</span>=<span class="val">"8.5"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;rect</span> <span class="attr">x</span>=<span class="val">"16"</span> <span class="attr">y</span>=<span class="val">"28"</span> <span class="attr">width</span>=<span class="val">"20"</span> <span class="attr">height</span>=<span class="val">"12"</span> <span class="attr">rx</span>=<span class="val">"6"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;circle</span> <span class="attr">cx</span>=<span class="val">"40"</span> <span class="attr">cy</span>=<span class="val">"34"</span> <span class="attr">r</span>=<span class="val">"7"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;/g&gt;</span>
+<span class="tag">&lt;/svg&gt;</span></pre>
+
+      <p class="mt-5 text-[13px]" style="color: var(--muted);">
+        所有 PNG 都可從上面的 SVG 直接匯出 (Figma → Export PNG @ 1x/2x/3x、或 <code class="tok">sharp</code> CLI)。<br />
+        Maskable 版本只差 mark 縮放比例：<code class="tok">translate(76 76) scale(5.625)</code> 取代 inset translate。
+      </p>
+    </section>
+
+    <!-- ============== FOOTER ============== -->
+    <div class="mt-20 pt-5 border-t border-border text-[12px] leading-[1.55]" style="color: var(--muted);">
+      FitForge Logo &amp; Icons · 2026.05.16 · <strong style="color: var(--fg);">一個 SVG、所有尺寸</strong>。
+    </div>
+  </div>
+
+</body>
+</html>

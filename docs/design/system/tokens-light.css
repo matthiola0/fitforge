@@ -1,0 +1,47 @@
+/**
+ * FitForge — Light mode design tokens
+ *
+ * 從 docs/design/system/tokens.html 抽出。
+ * 直接貼入 packages/web/src/styles/globals.css 的 :root 區塊。
+ *
+ * HSL 採 space-separated 寫法（無 hsl() 包裹）、Tailwind shadcn/ui 慣例：
+ *   color: hsl(var(--primary) / 0.8);  ← 支援 alpha
+ */
+:root {
+  /* Surfaces */
+  --background: 30 25% 99%;        /* #FDFCFA — warm paper */
+  --foreground: 240 12% 10%;       /* #17181F — near black */
+  --card: 0 0% 100%;               /* #FFFFFF */
+  --card-foreground: 240 12% 10%;
+
+  /* Brand */
+  --primary: 8 78% 55%;            /* #E14B36 — Forge Ember */
+  --primary-foreground: 0 0% 100%;
+
+  /* Surfaces (utility) */
+  --secondary: 30 12% 94%;         /* #F0EEEA — warm grey */
+  --secondary-foreground: 240 12% 18%;
+  --accent: 15 100% 96%;           /* #FFEBE5 — peach wash */
+  --accent-foreground: 8 78% 38%;
+  --muted: 30 8% 95%;
+  --muted-foreground: 240 5% 45%;  /* #6B6D77 */
+
+  /* Semantic */
+  --destructive: 0 78% 52%;        /* #DC2A2A */
+  --destructive-foreground: 0 0% 100%;
+  --success: 150 62% 38%;          /* #229861 */
+  --success-foreground: 0 0% 100%;
+  --warning: 38 94% 50%;           /* #F4A106 */
+  --warning-foreground: 30 30% 12%;
+
+  /* UI */
+  --border: 30 10% 88%;            /* #E1DDD7 */
+  --input: 30 10% 90%;
+  --ring: 8 78% 55%;
+
+  /* Shadow */
+  --shadow-color: 240 30% 12%;
+
+  /* Radius (global default) */
+  --radius: 12px;
+}

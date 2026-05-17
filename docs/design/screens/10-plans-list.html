@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · 課表</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            destructive: { DEFAULT: 'hsl(var(--destructive) / <alpha-value>)', foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)' },
+            success: { DEFAULT: 'hsl(var(--success) / <alpha-value>)', foreground: 'hsl(var(--success-foreground) / <alpha-value>)' },
+            warning: { DEFAULT: 'hsl(var(--warning) / <alpha-value>)', foreground: 'hsl(var(--warning-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'ds-sm': '0 1px 2px 0 hsl(0 0% 0% / 0.06)',
+            'ds-md': '0 8px 24px -6px hsl(0 0% 0% / 0.10), 0 2px 6px -2px hsl(0 0% 0% / 0.06)',
+            'ds-primary': '0 12px 30px -8px hsl(var(--primary) / 0.45), 0 4px 10px -4px hsl(var(--primary) / 0.30)',
+          },
+          transitionTimingFunction: {
+            forge: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          },
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="home-today.css" />
+  <style>
+    /* Extra tokens for this screen (semantic colors used for goal categories) */
+    .theme-light {
+      --destructive: 0 78% 52%;
+      --destructive-foreground: 0 0% 100%;
+      --success: 150 62% 38%;
+      --success-foreground: 0 0% 100%;
+      --warning: 38 94% 50%;
+      --warning-foreground: 30 30% 12%;
+    }
+    .theme-dark {
+      --destructive: 0 72% 58%;
+      --destructive-foreground: 0 0% 100%;
+      --success: 150 58% 50%;
+      --success-foreground: 240 30% 8%;
+      --warning: 38 90% 56%;
+      --warning-foreground: 240 30% 8%;
+    }
+
+    @keyframes live-pulse {
+      0%, 100% { opacity: 1;    transform: scale(1);    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.55); }
+      50%      { opacity: 0.55; transform: scale(0.92); box-shadow: 0 0 0 6px hsl(var(--primary) / 0); }
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 4px;
+      background: hsl(var(--primary));
+      animation: live-pulse 1.8s ease-in-out infinite;
+    }
+
+    /* swipe peek transition */
+    .swipe-shell { position: relative; overflow: hidden; border-radius: 16px; }
+    .swipe-shell .swipe-action {
+      position: absolute; top: 0; bottom: 0; right: 0;
+      display: flex; align-items: center; justify-content: center; gap: 3px;
+      width: 64px;
+      background: hsl(var(--destructive));
+      color: hsl(var(--destructive-foreground));
+      font-size: 11.5px; font-weight: 800; letter-spacing: 0.4px;
+    }
+    .swipe-card-content {
+      transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      background: hsl(var(--card));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============== PAGE CHROME ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-14 pb-12">
+    <div class="stage-eyebrow"><span class="dot"></span>FITFORGE · TAB 02 · 課表 (PLANS LIST)</div>
+    <h1 class="mt-3 text-[36px] md:text-[44px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      課表列表<span class="text-[#E14B36]">.</span>
+    </h1>
+    <p class="mt-3 text-[15px] leading-[1.55] text-[#6B6D77] max-w-[60ch]">
+      三層階級：使用中 (1 個、最大)、自訂課表 (用戶建立、可滑刪)、預設課表 (內建、有預設徽章)。試著點第二張自訂卡的 <strong>更多</strong> 按鈕、或直接點卡片本體切換 swipe-peek 狀態。
+    </p>
+  </div>
+
+  <!-- ============== PHONE STAGE ============== -->
+  <div id="root" class="px-6 pb-20 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== NOTES ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>USING · 視覺最大</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">「正在跑」的 plan 用大卡 + 2px primary 內陰影邊框 + 進度條 + 主 CTA 「繼續」、跟列表其他項目視覺上完全不同層級。Live pulsing dot 視覺強化「現在進行中」。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>SWIPE-DELETE · iOS PATTERN</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">自訂卡片左滑露出紅色刪除動作 (destructive bg + 白色 trash icon + 「刪除」字)。第二張預先展示 peek 狀態、其他可點 ⋯ 按鈕模擬展開。預設課表沒有刪除動作 (不可刪)。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>GOAL 圖示 · 用語意色 不發明色</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">4 個目標分類各自用設計系統現有的 semantic token：增肌 = primary、力量 = warning、體適能 = success、減脂 = muted。<strong>不發明新色</strong>、icon 區域只用 ~14% alpha tint。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <script type="text/babel" src="plans-list.jsx"></script>
+</body>
+</html>

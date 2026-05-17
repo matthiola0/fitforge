@@ -1,0 +1,13 @@
+%% Onboarding Flow
+%% 對應 05-domain-logic.md §5.1
+
+stateDiagram-v2
+    [*] --> Step1Goal: app 首次開啟
+    Step1Goal --> Step2Frequency: 選目標 (strength/hypertrophy/general/fatloss)
+    Step2Frequency --> Step3Equipment: 選頻率 (2-6)
+    Step3Equipment --> Step4Experience: 選器材
+    Step4Experience --> Recommendation: 選經驗 (beginner/novice/intermediate)
+    Recommendation --> SetActive: 顯示推薦 plan、用戶確認
+    SetActive --> Home: 設為 isActive 的 plan
+    Step1Goal --> Skip: 點「跳過」
+    Skip --> Home: 不設 active plan、用戶之後自選

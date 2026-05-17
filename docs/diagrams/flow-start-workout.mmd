@@ -1,0 +1,28 @@
+%% Sequence: Start Workout
+%% 對應 02-system-architecture.md §4.1
+
+sequenceDiagram
+    actor User as 用戶
+    participant UI as TodayPage
+    participant Hook as useStartWorkout
+    participant Engine as WorkoutEngine
+    participant SessionStore as sessionStore
+    participant PlanRepo as PlanRepository
+    participant WorkoutRepo as WorkoutRepository
+    participant DB as RxDB/IndexedDB
+
+    User->>UI: 點「開始訓練」
+    UI->>Hook: startWorkout(planId, dayIndex)
+    Hook->>PlanRepo: get(planId)
+    PlanRepo->>DB: query
+    DB-->>PlanRepo: Plan 物件
+    PlanRepo-->>Hook: plan
+    Hook->>Engine: createSession(plan, dayIndex)
+    Engine->>WorkoutRepo: create(initialSession)
+    WorkoutRepo->>DB: insert
+    DB-->>WorkoutRepo: id
+    WorkoutRepo-->>Engine: workoutId
+    Engine-->>Hook: WorkoutSession
+    Hook->>SessionStore: setActive(session)
+    Hook-->>UI: navigate(/workout/:id)
+    UI-->>User: 顯示第一個動作 + 第一組

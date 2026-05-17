@@ -1,0 +1,24 @@
+%% Screen Navigation Map
+%% 對應 07-screen-flow.md §1
+
+graph TB
+    Bootstrap[App 啟動<br/>CoreProvider]
+    Bootstrap --> CheckOnboard{onboarding<br/>completed?}
+    CheckOnboard -->|否| Onboard[/onboard/step1/]
+    CheckOnboard -->|是| Today[/today/]
+
+    Today --> Plans[/plans/]
+    Today --> Workout[/workout/:id/]
+    Today --> History[/history/]
+    Today --> Settings[/settings/]
+    Plans --> PlanDetail[/plans/:id/]
+    Plans --> PlanEdit[/plans/:id/edit/]
+    PlanDetail --> Workout
+    Today --> Exercises[/exercises/]
+    Exercises --> ExerciseDetail[/exercises/:slug/]
+    Workout --> WorkoutSummary[/workout/:id/summary/]
+    History --> WorkoutDetail[/history/:id/]
+
+    style Today fill:#bbdefb
+    style Workout fill:#ffccbc
+    style Onboard fill:#fff9c4

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · 今天</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'ds-sm': '0 1px 2px 0 hsl(0 0% 0% / 0.06)',
+            'ds-md': '0 8px 24px -6px hsl(0 0% 0% / 0.10), 0 2px 6px -2px hsl(0 0% 0% / 0.06)',
+            'ds-primary': '0 12px 30px -8px hsl(var(--primary) / 0.45), 0 4px 10px -4px hsl(var(--primary) / 0.30)',
+          },
+          transitionTimingFunction: {
+            forge: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          },
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="home-today.css" />
+</head>
+<body>
+
+  <!-- ============== PAGE CHROME ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-14 pb-12">
+    <div class="stage-eyebrow"><span class="dot"></span>FITFORGE · HOME · 今天 (TODAY)</div>
+    <h1 class="mt-3 text-[36px] md:text-[44px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      今日 home<span class="text-[#E14B36]">.</span>
+    </h1>
+    <p class="mt-3 text-[15px] leading-[1.55] text-[#6B6D77] max-w-[58ch]">
+      已 onboarded、有 active plan 的用戶第一屏。<strong>今天的訓練</strong> 是視覺主角、其他都是輔助。內容可滾動、BottomNav 固定。
+    </p>
+  </div>
+
+  <!-- ============== PHONE STAGE ============== -->
+  <div id="root" class="px-6 pb-20 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== NOTES ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>HERO · 今天的訓練</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">每屏只有 1 個 primary CTA — 這個畫面就是「開始訓練」。Hero card 用 bg-card + soft shadow、不搶 primary 色、但用大字 + chips + stats 三層資訊密度建立焦點。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>本週節奏 · 不用紅綠</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">7 天 mini calendar：訓練 = filled primary ✓、今天 = primary ring empty、未來 = muted。「rest day」不另外標註 — 沒填就是沒練、不羞辱。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>BOTTOMNAV · HAIRLINE 上邊界</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">4 個 tab、active 用 primary 色 + 上方 primary dot 指示。沒有 floating pill、沒有膠囊背景 — 跟設計系統 §09 BottomNav 規範一致。Backdrop blur 讓滾動時 nav 微透出底色。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <script type="text/babel" src="home-today.jsx"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+%% V1 → V2 Architecture Evolution
+%% 對應 12-roadmap-v2.md §3.1
+
+graph LR
+    subgraph V1["V1 架構"]
+        V1Core[packages/core] --> V1RxDB[(RxDB Local)]
+    end
+
+    subgraph V2["V2 架構"]
+        V2Core[packages/core<br/>+ syncService] --> V2RxDB[(RxDB Local)]
+        V2RxDB <-->|replication| V2Cloud[(Supabase Postgres)]
+        V2Core --> V2Auth[Auth Adapter]
+        V2Core --> V2AI[Claude AI Adapter]
+        V2AI --> V2Proxy[Edge Function Proxy]
+        V2Proxy --> V2Claude[Anthropic API]
+    end
+
+    style V1 fill:#fff
+    style V2 fill:#e3f2fd

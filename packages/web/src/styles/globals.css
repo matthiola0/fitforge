@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+ * FitForge — Design Tokens
+ * 從 docs/design/system/tokens-light.css + tokens-dark.css 同步而來。
+ * 改動時請同步 docs/design/system/ 與本檔。
+ * ========================================================================== */
+
+@layer base {
+  :root {
+    /* Surfaces */
+    --background: 30 25% 99%; /* #FDFCFA — warm paper */
+    --foreground: 240 12% 10%; /* #17181F — near black */
+    --card: 0 0% 100%;
+    --card-foreground: 240 12% 10%;
+
+    /* Brand */
+    --primary: 8 78% 55%; /* #E14B36 — Forge Ember */
+    --primary-foreground: 0 0% 100%;
+
+    /* Utility surfaces */
+    --secondary: 30 12% 94%;
+    --secondary-foreground: 240 12% 18%;
+    --accent: 15 100% 96%;
+    --accent-foreground: 8 78% 38%;
+    --muted: 30 8% 95%;
+    --muted-foreground: 240 5% 45%;
+
+    /* Semantic */
+    --destructive: 0 78% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 150 62% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 94% 50%;
+    --warning-foreground: 30 30% 12%;
+
+    /* UI */
+    --border: 30 10% 88%;
+    --input: 30 10% 90%;
+    --ring: 8 78% 55%;
+
+    /* Shadow & Radius */
+    --shadow-color: 240 30% 12%;
+    --radius: 12px;
+  }
+
+  .dark {
+    --background: 240 10% 7%; /* #10101A — warm carbon */
+    --foreground: 30 20% 95%;
+    --card: 240 8% 10%;
+    --card-foreground: 30 20% 95%;
+
+    --primary: 8 85% 62%;
+    --primary-foreground: 240 30% 8%;
+
+    --secondary: 240 6% 16%;
+    --secondary-foreground: 30 20% 92%;
+    --accent: 240 6% 18%;
+    --accent-foreground: 8 85% 72%;
+    --muted: 240 6% 14%;
+    --muted-foreground: 240 5% 64%;
+
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 150 58% 50%;
+    --success-foreground: 240 30% 8%;
+    --warning: 38 90% 56%;
+    --warning-foreground: 240 30% 8%;
+
+    --border: 240 6% 20%;
+    --input: 240 6% 22%;
+    --ring: 8 85% 62%;
+
+    --shadow-color: 0 0% 0%;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Base layer
+   * ------------------------------------------------------------------------ */
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family:
+      'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', system-ui,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  /* Tabular numerals for numbers (weights, reps, timers) */
+  .num {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}
+
+@layer utilities {
+  /* Touch-friendly safe area (for PWA standalone) */
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  }
+  .pt-safe {
+    padding-top: max(env(safe-area-inset-top), 0rem);
+  }
+}

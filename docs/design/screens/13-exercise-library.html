@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · 動作圖庫</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            destructive: { DEFAULT: 'hsl(var(--destructive) / <alpha-value>)', foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)' },
+            success: { DEFAULT: 'hsl(var(--success) / <alpha-value>)', foreground: 'hsl(var(--success-foreground) / <alpha-value>)' },
+            warning: { DEFAULT: 'hsl(var(--warning) / <alpha-value>)', foreground: 'hsl(var(--warning-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          },
+          transitionTimingFunction: { forge: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="home-today.css" />
+  <style>
+    .theme-light { --destructive: 0 78% 52%; --destructive-foreground: 0 0% 100%; --success: 150 62% 38%; --success-foreground: 0 0% 100%; --warning: 38 94% 50%; --warning-foreground: 30 30% 12%; }
+    .theme-dark  { --destructive: 0 72% 58%; --destructive-foreground: 0 0% 100%; --success: 150 58% 50%; --success-foreground: 240 30% 8%; --warning: 38 90% 56%; --warning-foreground: 240 30% 8%; }
+
+    .head-blur {
+      background: hsl(var(--background) / 0.82);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+    }
+
+    /* Lottie loop "play" frame indicator — used on hover */
+    @keyframes loop-pulse {
+      0%, 100% { opacity: 0.95; transform: scale(1); }
+      50%      { opacity: 1;    transform: scale(1.06); }
+    }
+    .loop-anim { animation: loop-pulse 1.4s ease-in-out infinite; transform-origin: center; }
+
+    /* "Live" line through the exercise thumb on focus — suggests the Lottie is playing */
+    @keyframes scan-line {
+      0%   { transform: translateX(-100%); opacity: 0; }
+      15%  { opacity: 0.9; }
+      85%  { opacity: 0.9; }
+      100% { transform: translateX(100%); opacity: 0; }
+    }
+    .scan-line {
+      position: absolute; left: 0; right: 0; top: 50%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        hsl(var(--primary) / 0) 0%,
+        hsl(var(--primary) / 0.65) 50%,
+        hsl(var(--primary) / 0) 100%);
+      animation: scan-line 1.6s ease-in-out infinite;
+    }
+
+    /* compact playing card subtle lift on hover */
+    .ex-card { transition: transform 200ms cubic-bezier(0.16,1,0.3,1), box-shadow 200ms ease; }
+    .ex-card:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+
+  <!-- ============== PAGE CHROME ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-14 pb-12">
+    <div class="stage-eyebrow"><span class="dot"></span>FITFORGE · TAB 03 · 動作 (EXERCISE LIBRARY)</div>
+    <h1 class="mt-3 text-[36px] md:text-[44px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      動作圖庫<span class="text-[#E14B36]">.</span>
+    </h1>
+    <p class="mt-3 text-[15px] leading-[1.55] text-[#6B6D77] max-w-[64ch]">
+      30 個 V1 MVP 動作。Sticky 搜尋區 + 水平 muscle filter + 2 欄方形卡片。<strong>第 1 張卡片 thumb 在 hover 時播放 scan-line</strong> 暗示 Lottie 動畫。
+      第三個 phone 示範 empty state。
+    </p>
+  </div>
+
+  <!-- ============== STATE A: NORMAL ============== -->
+  <div class="max-w-[1100px] mx-auto px-6">
+    <div class="rounded-lg bg-white border border-[#E1DDD7] p-5 mb-6">
+      <div class="stage-eyebrow"><span class="dot"></span>STATE A · 預設 (30 個全部顯示)</div>
+      <p class="mt-2 text-[14px] leading-[1.55] text-[#17181F]">「全部」chip 為選中、無搜尋字串。card grid 兩欄、可滾動。試著點不同 chip 觀察篩選即時生效。</p>
+    </div>
+  </div>
+  <div id="root-main" class="px-6 pb-12 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== STATE B: EMPTY ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-6">
+    <div class="rounded-lg bg-white border border-[#E1DDD7] p-5 mb-6">
+      <div class="stage-eyebrow"><span class="dot"></span>STATE B · 空狀態 (搜尋無結果)</div>
+      <p class="mt-2 text-[14px] leading-[1.55] text-[#17181F]">搜尋框輸入「跳繩」+ 「胸」filter — V1 沒有對應動作。Empty state 用 line-art search 插圖 + 教練口吻文案 + 「清除全部篩選」link，呼應 design system §08 voice rule「承認現狀 + 預告未來」。</p>
+    </div>
+  </div>
+  <div id="root-empty" class="px-6 pb-20 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== NOTES ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>STICKY 搜尋 · TITLE COLLAPSE</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">滾動到一定距離後 hero 大標題 hide、sticky 區塊 (搜尋 + filter chips) 維持頂部。第二支 phone 預先 scroll 到 collapsed 狀態示範該效果。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>LOTTIE 縮圖 · MOTION 暗示</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">真實實作會用 Lottie autoplay-on-hover、靜止顯示第一幀。預覽用 hover 時的 scan-line + LOOP badge pulse 來暗示「這是動畫」、不是死圖。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>2 COLUMN · NOT 3</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">375 寬度下選 2 欄而非 3 欄 — 每張卡 ≈ 167px、足夠塞下動作預覽 + 中英文 + chips。3 欄會讓中文名 truncate、體驗變差。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <script type="text/babel" src="exercise-library.jsx"></script>
+</body>
+</html>

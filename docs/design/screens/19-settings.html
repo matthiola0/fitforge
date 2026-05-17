@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FitForge · 設定</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          background: 'hsl(var(--background) / <alpha-value>)',
+          foreground: 'hsl(var(--foreground) / <alpha-value>)',
+          card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+          primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+          secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+          accent: { DEFAULT: 'hsl(var(--accent) / <alpha-value>)', foreground: 'hsl(var(--accent-foreground) / <alpha-value>)' },
+          muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+          destructive: { DEFAULT: 'hsl(var(--destructive) / <alpha-value>)', foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)' },
+          success: { DEFAULT: 'hsl(var(--success) / <alpha-value>)', foreground: 'hsl(var(--success-foreground) / <alpha-value>)' },
+          warning: { DEFAULT: 'hsl(var(--warning) / <alpha-value>)', foreground: 'hsl(var(--warning-foreground) / <alpha-value>)' },
+          border: 'hsl(var(--border) / <alpha-value>)',
+          input: 'hsl(var(--input) / <alpha-value>)',
+          ring: 'hsl(var(--ring) / <alpha-value>)',
+        },
+        borderRadius: { sm: '6px', md: '10px', lg: '14px', xl: '20px' },
+        fontFamily: {
+          sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+        boxShadow: {
+          'ds-sm': '0 1px 2px 0 hsl(var(--shadow-color) / 0.06), 0 1px 1px 0 hsl(var(--shadow-color) / 0.04)',
+          'ds-md': '0 4px 12px -2px hsl(var(--shadow-color) / 0.10), 0 2px 4px -1px hsl(var(--shadow-color) / 0.06)',
+        },
+        transitionTimingFunction: { forge: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      }
+    }
+  };
+</script>
+<style>
+  :root {
+    --background: 30 25% 99%;
+    --foreground: 240 12% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 12% 10%;
+    --primary: 8 78% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 12% 94%;
+    --secondary-foreground: 240 12% 18%;
+    --accent: 15 100% 96%;
+    --accent-foreground: 8 78% 38%;
+    --muted: 30 8% 95%;
+    --muted-foreground: 240 5% 45%;
+    --destructive: 0 78% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 150 62% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 94% 50%;
+    --warning-foreground: 30 30% 12%;
+    --border: 30 10% 88%;
+    --input: 30 10% 90%;
+    --ring: 8 78% 55%;
+    --shadow-color: 240 30% 12%;
+    --radius: 12px;
+  }
+  .dark {
+    --background: 240 10% 7%;
+    --foreground: 30 20% 95%;
+    --card: 240 8% 10%;
+    --card-foreground: 30 20% 95%;
+    --primary: 8 85% 62%;
+    --primary-foreground: 240 30% 8%;
+    --secondary: 240 6% 16%;
+    --secondary-foreground: 30 20% 92%;
+    --accent: 240 6% 18%;
+    --accent-foreground: 8 85% 72%;
+    --muted: 240 6% 14%;
+    --muted-foreground: 240 5% 64%;
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 20%;
+    --input: 240 6% 22%;
+    --ring: 8 85% 62%;
+    --shadow-color: 0 0% 0%;
+  }
+  html, body {
+    font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #efece6;
+  }
+  .num { font-variant-numeric: tabular-nums lining-nums; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  .ico-12 svg { width: 12px; height: 12px; stroke-width: 2; }
+  .ico-14 svg { width: 14px; height: 14px; stroke-width: 2; }
+  .ico-16 svg { width: 16px; height: 16px; stroke-width: 2; }
+  .ico-18 svg { width: 18px; height: 18px; stroke-width: 2; }
+  .ico-20 svg { width: 20px; height: 20px; stroke-width: 2; }
+  .ico-24 svg { width: 24px; height: 24px; stroke-width: 2; }
+
+  /* phone */
+  .phone {
+    width: 390px;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    border-radius: 44px;
+    box-shadow:
+      0 0 0 8px #0c0c12,
+      0 0 0 9px #25252e,
+      0 30px 60px -20px hsl(240 30% 30% / 0.35),
+      0 12px 30px -12px hsl(240 30% 30% / 0.25);
+    overflow: hidden;
+    position: relative;
+  }
+  .phone-screen { position: relative; }
+  .status-bar {
+    height: 44px;
+    padding: 0 26px 0 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 15px; font-weight: 600;
+    letter-spacing: -0.02em;
+    color: hsl(var(--foreground));
+    font-variant-numeric: tabular-nums;
+  }
+  .status-bar .right { display: flex; align-items: center; gap: 6px; }
+  .notch {
+    position: absolute;
+    top: 11px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 32px;
+    background: #0c0c12;
+    border-radius: 22px;
+    z-index: 5;
+  }
+  .home-indicator {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 134px; height: 5px;
+    background: hsl(var(--foreground) / 0.85);
+    border-radius: 3px;
+    opacity: 0.6;
+  }
+
+  /* section card */
+  .section-card {
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--card));
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .section-eyebrow {
+    font-size: 10.5px; font-weight: 800; letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+    padding: 0 8px 8px;
+  }
+
+  /* row */
+  .row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; min-height: 56px;
+    text-align: left; width: 100%;
+    background: hsl(var(--card));
+    transition: background 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .row + .row { border-top: 1px solid hsl(var(--border)); }
+  .row.clickable:hover { background: hsl(var(--secondary) / 0.5); }
+  .row-icon {
+    width: 30px; height: 30px; border-radius: 7px;
+    background: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .row-label {
+    flex: 1; font-size: 14.5px; font-weight: 500; color: hsl(var(--foreground));
+    line-height: 1.3;
+  }
+  .row-label .sub {
+    display: block; font-size: 11.5px; font-weight: 500;
+    color: hsl(var(--muted-foreground)); margin-top: 2px;
+  }
+  .row-value {
+    font-size: 13px; color: hsl(var(--muted-foreground));
+    font-weight: 500;
+  }
+  .row-chevron { color: hsl(var(--muted-foreground)); }
+
+  .row.destructive .row-icon {
+    background: hsl(var(--destructive) / 0.12);
+    color: hsl(var(--destructive));
+  }
+  .row.destructive .row-label { color: hsl(var(--destructive)); font-weight: 600; }
+  .row.destructive .row-chevron { color: hsl(var(--destructive) / 0.7); }
+
+  .row.locked { opacity: 0.55; cursor: not-allowed; }
+
+  /* iOS-style toggle */
+  .toggle {
+    position: relative;
+    width: 44px; height: 26px; border-radius: 13px;
+    background: hsl(var(--muted));
+    transition: background 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+  }
+  .toggle.on { background: hsl(var(--primary)); }
+  .toggle::after {
+    content: ''; position: absolute;
+    width: 22px; height: 22px; border-radius: 11px;
+    top: 2px; left: 2px;
+    background: #fff;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.10), 0 2px 4px 0 rgba(0,0,0,0.10);
+    transition: left 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .toggle.on::after { left: 20px; }
+
+  /* segmented kg/lbs */
+  .seg-mini {
+    display: inline-flex; padding: 2px; gap: 1px;
+    border-radius: 8px;
+    background: hsl(var(--muted));
+  }
+  .seg-mini button {
+    height: 26px; padding: 0 10px;
+    border-radius: 6px;
+    font-size: 12px; font-weight: 700;
+    color: hsl(var(--muted-foreground));
+    font-variant-numeric: tabular-nums;
+    transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .seg-mini button.active {
+    background: hsl(var(--card));
+    color: hsl(var(--foreground));
+    box-shadow: 0 1px 2px 0 hsl(var(--shadow-color) / 0.08);
+  }
+
+  /* inline stepper */
+  .stepper {
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .stepper-btn {
+    width: 26px; height: 26px; border-radius: 13px;
+    background: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .stepper-btn:hover { background: hsl(var(--muted)); }
+  .stepper-val {
+    min-width: 48px; text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700; font-size: 13px;
+    color: hsl(var(--foreground));
+  }
+
+  /* avatar in top header */
+  .avatar {
+    width: 28px; height: 28px; border-radius: 14px;
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11.5px; font-weight: 700;
+    border: 1px solid hsl(var(--border));
+  }
+
+  /* page chrome */
+  .page-eyebrow {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px;
+    text-transform: uppercase;
+    color: hsl(8 78% 38%);
+  }
+  .page-eyebrow .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+    background: hsl(8 78% 55%); vertical-align: 1px; margin-right: 8px;
+  }
+  .lab {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.6px;
+    text-transform: uppercase; color: #6B6D77;
+  }
+  .lab .pill {
+    display: inline-block; padding: 3px 8px; border-radius: 999px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid #d6d2c8;
+    color: #17181F; font-size: 10.5px; margin-right: 6px;
+  }
+  .lab .pill.dark-pill { background: #17181F; color: #f4f1ea; border-color: #2c2c36; }
+
+  /* dot caption — small "v2 開放" style */
+  .mini-pill {
+    display: inline-flex; align-items: center; gap: 3px;
+    height: 18px; padding: 0 6px; border-radius: 5px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
+    text-transform: uppercase;
+    background: hsl(var(--muted)); color: hsl(var(--muted-foreground));
+  }
+  .mini-pill.success {
+    background: hsl(var(--success) / 0.12);
+    color: hsl(var(--success));
+  }
+</style>
+</head>
+<body class="antialiased">
+
+  <!-- ====== Page header ====== -->
+  <div class="max-w-[1840px] mx-auto px-10 pt-14 pb-6">
+    <div class="page-eyebrow"><span class="dot"></span>FITFORGE · §29 · SETTINGS</div>
+    <h1 class="mt-3 text-[42px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      設定 — <span class="text-[hsl(8_78%_55%)]">utilitarian</span>
+    </h1>
+    <div class="mt-4 max-w-[64ch] text-[15px] leading-[1.6] text-[#54565f]">
+      shadcn-style 分組 list、icon + label + value + chevron。控件依資料型態挑：
+      chevron sheet / 行內 stepper / segmented / iOS toggle，不全部塞 chevron。
+    </div>
+    <div class="mt-5 flex flex-wrap items-center gap-2 text-[12px] text-[#54565f]">
+      <span class="px-2.5 py-1 rounded-md bg-[#fdfcfa] border border-[#e1ddd7] font-semibold">390 × content</span>
+      <span class="px-2.5 py-1 rounded-md bg-[#fdfcfa] border border-[#e1ddd7] font-semibold">light + dark</span>
+      <span class="px-2.5 py-1 rounded-md bg-[#fdfcfa] border border-[#e1ddd7] font-semibold">3 sections</span>
+      <span class="px-2.5 py-1 rounded-md bg-[#fdfcfa] border border-[#e1ddd7] font-mono">no BottomNav · sub-page</span>
+    </div>
+  </div>
+
+  <!-- ====== TWO PHONES ====== -->
+  <div class="max-w-[1840px] mx-auto px-10 pt-8 pb-24">
+    <div class="flex flex-wrap gap-10 items-start">
+
+      <!-- ============ LIGHT ============ -->
+      <div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-screen bg-background text-foreground">
+
+            <div class="status-bar">
+              <span>9:41</span>
+              <span class="right">
+                <span class="ico-14"><i data-lucide="signal"></i></span>
+                <span class="ico-14"><i data-lucide="wifi"></i></span>
+                <span class="ico-16"><i data-lucide="battery-full"></i></span>
+              </span>
+            </div>
+
+            <!-- top app bar -->
+            <div class="px-4 pt-1 pb-3 flex items-center gap-2">
+              <button class="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-secondary transition-colors duration-200 ease-forge">
+                <span class="ico-24"><i data-lucide="chevron-left"></i></span>
+              </button>
+              <h1 class="flex-1 text-[20px] font-bold tracking-[-0.02em]">設定</h1>
+              <div class="avatar">A</div>
+            </div>
+
+            <!-- profile teaser -->
+            <div class="px-5 pb-5">
+              <div class="rounded-lg border border-border bg-card p-4 flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-accent text-accent-foreground inline-flex items-center justify-center font-extrabold text-[16px] border border-border">A</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[15px] font-bold">阿哲</div>
+                  <div class="num mono text-[11.5px] text-muted-foreground mt-0.5">
+                    訓練 <span class="text-foreground font-semibold">38</span> 次 · 連續 <span class="text-foreground font-semibold">12</span> 天
+                  </div>
+                </div>
+                <button class="text-[12px] font-semibold text-muted-foreground flex items-center gap-1 hover:text-foreground transition-colors duration-200 ease-forge">
+                  編輯 <span class="ico-14"><i data-lucide="chevron-right"></i></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ===== 一般 ===== -->
+            <div class="px-4 pb-5">
+              <div class="section-eyebrow">一般</div>
+              <div class="section-card">
+                <!-- 主題 -->
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="sun-moon"></i></span></span>
+                  <span class="row-label">主題</span>
+                  <span class="row-value">跟隨系統</span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+                <!-- 重量單位 -->
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="weight"></i></span></span>
+                  <span class="row-label">重量單位</span>
+                  <span class="seg-mini">
+                    <button class="active">kg</button>
+                    <button>lbs</button>
+                  </span>
+                </div>
+                <!-- 預設組間休息 -->
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="timer"></i></span></span>
+                  <span class="row-label">預設組間休息<span class="sub">每組訓練後自動倒數</span></span>
+                  <span class="stepper">
+                    <button class="stepper-btn"><span class="ico-14"><i data-lucide="minus"></i></span></button>
+                    <span class="stepper-val">90<span class="text-muted-foreground" style="font-size:10.5px; margin-left:1px;">s</span></span>
+                    <button class="stepper-btn"><span class="ico-14"><i data-lucide="plus"></i></span></button>
+                  </span>
+                </div>
+                <!-- 訓練音效 -->
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="volume-2"></i></span></span>
+                  <span class="row-label">訓練音效<span class="sub">倒數結束、完成組</span></span>
+                  <span class="toggle on"></span>
+                </div>
+                <!-- 震動回饋 -->
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="vibrate"></i></span></span>
+                  <span class="row-label">震動回饋</span>
+                  <span class="toggle on"></span>
+                </div>
+                <!-- 語言 (locked) -->
+                <div class="row locked">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="languages"></i></span></span>
+                  <span class="row-label">語言</span>
+                  <span class="row-value flex items-center gap-2">
+                    繁體中文
+                    <span class="mini-pill">v2</span>
+                  </span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="lock"></i></span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== 資料 ===== -->
+            <div class="px-4 pb-5">
+              <div class="section-eyebrow">資料</div>
+              <div class="section-card">
+                <!-- 匯出 -->
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="download"></i></span></span>
+                  <span class="row-label">匯出資料<span class="sub">JSON · 含所有訓練、PR、設定</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+                <!-- 匯入 -->
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="upload"></i></span></span>
+                  <span class="row-label">匯入資料<span class="sub">從 .json 還原</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+                <!-- 清除 destructive -->
+                <button class="row clickable destructive">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="trash-2"></i></span></span>
+                  <span class="row-label">清除所有資料<span class="sub" style="color:hsl(var(--destructive)/0.7);">無法復原 · 會二次確認</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ===== 關於 ===== -->
+            <div class="px-4 pb-5">
+              <div class="section-eyebrow">關於</div>
+              <div class="section-card">
+                <!-- 版本 -->
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="package"></i></span></span>
+                  <span class="row-label">版本</span>
+                  <span class="row-value flex items-center gap-1.5">
+                    <span class="num mono text-foreground font-semibold">v1.0.0</span>
+                    <span class="mini-pill success">最新</span>
+                  </span>
+                </div>
+                <!-- GitHub -->
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="github"></i></span></span>
+                  <span class="row-label">GitHub<span class="sub mono">github.com/fitforge/app</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="external-link"></i></span></span>
+                </button>
+                <!-- 隱私 -->
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="shield-check"></i></span></span>
+                  <span class="row-label">隱私政策<span class="sub">資料只存在你的裝置上</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+                <!-- 致謝 -->
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="heart"></i></span></span>
+                  <span class="row-label">致謝</span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- footer -->
+            <div class="px-5 pb-10 pt-2 text-center">
+              <div class="text-[11.5px] text-muted-foreground">
+                Made by <span class="text-foreground font-semibold">[name]</span> · <span class="num mono">2026</span>
+              </div>
+              <div class="mt-1 text-[10.5px] text-muted-foreground/70 tracking-[1px] uppercase font-semibold">
+                Iron sharpens iron
+              </div>
+            </div>
+
+            <div class="home-indicator" style="background: hsl(var(--foreground) / 0.85);"></div>
+          </div>
+        </div>
+        <div class="mt-3 lab text-center">Light · 設定</div>
+      </div>
+
+      <!-- ============ DARK ============ -->
+      <div class="dark">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-screen bg-background text-foreground">
+
+            <div class="status-bar">
+              <span>9:41</span>
+              <span class="right">
+                <span class="ico-14"><i data-lucide="signal"></i></span>
+                <span class="ico-14"><i data-lucide="wifi"></i></span>
+                <span class="ico-16"><i data-lucide="battery-full"></i></span>
+              </span>
+            </div>
+
+            <div class="px-4 pt-1 pb-3 flex items-center gap-2">
+              <button class="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-secondary transition-colors duration-200 ease-forge">
+                <span class="ico-24"><i data-lucide="chevron-left"></i></span>
+              </button>
+              <h1 class="flex-1 text-[20px] font-bold tracking-[-0.02em]">設定</h1>
+              <div class="avatar">A</div>
+            </div>
+
+            <div class="px-5 pb-5">
+              <div class="rounded-lg border border-border bg-card p-4 flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-accent text-accent-foreground inline-flex items-center justify-center font-extrabold text-[16px] border border-border">A</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[15px] font-bold">阿哲</div>
+                  <div class="num mono text-[11.5px] text-muted-foreground mt-0.5">
+                    訓練 <span class="text-foreground font-semibold">38</span> 次 · 連續 <span class="text-foreground font-semibold">12</span> 天
+                  </div>
+                </div>
+                <button class="text-[12px] font-semibold text-muted-foreground flex items-center gap-1 hover:text-foreground transition-colors duration-200 ease-forge">
+                  編輯 <span class="ico-14"><i data-lucide="chevron-right"></i></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="px-4 pb-5">
+              <div class="section-eyebrow">一般</div>
+              <div class="section-card">
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="sun-moon"></i></span></span>
+                  <span class="row-label">主題</span>
+                  <span class="row-value">跟隨系統</span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="weight"></i></span></span>
+                  <span class="row-label">重量單位</span>
+                  <span class="seg-mini">
+                    <button class="active">kg</button>
+                    <button>lbs</button>
+                  </span>
+                </div>
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="timer"></i></span></span>
+                  <span class="row-label">預設組間休息<span class="sub">每組訓練後自動倒數</span></span>
+                  <span class="stepper">
+                    <button class="stepper-btn"><span class="ico-14"><i data-lucide="minus"></i></span></button>
+                    <span class="stepper-val">90<span class="text-muted-foreground" style="font-size:10.5px; margin-left:1px;">s</span></span>
+                    <button class="stepper-btn"><span class="ico-14"><i data-lucide="plus"></i></span></button>
+                  </span>
+                </div>
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="volume-2"></i></span></span>
+                  <span class="row-label">訓練音效<span class="sub">倒數結束、完成組</span></span>
+                  <span class="toggle on"></span>
+                </div>
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="vibrate"></i></span></span>
+                  <span class="row-label">震動回饋</span>
+                  <span class="toggle on"></span>
+                </div>
+                <div class="row locked">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="languages"></i></span></span>
+                  <span class="row-label">語言</span>
+                  <span class="row-value flex items-center gap-2">
+                    繁體中文
+                    <span class="mini-pill">v2</span>
+                  </span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="lock"></i></span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-4 pb-5">
+              <div class="section-eyebrow">資料</div>
+              <div class="section-card">
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="download"></i></span></span>
+                  <span class="row-label">匯出資料<span class="sub">JSON · 含所有訓練、PR、設定</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="upload"></i></span></span>
+                  <span class="row-label">匯入資料<span class="sub">從 .json 還原</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+                <button class="row clickable destructive">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="trash-2"></i></span></span>
+                  <span class="row-label">清除所有資料<span class="sub" style="color:hsl(var(--destructive)/0.7);">無法復原 · 會二次確認</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="px-4 pb-5">
+              <div class="section-eyebrow">關於</div>
+              <div class="section-card">
+                <div class="row">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="package"></i></span></span>
+                  <span class="row-label">版本</span>
+                  <span class="row-value flex items-center gap-1.5">
+                    <span class="num mono text-foreground font-semibold">v1.0.0</span>
+                    <span class="mini-pill success">最新</span>
+                  </span>
+                </div>
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="github"></i></span></span>
+                  <span class="row-label">GitHub<span class="sub mono">github.com/fitforge/app</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="external-link"></i></span></span>
+                </button>
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="shield-check"></i></span></span>
+                  <span class="row-label">隱私政策<span class="sub">資料只存在你的裝置上</span></span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+                <button class="row clickable">
+                  <span class="row-icon"><span class="ico-18"><i data-lucide="heart"></i></span></span>
+                  <span class="row-label">致謝</span>
+                  <span class="row-chevron"><span class="ico-16"><i data-lucide="chevron-right"></i></span></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="px-5 pb-10 pt-2 text-center">
+              <div class="text-[11.5px] text-muted-foreground">
+                Made by <span class="text-foreground font-semibold">[name]</span> · <span class="num mono">2026</span>
+              </div>
+              <div class="mt-1 text-[10.5px] text-muted-foreground/70 tracking-[1px] uppercase font-semibold">
+                Iron sharpens iron
+              </div>
+            </div>
+
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+        <div class="mt-3 lab text-center"><span class="pill dark-pill">DARK</span>Dark · 設定</div>
+      </div>
+    </div>
+
+    <!-- design notes -->
+    <div class="mt-16 max-w-[1100px] rounded-lg border border-[#e1ddd7] bg-[#fdfcfa] p-7">
+      <div class="page-eyebrow"><span class="dot"></span>DESIGN NOTES</div>
+      <ul class="mt-4 space-y-2.5 text-[14px] leading-[1.6] text-[#17181F]">
+        <li><strong>Header：</strong>40×40 圓形 back button + 「設定」H4 字級（20px、left-aligned）+ 右上 avatar 28×28（accent peach）— sub-page chrome，沒有 BottomNav。</li>
+        <li><strong>Profile teaser：</strong>頂部多放了 profile mini card（頭像 + 名字 + 訓練次數 + 連續天數 + 編輯入口）— 設定頁通常是用戶從頭像進來，第一行就看到自己的狀態，比直接跳設定 list 親切。如不要可刪。</li>
+        <li><strong>Section card：</strong>每個 section 包一張 rounded-lg card + 1px hairline border。Row 之間用 1px border-top 分割（不是 padding gap）— shadcn 風 grouped list 是 row 緊貼。</li>
+        <li><strong>Row icon：</strong>30×30 圓角方塊（border-radius sm + 1）+ secondary 底 + foreground 色 icon。<strong>不</strong>給每個 row 染不同顏色 — 那會變 Material 風。Destructive row 例外用 destructive/12 底 + destructive icon。</li>
+        <li><strong>控件選擇（最直接的）：</strong>
+          <ul class="mt-1.5 ml-5 space-y-1.5 list-disc">
+            <li><strong>主題</strong> → chevron sheet（3 個選項：淺色 / 深色 / 跟隨系統）</li>
+            <li><strong>重量單位</strong> → segmented [kg|lbs]（binary、語意對等、不適合 toggle）</li>
+            <li><strong>預設組間休息</strong> → 行內 stepper（−/+ 26px 圓 + mono num + ±15s 增量）— 數值微調比開 sheet 快</li>
+            <li><strong>音效 / 震動</strong> → iOS pill toggle 44×26（off/on 是真的 binary）</li>
+            <li><strong>語言</strong> → locked，整 row 55% opacity + lock icon 取代 chevron + 「v2」 mini pill</li>
+          </ul>
+        </li>
+        <li><strong>Sub-label：</strong>row label 下方加 11.5px muted sub 解釋功能。「JSON · 含所有訓練、PR、設定」、「資料只存在你的裝置上」— 給新手安全感。語言 / 主題 / 單位這類自明的 row 不加。</li>
+        <li><strong>版本 row：</strong>「v1.0.0」mono + 「最新」success mini pill — 隱性檢查更新訊號。如果有新版本，這裡會換成「更新」primary pill + tap 進更新流程。</li>
+        <li><strong>清除所有資料：</strong>destructive 色限制只給這一處。sub label 同步染 destructive/70 「無法復原 · 會二次確認」— 預告會有 confirm modal，不會手滑炸資料。</li>
+        <li><strong>Footer：</strong>「Made by [name] · 2026」+ 副標「Iron sharpens iron」（uppercase eyebrow 風）— 留 [name] 當 slot 待填。副標可拿掉。</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+</html>

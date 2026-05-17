@@ -1,0 +1,29 @@
+%% Workout Session State Machine
+%% 對應 05-domain-logic.md §2.2
+
+stateDiagram-v2
+    [*] --> Idle: app 啟動 / 沒進行中 session
+    Idle --> CreatingSession: startWorkout()
+    CreatingSession --> Active: session 建立成功
+    Active --> Resting: logSet() 完成、進入休息
+    Resting --> Active: 倒數結束 OR skipRest()
+    Active --> Active: skipSet() / addSet()
+    Active --> Completing: finishWorkout()
+    Resting --> Completing: finishWorkout()
+    Completing --> Completed: 結算完成
+    Completed --> [*]
+    Active --> Abandoned: abandon() (例如離開超過 24 小時)
+    Resting --> Abandoned: abandon()
+    Abandoned --> [*]
+
+    note right of Active
+        - currentExerciseIndex
+        - currentSetIndex
+        - 可 logSet / skipSet / addSet
+    end note
+
+    note right of Resting
+        - restEndsAt (絕對時間)
+        - nextSet preview
+        - 可 skipRest / extendRest
+    end note

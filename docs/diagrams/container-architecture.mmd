@@ -1,0 +1,33 @@
+%% C4 Level 2 — Container Architecture
+%% 對應 SDD.md §2.2
+
+graph TB
+    subgraph Browser["瀏覽器執行環境"]
+        subgraph SPA["React PWA (Vite Build)"]
+            Router[React Router v6<br/>頁面路由]
+            UI[UI Layer<br/>頁面 + 組件]
+            State[State Layer<br/>Zustand + RxDB Hooks]
+        end
+
+        subgraph CoreLogic["packages/core (共用業務邏輯)"]
+            Domain[Domain Services<br/>WorkoutEngine / PlanService]
+            Repo[Repository<br/>RxDB Collections]
+            AIPort[AIPort 介面<br/>V2 預留]
+        end
+
+        SW[Service Worker<br/>Workbox]
+        IDB[(IndexedDB<br/>via RxDB)]
+        Cache[(Cache Storage<br/>App Shell + Lottie)]
+    end
+
+    Router --> UI
+    UI --> State
+    State --> Domain
+    Domain --> Repo
+    Repo --> IDB
+    SW --> Cache
+    UI -.->|Lottie JSON| Cache
+
+    style SPA fill:#e3f2fd
+    style CoreLogic fill:#fff4e1
+    style SW fill:#f3e5f5

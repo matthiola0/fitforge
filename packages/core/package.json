@@ -1,0 +1,36 @@
+{
+  "name": "@fitforge/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "FitForge business logic — shared between web (V1) and React Native (V2)",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/data/schemas/index.ts",
+    "./domain": "./src/domain/index.ts",
+    "./ports": "./src/ports/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo '(lint not configured yet)'"
+  },
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "nanoid": "^5.0.7",
+    "rxdb": "^15.24.0",
+    "rxjs": "^7.8.1",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "fake-indexeddb": "^5.0.2",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}

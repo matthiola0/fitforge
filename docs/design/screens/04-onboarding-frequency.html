@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · Onboarding · 選擇訓練頻率</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'ds-sm': '0 1px 2px 0 hsl(0 0% 0% / 0.06)',
+            'ds-md': '0 8px 24px -6px hsl(0 0% 0% / 0.12), 0 2px 6px -2px hsl(0 0% 0% / 0.08)',
+            'ds-primary': '0 10px 28px -8px hsl(var(--primary) / 0.45), 0 4px 10px -4px hsl(var(--primary) / 0.30)',
+            'ds-primary-soft': '0 8px 20px -8px hsl(var(--primary) / 0.50)',
+          },
+          transitionTimingFunction: {
+            forge: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          },
+        }
+      }
+    };
+  </script>
+  <style>
+    .theme-light {
+      --background: 30 25% 99%;
+      --foreground: 240 12% 10%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 12% 10%;
+      --primary: 8 78% 55%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 30 12% 94%;
+      --secondary-foreground: 240 12% 18%;
+      --muted: 30 8% 95%;
+      --muted-foreground: 240 5% 45%;
+      --border: 30 10% 88%;
+      --ring: 8 78% 55%;
+    }
+    .theme-dark {
+      --background: 240 10% 7%;
+      --foreground: 30 20% 95%;
+      --card: 240 8% 10%;
+      --card-foreground: 30 20% 95%;
+      --primary: 8 85% 62%;
+      --primary-foreground: 240 30% 8%;
+      --secondary: 240 6% 16%;
+      --secondary-foreground: 30 20% 92%;
+      --muted: 240 6% 14%;
+      --muted-foreground: 240 5% 64%;
+      --border: 240 6% 20%;
+      --ring: 8 85% 62%;
+    }
+    html, body {
+      font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'PingFang TC', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #E5E0D6;
+    }
+    .stage-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.8px;
+      text-transform: uppercase; color: #6B6D77;
+    }
+    .stage-eyebrow .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: #E14B36; vertical-align: 1px; margin-right: 8px;
+    }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+    /* phone frame */
+    .phone {
+      width: 375px; height: 812px;
+      border-radius: 54px; padding: 8px;
+      background: #15161B;
+      box-shadow:
+        0 50px 100px -28px rgba(0,0,0,0.32),
+        0 22px 44px -12px rgba(0,0,0,0.22),
+        inset 0 0 0 1.5px #2A2B33;
+      flex-shrink: 0;
+    }
+    .phone .screen {
+      width: 100%; height: 100%;
+      border-radius: 46px; overflow: hidden;
+      position: relative; background: hsl(var(--background));
+    }
+    .screen-dynamic-island {
+      position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 36px; border-radius: 20px;
+      background: #000; z-index: 30;
+    }
+
+    /* tap pulse */
+    @keyframes tap-pulse {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.10); }
+      100% { transform: scale(1.05); }
+    }
+    .tap-pulse { animation: tap-pulse 380ms cubic-bezier(0.16,1,0.3,1); }
+
+    /* haptic ring */
+    @keyframes haptic-ring-circle {
+      0%   { transform: scale(0.6); opacity: 0.55; }
+      100% { transform: scale(2.0); opacity: 0; }
+    }
+    .haptic-ring-circle {
+      position: absolute; inset: 0;
+      border-radius: 16px;
+      box-shadow: 0 0 0 2px hsl(var(--primary));
+      pointer-events: none;
+      animation: haptic-ring-circle 480ms cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    /* hint card fade-in */
+    @keyframes hint-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hint-in { animation: hint-in 280ms cubic-bezier(0.16,1,0.3,1) both; }
+  </style>
+</head>
+<body>
+
+  <!-- ============== PAGE CHROME ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-14 pb-12">
+    <div class="stage-eyebrow"><span class="dot"></span>FITFORGE · ONBOARDING · STEP 2 OF 4</div>
+    <h1 class="mt-3 text-[36px] md:text-[44px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      選擇訓練頻率<span class="text-[#E14B36]">.</span>
+    </h1>
+    <p class="mt-3 text-[15px] leading-[1.55] text-[#6B6D77] max-w-[58ch]">
+      點不同的數字 — 觀察 selected 縮放動畫、coach hint 卡片淡入、底部 CTA 從 disabled 變 primary 的全流程。
+    </p>
+  </div>
+
+  <!-- ============== PHONE STAGE ============== -->
+  <div id="root" class="px-6 pb-20 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== NOTES ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>數字按鈕 · LAYOUT</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">5 等寬 grid、aspect-square、<code class="mono text-[11.5px] bg-[#F0EEEA] px-1.5 py-0.5 rounded">rounded-2xl</code> (16px)。375 螢幕 - 40px 兩側 padding - 4×8px gap → 每顆 ≈ 59×59px。spec 64px 在 mobile width 內無法 5 等寬塞下、選擇等寬 fluid。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>「3」· DEFAULT HIGHLIGHT</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">caption「新手常見」後接 filled star (取代 emoji ⭐) — 跟設計系統 iconography 規則一致。沒選中時用 primary 色 star 提示「這是常見答案」、但不預選 (避免引導反感)。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>COACH HINT 卡片</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">選中後出現一段教練口吻的單句解釋 (例：「3 天 — Push / Pull / Legs 經典三日輪替」)。回應「友善但不油膩」的 voice 規範 — 不誇張、給專業 context。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const FREQS = [
+      { n: 2, cap: '比較輕鬆', hint: '週末 + 一個平日 — 慢慢養成習慣' },
+      { n: 3, cap: '新手常見', hint: 'Push / Pull / Legs — 經典三日輪替', recommended: true },
+      { n: 4, cap: '進階一點', hint: '上半身 / 下半身分化、留時間恢復' },
+      { n: 5, cap: '有目標感', hint: '推 / 拉 / 腿 / 上 / 下 — 進階分化' },
+      { n: 6, cap: '認真衝',   hint: '每日專注一個肌群 — 需良好睡眠支撐' },
+    ];
+
+    // ---- iOS status bar (clone of step-1 chrome) ----
+    function StatusBar() {
+      return (
+        <div className="absolute top-0 inset-x-0 h-[54px] z-20 flex items-end justify-between px-7 pb-1.5 pointer-events-none">
+          <div className="text-foreground text-[15px] font-semibold tracking-[-0.01em]" style={{fontFeatureSettings: '"tnum"'}}>
+            9:41
+          </div>
+          <div className="flex items-center gap-1.5 text-foreground">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor">
+              <rect x="0"  y="7"  width="3" height="4"  rx="0.5"/>
+              <rect x="4.5" y="5" width="3" height="6"  rx="0.5"/>
+              <rect x="9"  y="3"  width="3" height="8"  rx="0.5"/>
+              <rect x="13.5" y="0" width="3" height="11" rx="0.5"/>
+            </svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+              <path d="M1 4 A11 11 0 0 1 15 4"/>
+              <path d="M3 6.5 A7.5 7.5 0 0 1 13 6.5"/>
+              <path d="M5.3 9 A4 4 0 0 1 10.7 9"/>
+              <circle cx="8" cy="10.2" r="0.7" fill="currentColor" stroke="none"/>
+            </svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none">
+              <rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="currentColor" strokeOpacity="0.5" />
+              <rect x="2"   y="2"   width="19" height="8"  rx="1.5" fill="currentColor" />
+              <rect x="23"  y="4"   width="2"  height="4"  rx="1" fill="currentColor" fillOpacity="0.5" />
+            </svg>
+          </div>
+        </div>
+      );
+    }
+
+    function ProgressDots({ step = 2, total = 4 }) {
+      return (
+        <div className="flex items-center gap-1.5">
+          {Array.from({ length: total }, (_, i) => {
+            const idx = i + 1;
+            const active = idx === step;
+            const done = idx < step;
+            return (
+              <div key={i}
+                   className="rounded-full transition-all duration-300 ease-forge"
+                   style={{
+                     width: active ? 28 : 8,
+                     height: 8,
+                     background: active
+                       ? 'hsl(var(--primary))'
+                       : (done ? 'hsl(var(--primary) / 0.45)' : 'hsl(var(--border))'),
+                   }}/>
+            );
+          })}
+        </div>
+      );
+    }
+
+    // small filled star (not lucide — lucide star is stroke-only)
+    function Star({ size = 12, className = '' }) {
+      return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+          <path d="M12 2.5l2.7 6.4 6.9.5-5.2 4.5 1.6 6.7L12 17l-6 3.6 1.6-6.7-5.2-4.5 6.9-.5z"/>
+        </svg>
+      );
+    }
+
+    function FreqButton({ f, selected, onSelect }) {
+      const [hapticKey, setHapticKey] = useState(0);
+      const [pulsing, setPulsing] = useState(false);
+
+      const handleClick = () => {
+        if (!selected) {
+          setHapticKey(k => k + 1);
+          setPulsing(true);
+          setTimeout(() => setPulsing(false), 380);
+        }
+        onSelect(f.n);
+      };
+
+      return (
+        <div className="flex flex-col items-center min-w-0">
+          <div className="w-full" style={{ paddingTop: 4, paddingBottom: 4 }}>
+            <button
+              type="button"
+              onClick={handleClick}
+              className={`relative aspect-square w-full grid place-items-center
+                transition-all duration-300 ease-forge
+                outline-none focus-visible:ring-4 focus-visible:ring-ring/25
+                ${pulsing ? 'tap-pulse' : ''}
+                ${selected
+                  ? 'bg-primary text-primary-foreground scale-[1.05] shadow-ds-primary-soft'
+                  : 'bg-secondary text-foreground hover:bg-muted'}`}
+              style={{ borderRadius: 16 }}
+              aria-pressed={selected}
+            >
+              {hapticKey > 0 && <span key={hapticKey} className="haptic-ring-circle" aria-hidden />}
+              <span className="font-extrabold tracking-[-0.02em]"
+                    style={{ fontSize: 24, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+                {f.n}
+              </span>
+            </button>
+          </div>
+          <div className={`mt-2 text-center text-[11px] leading-tight font-medium inline-flex items-center justify-center gap-1 transition-colors duration-200
+            ${selected ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
+            <span className="truncate">{f.cap}</span>
+            {f.recommended && (
+              <Star size={11} className={selected ? 'text-primary-foreground/0' : 'text-primary'} />
+              /* hide the star if THIS button is selected (it's already shown by being primary) */
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    function OnboardingStep2() {
+      const [selected, setSelected] = useState(null);
+      const sel = FREQS.find(f => f.n === selected);
+
+      useEffect(() => {
+        if (window.lucide) window.lucide.createIcons();
+      }, [selected]);
+
+      return (
+        <div className="absolute inset-0 flex flex-col" style={{ background: 'hsl(var(--background))' }}>
+          <div className="screen-dynamic-island"></div>
+          <StatusBar />
+
+          {/* top bar: back link · progress dots · spacer */}
+          <div className="pt-[68px] px-5 flex items-center justify-between">
+            <button className="inline-flex items-center gap-1 px-2 py-1 -ml-2 text-[13.5px] font-semibold text-muted-foreground hover:text-foreground transition-colors duration-200 ease-forge">
+              <i data-lucide="chevron-left" style={{ width: 16, height: 16, strokeWidth: 2.4 }}></i>
+              上一步
+            </button>
+            <ProgressDots step={2} total={4} />
+            <div className="w-[70px]"></div>{/* spacer to balance back-link width */}
+          </div>
+
+          {/* hero copy */}
+          <div className="px-6 mt-7">
+            <h1 className="text-[28px] font-extrabold tracking-[-0.025em] leading-[1.15] text-foreground">
+              一週能練幾次？
+            </h1>
+            <p className="mt-2.5 text-[14.5px] leading-[1.5] text-muted-foreground" style={{textWrap: 'pretty'}}>
+              不確定就選 <span className="font-bold text-foreground">3</span> — 入門最常見。
+            </p>
+          </div>
+
+          {/* frequency grid */}
+          <div className="mt-9 px-5">
+            <div className="grid grid-cols-5 gap-2">
+              {FREQS.map(f => (
+                <FreqButton key={f.n} f={f} selected={selected === f.n} onSelect={setSelected} />
+              ))}
+            </div>
+          </div>
+
+          {/* unit label */}
+          <div className="mt-5 px-6 flex items-center justify-center gap-2">
+            <div className="flex-1 h-px" style={{ background: 'hsl(var(--border))' }}></div>
+            <div className="text-[10.5px] font-bold tracking-[1.6px] uppercase text-muted-foreground">
+              天 / 週
+            </div>
+            <div className="flex-1 h-px" style={{ background: 'hsl(var(--border))' }}></div>
+          </div>
+
+          {/* coach hint — appears when selected */}
+          <div className="px-6 mt-6 min-h-[88px]">
+            {sel && (
+              <div key={selected} className="hint-in rounded-2xl p-4 flex items-start gap-3"
+                   style={{
+                     background: 'hsl(var(--primary) / 0.06)',
+                     boxShadow: 'inset 0 0 0 1px hsl(var(--primary) / 0.22)',
+                   }}>
+                <div className="shrink-0 grid place-items-center mt-0.5"
+                     style={{
+                       width: 28, height: 28, borderRadius: 10,
+                       background: 'hsl(var(--primary))',
+                       color: 'hsl(var(--primary-foreground))',
+                     }}>
+                  <i data-lucide="dumbbell" style={{ width: 16, height: 16 }}></i>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[11px] font-bold tracking-[1.4px] uppercase" style={{ color: 'hsl(var(--primary))' }}>
+                    Coach
+                  </div>
+                  <div className="mt-1 text-[13.5px] leading-[1.5] text-foreground font-medium">
+                    <span className="font-bold" style={{fontVariantNumeric: 'tabular-nums'}}>{sel.n} 天</span> — {sel.hint}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* spacer */}
+          <div className="flex-1"></div>
+
+          {/* footer — CTA only (back link is at top per spec) */}
+          <div className="px-6 pb-9">
+            <button
+              disabled={!selected}
+              className={`w-full inline-flex items-center justify-center gap-1.5
+                rounded-2xl font-bold text-[15px]
+                transition-all duration-200 ease-forge
+                ${selected
+                  ? 'bg-primary text-primary-foreground shadow-ds-primary hover:opacity-95 active:scale-[0.99]'
+                  : 'bg-muted text-muted-foreground/60 cursor-not-allowed'}`}
+              style={{ height: 56 }}
+            >
+              下一步
+              <i data-lucide="arrow-right" style={{ width: 18, height: 18 }}></i>
+            </button>
+            <div className="mt-6 mx-auto rounded-full bg-foreground/30" style={{ width: 134, height: 5 }}></div>
+          </div>
+        </div>
+      );
+    }
+
+    function Phone({ theme }) {
+      return (
+        <div className="flex flex-col items-center gap-4">
+          <div className="stage-eyebrow flex items-center gap-2">
+            <span className="dot"></span>{theme === 'light' ? 'LIGHT MODE' : 'DARK MODE'}
+            <span className="mono text-[10.5px] text-[#9F9FA8]">· 375 × 812</span>
+          </div>
+          <div className={`phone theme-${theme}`}>
+            <div className="screen">
+              <OnboardingStep2 />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <>
+          <Phone theme="light" />
+          <Phone theme="dark" />
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

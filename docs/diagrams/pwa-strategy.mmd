@@ -1,0 +1,26 @@
+%% PWA / Service Worker Cache Strategy
+%% 對應 08-pwa-offline.md §2
+
+graph LR
+    Request[Browser fetch] --> SW[Service Worker]
+    SW --> Decide{URL 類別?}
+
+    Decide -->|App Shell<br/>HTML/JS/CSS| Precache[Precache Cache<br/>install 時寫入]
+    Precache --> Browser[回傳]
+
+    Decide -->|Lottie JSON<br/>/lottie/*| SWRStale[Stale-While-Revalidate<br/>立即回快取、背景更新]
+    SWRStale --> Browser
+
+    Decide -->|Icons / fonts| CacheFirst[Cache-first<br/>1 年 TTL]
+    CacheFirst --> Browser
+
+    Decide -->|API (V2)| NetworkFirst[Network-first<br/>fallback to offline]
+    NetworkFirst --> Browser
+
+    Decide -->|其他| NetworkOnly[Network-only]
+    NetworkOnly --> Browser
+
+    style SW fill:#f3e5f5
+    style Precache fill:#c8e6c9
+    style SWRStale fill:#fff9c4
+    style CacheFirst fill:#bbdefb

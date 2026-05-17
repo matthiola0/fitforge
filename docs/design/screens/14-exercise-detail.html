@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · 動作詳情</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background) / <alpha-value>)',
+            foreground: 'hsl(var(--foreground) / <alpha-value>)',
+            card: { DEFAULT: 'hsl(var(--card) / <alpha-value>)', foreground: 'hsl(var(--card-foreground) / <alpha-value>)' },
+            primary: { DEFAULT: 'hsl(var(--primary) / <alpha-value>)', foreground: 'hsl(var(--primary-foreground) / <alpha-value>)' },
+            secondary: { DEFAULT: 'hsl(var(--secondary) / <alpha-value>)', foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)' },
+            muted: { DEFAULT: 'hsl(var(--muted) / <alpha-value>)', foreground: 'hsl(var(--muted-foreground) / <alpha-value>)' },
+            destructive: { DEFAULT: 'hsl(var(--destructive) / <alpha-value>)', foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)' },
+            success: { DEFAULT: 'hsl(var(--success) / <alpha-value>)', foreground: 'hsl(var(--success-foreground) / <alpha-value>)' },
+            warning: { DEFAULT: 'hsl(var(--warning) / <alpha-value>)', foreground: 'hsl(var(--warning-foreground) / <alpha-value>)' },
+            border: 'hsl(var(--border) / <alpha-value>)',
+            ring: 'hsl(var(--ring) / <alpha-value>)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', '-apple-system', 'BlinkMacSystemFont', 'PingFang TC', 'system-ui', 'sans-serif'],
+          },
+          transitionTimingFunction: { forge: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="home-today.css" />
+  <style>
+    .theme-light { --destructive: 0 78% 52%; --destructive-foreground: 0 0% 100%; --success: 150 62% 38%; --success-foreground: 0 0% 100%; --warning: 38 94% 50%; --warning-foreground: 30 30% 12%; }
+    .theme-dark  { --destructive: 0 72% 58%; --destructive-foreground: 0 0% 100%; --success: 150 58% 50%; --success-foreground: 240 30% 8%; --warning: 38 90% 56%; --warning-foreground: 240 30% 8%; }
+
+    .head-blur {
+      background: hsl(var(--background) / 0.82);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+    }
+
+    /* Hero Lottie placeholder — full-bleed muted with subtle radial highlight */
+    .lottie-stage {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background:
+        radial-gradient(circle at 30% 20%, hsl(var(--foreground) / 0.04), transparent 55%),
+        hsl(var(--muted));
+      overflow: hidden;
+    }
+
+    /* The synthetic "Lottie": a barbell + figure stick, looping the bench-press motion */
+    @keyframes lottie-press {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-22px); }
+    }
+    @keyframes lottie-arms {
+      0%, 100% { transform: scaleY(1);   }
+      50%      { transform: scaleY(0.7); }
+    }
+    @keyframes lottie-breath {
+      0%, 100% { transform: scaleY(1.0); }
+      50%      { transform: scaleY(1.04); }
+    }
+    .lottie-bar  { animation: lottie-press 1.8s cubic-bezier(0.42, 0, 0.58, 1) infinite; }
+    .lottie-arms { animation: lottie-arms 1.8s cubic-bezier(0.42, 0, 0.58, 1) infinite; transform-origin: top center; }
+    .lottie-chest { animation: lottie-breath 1.8s cubic-bezier(0.42, 0, 0.58, 1) infinite; transform-origin: center; }
+
+    /* Tick marks on the playback bar */
+    .pb-tick {
+      width: 2px; height: 6px; background: hsl(var(--foreground) / 0.18);
+      border-radius: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============== PAGE CHROME ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pt-14 pb-12">
+    <div class="stage-eyebrow"><span class="dot"></span>FITFORGE · EXERCISE DETAIL</div>
+    <h1 class="mt-3 text-[36px] md:text-[44px] font-extrabold tracking-[-0.035em] leading-[1.05] text-[#17181F]">
+      動作詳情<span class="text-[#E14B36]">.</span>
+    </h1>
+    <p class="mt-3 text-[15px] leading-[1.55] text-[#6B6D77] max-w-[64ch]">
+      Modal-style fullscreen、無 BottomNav。Hero Lottie (280h) + 播放控制、tag 區、說明、編號步驟、提醒、常見錯誤。
+      第一個 phone 是「平板臥推」(初級)、第二個示範「硬舉」(進階) 看難度色階變化。
+    </p>
+  </div>
+
+  <!-- ============== PHONE STAGE ============== -->
+  <div id="root" class="px-6 pb-20 flex flex-wrap gap-10 justify-center items-start"></div>
+
+  <!-- ============== NOTES ============== -->
+  <div class="max-w-[1100px] mx-auto px-6 pb-24">
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>LOTTIE PLACEHOLDER · 真實示範</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">用純 CSS 模擬一個「人推槓鈴」的循環動畫 (槓鈴下降 + 手臂收縮 + 胸口呼吸) — 真實實作會用 LottieFiles 動畫、但結構相同：autoplay loop、可控速度、可重播。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>💡 / ⚠️ → ICONS 不用 EMOJI</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">設計系統規定不用裝飾 emoji。lightbulb / alert-triangle (Lucide) 取代 💡 / ⚠️ — 配合本品牌 stroke-width 2 線條風格、跨平台一致。</p>
+      </div>
+      <div class="rounded-lg bg-white border border-[#E1DDD7] p-5">
+        <div class="stage-eyebrow"><span class="dot"></span>難度 chip · 三色語意</div>
+        <p class="mt-2.5 text-[13.5px] leading-[1.55] text-[#17181F]">初級 = success 綠、中階 = warning 琥珀、進階 = primary 橘。每個 chip 用 ~12% alpha tint + 全色 dot + 全色文字、避免大面積飽和色塊。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== APP ============== -->
+  <script type="text/babel" src="exercise-detail.jsx"></script>
+</body>
+</html>
