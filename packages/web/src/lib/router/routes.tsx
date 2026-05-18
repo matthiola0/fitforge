@@ -3,7 +3,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppShell } from '@/app/_layout/AppShell';
 // Today is the entry route — keep eager so first paint doesn't wait on a chunk
 import { TodayPage } from '@/app/today/TodayPage';
-import { NotFoundPage } from '@/app/stubs';
+import { NotFoundPage } from '@/app/NotFoundPage';
 
 /**
  * 路由設定

@@ -14,8 +14,9 @@
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-3.4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![RxDB](https://img.shields.io/badge/RxDB-15-8a2be2)](https://rxdb.info/)
-[![Tests](https://img.shields.io/badge/tests-45_unit_+_5_e2e-22c55e)](packages/core/tests)
+[![Tests](https://img.shields.io/badge/tests-45_unit_+_6_e2e-22c55e)](packages/core/tests)
 [![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8)](packages/web/vite.config.ts)
+[![Lighthouse](https://img.shields.io/badge/Lighthouse-A11y_100_·_BP_100_·_SEO_91-22c55e)](#lighthouse)
 [![License](https://img.shields.io/badge/license-personal-lightgrey)](README.md)
 
 </div>
@@ -168,9 +169,29 @@ pnpm --filter @fitforge/web typecheck
 
 ---
 
+<a id="lighthouse"></a>
+## 🎯 Lighthouse 分數
+
+跑在 production build (`vite preview`)、Lighthouse 12 行動模擬 + 4× CPU throttle、無 CDN / 無壓縮：
+
+| 類別 | 分數 | 備註 |
+|------|------|------|
+| Performance | 74 | 本地 preview 無 gzip / HTTP/2；FCP 2.8 s / TBT 0 ms / CLS 0 |
+| Accessibility | **100** | 全綠 |
+| Best Practices | **100** | 全綠 |
+| SEO | 91 | 缺 robots.txt + canonical (個人專案非必要) |
+
+Performance 在 production CDN 上預期較高 (Vercel edge gzip + HTTP/2)，但 Vercel 的反爬阻擋 headless Chrome、無法直接以 Lighthouse 對線上測。
+TBT 0 ms / CLS 0 / A11y 100 / BP 100 已能說明前端品質。
+PWA 類別在 Lighthouse 12 後拆入「installable」audit，仍 ✅ pass。
+
+跑：`npx lighthouse http://localhost:4173/today --form-factor=mobile`
+
 ## 🧪 測試覆蓋
 
-`packages/core` 41 個測試、行覆蓋 87%：
+`packages/core` 45 個 unit、`packages/web` 6 個 E2E (Playwright)：
+
+**Core unit (Vitest + fake-indexeddb)**
 
 | 領域 | 數量 |
 |------|------|
@@ -178,10 +199,21 @@ pnpm --filter @fitforge/web typecheck
 | ExerciseQueryService (3 階 fallback / 推薦) | 9 |
 | Repositories (CRUD / setActive 串接) | 7 |
 | OnboardingService 推薦決策樹 | 6 |
+| StatsService (PR 偵測 + 時間型動作排除) | 4 |
 | SeedService (種入 / 冪等) | 3 |
 | RestTimer | 3 |
 
-跑：`pnpm --filter @fitforge/core test`
+**Web E2E (Playwright + chromium mobile)**
+
+| 領域 | 數量 |
+|------|------|
+| Smoke (app load / onboarding / 跳過 / BottomNav) | 4 |
+| Golden path (skip onboarding → 選課表 → 跑訓練 → summary) | 1 |
+| Offline (進入訓練後斷網仍能 log + 完成 + 看摘要) | 1 |
+
+每 push/PR 由 GitHub Actions 全跑。
+
+跑：`pnpm --filter @fitforge/core test` / `pnpm test:e2e`
 
 ---
 

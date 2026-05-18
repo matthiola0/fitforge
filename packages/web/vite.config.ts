@@ -43,8 +43,10 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
-        skipWaiting: false,
-        clientsClaim: false,
+        // First install activates immediately + takes over open tabs so the app
+        // genuinely works offline after first load (SDD §7.1 hard requirement).
+        skipWaiting: true,
+        clientsClaim: true,
       },
       devOptions: {
         enabled: false,
