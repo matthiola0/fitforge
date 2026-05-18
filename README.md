@@ -8,12 +8,13 @@
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-fitness--app--iota--steel.vercel.app-E14B36?style=for-the-badge&logo=vercel)](https://fitness-app-iota-steel.vercel.app)
 
+[![CI](https://github.com/matthiola0/fitforge/actions/workflows/ci.yml/badge.svg)](https://github.com/matthiola0/fitforge/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-3.4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![RxDB](https://img.shields.io/badge/RxDB-15-8a2be2)](https://rxdb.info/)
-[![Tests](https://img.shields.io/badge/tests-41_passing-22c55e)](packages/core/tests)
+[![Tests](https://img.shields.io/badge/tests-45_unit_+_5_e2e-22c55e)](packages/core/tests)
 [![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8)](packages/web/vite.config.ts)
 [![License](https://img.shields.io/badge/license-personal-lightgrey)](README.md)
 
