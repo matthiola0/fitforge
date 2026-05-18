@@ -1,0 +1,1384 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · §18 確認對話框集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          background: 'hsl(var(--background) / <alpha-value>)',
+          foreground: 'hsl(var(--foreground) / <alpha-value>)',
+          card: 'hsl(var(--card) / <alpha-value>)',
+          primary: 'hsl(var(--primary) / <alpha-value>)',
+          'primary-fg': 'hsl(var(--primary-foreground) / <alpha-value>)',
+          muted: 'hsl(var(--muted) / <alpha-value>)',
+          'muted-fg': 'hsl(var(--muted-foreground) / <alpha-value>)',
+          border: 'hsl(var(--border) / <alpha-value>)',
+          input: 'hsl(var(--input) / <alpha-value>)',
+          destructive: 'hsl(var(--destructive) / <alpha-value>)',
+          success: 'hsl(var(--success) / <alpha-value>)',
+          warning: 'hsl(var(--warning) / <alpha-value>)',
+          accent: 'hsl(var(--accent) / <alpha-value>)',
+        },
+        fontFamily: {
+          sans: ['Inter', 'Noto Sans TC', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+        transitionTimingFunction: { forge: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      } }
+    };
+  </script>
+  <style>
+    :root {
+      --background: 30 25% 99%;
+      --foreground: 240 12% 10%;
+      --card: 0 0% 100%;
+      --primary: 8 78% 55%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 30 12% 94%;
+      --muted: 30 8% 95%;
+      --muted-foreground: 240 5% 45%;
+      --accent: 15 100% 96%;
+      --border: 30 10% 88%;
+      --input: 30 10% 90%;
+      --destructive: 0 75% 50%;
+      --destructive-soft: 0 78% 96%;
+      --destructive-border: 0 60% 88%;
+      --success: 150 62% 38%;
+      --warning: 38 94% 50%;
+      --shadow-color: 240 30% 12%;
+    }
+    .theme-dark {
+      --background: 240 10% 7%;
+      --foreground: 30 20% 95%;
+      --card: 240 8% 11%;
+      --primary: 8 85% 62%;
+      --primary-foreground: 240 30% 8%;
+      --secondary: 240 6% 16%;
+      --muted: 240 6% 14%;
+      --muted-foreground: 240 5% 64%;
+      --accent: 240 6% 18%;
+      --border: 240 6% 22%;
+      --input: 240 6% 22%;
+      --destructive: 0 74% 60%;
+      --destructive-soft: 0 50% 16%;
+      --destructive-border: 0 50% 30%;
+      --success: 150 58% 50%;
+      --warning: 38 90% 56%;
+      --shadow-color: 0 0% 0%;
+    }
+    html, body {
+      font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background:
+        radial-gradient(1200px 600px at 30% 10%, #efe9dd 0%, transparent 60%),
+        radial-gradient(900px 700px at 80% 90%, #e7dfd0 0%, transparent 55%),
+        #ebe4d5;
+      color: #17181F;
+    }
+    .num, .mono { font-variant-numeric: tabular-nums lining-nums; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .eyebrow-page {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.8px; text-transform: uppercase;
+      color: #6B6D77;
+    }
+    .eyebrow-page .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: #E14B36; vertical-align: 1px; margin-right: 8px;
+    }
+    code.tok {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; padding: 1px 6px; border-radius: 4px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #E1DDD7;
+      color: #17181F;
+    }
+    .var-eyebrow {
+      font-size: 10.5px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; color: #8a8074;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ===== Phone bezel ===== */
+    .phone {
+      width: 390px; height: 844px;
+      border-radius: 48px;
+      background: hsl(var(--background));
+      overflow: hidden;
+      position: relative;
+      color: hsl(var(--foreground));
+      box-shadow:
+        0 36px 64px -24px rgba(20, 16, 10, 0.30),
+        0 16px 32px -16px rgba(20, 16, 10, 0.20),
+        0 0 0 11px #15151b,
+        0 0 0 12px #2a2a32;
+    }
+    .notch {
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 32px; border-radius: 18px;
+      background: #0a0a10; z-index: 20;
+    }
+    .home-bar {
+      position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%);
+      width: 134px; height: 5px; border-radius: 3px;
+      background: hsl(var(--foreground)); opacity: 0.55; z-index: 30;
+    }
+
+    /* ===== Icons ===== */
+    .ico-12 svg { width: 12px; height: 12px; stroke-width: 2; }
+    .ico-14 svg { width: 14px; height: 14px; stroke-width: 2; }
+    .ico-16 svg { width: 16px; height: 16px; stroke-width: 2; }
+    .ico-18 svg { width: 18px; height: 18px; stroke-width: 2; }
+    .ico-20 svg { width: 20px; height: 20px; stroke-width: 2; }
+    .ico-22 svg { width: 22px; height: 22px; stroke-width: 2; }
+    .ico-24 svg { width: 24px; height: 24px; stroke-width: 2; }
+
+    /* ===== Dim ===== */
+    .dim {
+      position: absolute; inset: 0;
+      background: rgba(16, 12, 8, 0.45);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+    .theme-dark .dim { background: rgba(0, 0, 0, 0.55); }
+
+    /* ===== Alert dialog (center modal) ===== */
+    .alert {
+      position: absolute; left: 24px; right: 24px;
+      top: 50%; transform: translateY(-50%);
+      background: hsl(var(--card));
+      border-radius: 20px;
+      border: 1px solid hsl(var(--border));
+      box-shadow:
+        0 24px 48px -16px hsl(var(--shadow-color) / 0.40),
+        0 8px 16px -8px hsl(var(--shadow-color) / 0.22);
+      overflow: hidden;
+    }
+
+    /* ===== Buttons (in-modal) ===== */
+    .btn {
+      width: 100%;
+      height: 50px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700;
+      border-radius: 12px;
+      transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      gap: 8px;
+    }
+    .btn-primary {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+    }
+    .btn-destructive {
+      background: hsl(var(--destructive));
+      color: #fff;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid hsl(var(--border));
+      color: hsl(var(--foreground));
+    }
+    .btn-ghost-destructive {
+      background: transparent;
+      color: hsl(var(--destructive));
+    }
+    .btn-disabled {
+      background: hsl(var(--muted));
+      color: hsl(var(--muted-foreground));
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .btn-text {
+      background: transparent;
+      color: hsl(var(--primary));
+      font-weight: 700;
+    }
+
+    /* ===== Input ===== */
+    .input {
+      width: 100%; height: 48px;
+      background: hsl(var(--input));
+      border: 1px solid hsl(var(--border));
+      border-radius: 10px;
+      padding: 0 14px;
+      font-size: 15px;
+      color: hsl(var(--foreground));
+      font-family: 'JetBrains Mono', 'Noto Sans TC', monospace;
+    }
+    .input-active {
+      border-color: hsl(var(--destructive));
+      box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.15);
+      background: hsl(var(--card));
+    }
+    .input::placeholder { color: hsl(var(--muted-foreground)); opacity: 0.7; }
+
+    /* ===== Icon badge atop alert ===== */
+    .iconbadge {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .iconbadge.warn {
+      background: hsl(38 94% 50% / 0.12);
+      color: hsl(38 90% 38%);
+    }
+    .theme-dark .iconbadge.warn {
+      background: hsl(38 90% 56% / 0.15);
+      color: hsl(38 90% 65%);
+    }
+    .iconbadge.danger {
+      background: hsl(var(--destructive-soft));
+      color: hsl(var(--destructive));
+    }
+    .iconbadge.nuclear {
+      background: hsl(var(--destructive));
+      color: #fff;
+    }
+    .iconbadge.info {
+      background: hsl(var(--accent));
+      color: hsl(var(--primary));
+    }
+    .iconbadge.success {
+      background: hsl(var(--success) / 0.14);
+      color: hsl(var(--success));
+    }
+    .theme-dark .iconbadge.success {
+      background: hsl(var(--success) / 0.16);
+      color: hsl(var(--success));
+    }
+
+    /* ===== Underlying screen (active workout / settings stub) ===== */
+    .bg-screen {
+      position: absolute; inset: 0;
+      padding-top: 54px;
+      color: hsl(var(--foreground));
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 999px;
+      font-size: 10.5px; font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.5px;
+      background: hsl(var(--muted));
+      color: hsl(var(--muted-foreground));
+      border: 1px solid hsl(var(--border));
+    }
+    .pill-pri { background: hsl(var(--accent)); color: hsl(var(--primary)); border-color: transparent; }
+    .pill-warn { background: hsl(var(--warning) / 0.16); color: hsl(38 90% 32%); border-color: transparent; }
+    .theme-dark .pill-warn { color: hsl(38 90% 65%); }
+    .pill-no { background: hsl(var(--destructive) / 0.12); color: hsl(var(--destructive)); border-color: transparent; }
+    .pill-ok { background: hsl(var(--success) / 0.14); color: hsl(var(--success)); border-color: transparent; }
+
+    /* page-level meta pill */
+    .meta-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 600;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #E1DDD7;
+      color: #17181F;
+    }
+    .meta-pill .sw { width: 8px; height: 8px; border-radius: 999px; }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: absolute; left: 16px; right: 16px; bottom: 28px;
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: 14px;
+      box-shadow:
+        0 16px 32px -12px hsl(var(--shadow-color) / 0.35),
+        0 6px 12px -6px hsl(var(--shadow-color) / 0.18);
+      overflow: hidden;
+    }
+    .toast-progress {
+      position: absolute; left: 0; bottom: 0; height: 2px;
+      background: hsl(var(--success));
+      animation: toastBar 3s linear forwards;
+    }
+    @keyframes toastBar {
+      from { width: 100%; }
+      to { width: 0%; }
+    }
+
+    /* ===== Top banner ===== */
+    .banner {
+      position: absolute; left: 12px; right: 12px;
+      background: hsl(var(--accent));
+      border: 1px solid hsl(var(--primary) / 0.35);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    /* placeholder card on bg screen */
+    .ghost-card {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: 14px;
+    }
+
+    /* Numeric set tracker line */
+    .set-row {
+      display: grid;
+      grid-template-columns: 36px 1fr auto 28px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+    }
+    .set-row .lbl { font-weight: 700; letter-spacing: 1px; color: hsl(var(--muted-foreground)); font-size: 11px; }
+    .set-row.done { background: hsl(var(--muted)); }
+
+    /* Section card on page */
+    .page-card {
+      background: white;
+      border: 1px solid #E1DDD7;
+      border-radius: 16px;
+    }
+
+    .h-section {
+      font-size: 26px; font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ============================================================ -->
+  <!-- PAGE MASTHEAD                                                -->
+  <!-- ============================================================ -->
+  <header class="max-w-[1320px] mx-auto px-8 pt-16 pb-10">
+    <div class="eyebrow-page"><span class="dot"></span>FITFORGE · §18 · CONFIRM DIALOGS + BANNERS + TOAST</div>
+    <h1 class="mt-3 text-[44px] md:text-[52px] font-extrabold tracking-[-0.035em] leading-[1.02]">
+      確認、後悔、與<span style="color: #E14B36;">不可復原的事</span>
+    </h1>
+    <p class="mt-5 text-[16px] text-[#5a5b66] leading-[1.65] max-w-[68ch]">
+      六種型態、四層破壞性。從輕（結束訓練）到核武（清除所有資料）、再到只是「通知」的 banner 與 toast — 每一個的視覺重量要對得起後果。
+    </p>
+    <div class="mt-7 py-3 border-t border-b border-[#dcd6c9] flex flex-wrap gap-x-7 gap-y-2 text-[12.5px] text-[#5a5b66]">
+      <span><strong class="text-[#17181F] font-bold">入場</strong> · dim 200ms · alert pop 200ms forge</span>
+      <span><strong class="text-[#17181F] font-bold">按鈕方向</strong> · 安全在左 / 破壞在右</span>
+      <span><strong class="text-[#17181F] font-bold">不可復原</strong> · 加 type-to-confirm 二次門檻</span>
+      <span class="mono ml-auto text-[#8a8074]">6 dialog × Light / Dark</span>
+    </div>
+
+    <!-- Severity ladder -->
+    <div class="mt-6 page-card p-5">
+      <div class="eyebrow-page"><span class="dot"></span>破壞性梯度</div>
+      <div class="mt-3 grid grid-cols-6 gap-3">
+        <div>
+          <div class="text-[11px] mono uppercase tracking-[1.2px] text-[#8a8074]">§18.1</div>
+          <div class="mt-1 font-semibold text-[14px]">結束訓練</div>
+          <div class="mt-2 flex"><span class="meta-pill"><span class="sw" style="background: hsl(8 78% 55%);"></span>primary destr.</span></div>
+          <div class="mt-2 text-[12px] text-[#5a5b66] leading-[1.5]">已紀錄保留 · 只丟未完成</div>
+        </div>
+        <div>
+          <div class="text-[11px] mono uppercase tracking-[1.2px] text-[#8a8074]">§18.2</div>
+          <div class="mt-1 font-semibold text-[14px]">放棄訓練</div>
+          <div class="mt-2 flex"><span class="meta-pill"><span class="sw" style="background: hsl(0 75% 50%);"></span>destructive</span></div>
+          <div class="mt-2 text-[12px] text-[#5a5b66] leading-[1.5]">整次刪除 · 不可恢復</div>
+        </div>
+        <div>
+          <div class="text-[11px] mono uppercase tracking-[1.2px] text-[#8a8074]">§18.3</div>
+          <div class="mt-1 font-semibold text-[14px]">清除全部</div>
+          <div class="mt-2 flex"><span class="meta-pill"><span class="sw" style="background: hsl(0 75% 50%);"></span>+ type-to-confirm</span></div>
+          <div class="mt-2 text-[12px] text-[#5a5b66] leading-[1.5]">核武級 · 二次門檻</div>
+        </div>
+        <div>
+          <div class="text-[11px] mono uppercase tracking-[1.2px] text-[#8a8074]">§18.4</div>
+          <div class="mt-1 font-semibold text-[14px]">未儲存編輯</div>
+          <div class="mt-2 flex"><span class="meta-pill"><span class="sw" style="background: hsl(38 94% 50%);"></span>3 路選擇</span></div>
+          <div class="mt-2 text-[12px] text-[#5a5b66] leading-[1.5]">儲存 · 離開 · 繼續</div>
+        </div>
+        <div>
+          <div class="text-[11px] mono uppercase tracking-[1.2px] text-[#8a8074]">§18.5</div>
+          <div class="mt-1 font-semibold text-[14px]">新版可用</div>
+          <div class="mt-2 flex"><span class="meta-pill"><span class="sw" style="background: hsl(8 78% 55%);"></span>banner · 非阻塞</span></div>
+          <div class="mt-2 text-[12px] text-[#5a5b66] leading-[1.5]">頂部 · 可忽略</div>
+        </div>
+        <div>
+          <div class="text-[11px] mono uppercase tracking-[1.2px] text-[#8a8074]">§18.6</div>
+          <div class="mt-1 font-semibold text-[14px]">安裝成功</div>
+          <div class="mt-2 flex"><span class="meta-pill"><span class="sw" style="background: hsl(150 62% 38%);"></span>toast · 自動消</span></div>
+          <div class="mt-2 text-[12px] text-[#5a5b66] leading-[1.5]">3 秒後 dismiss</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- §18.1 END WORKOUT                                            -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 mt-2">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§18.1</span>
+      <h2 class="h-section">結束訓練</h2>
+      <span class="text-[13px] text-[#5a5b66]">已完成的組保留 · 屬「中度破壞」 · 用 primary 色而非 destructive 紅</span>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-10 place-items-center pb-12">
+
+      <!-- LIGHT -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone" data-screen-label="18.1 End · Light">
+          <div class="notch"></div>
+          <!-- status bar -->
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <!-- bg: active workout screen -->
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="flex items-center justify-between">
+                <span class="ico-22" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-down"></i></span>
+                <div class="text-center">
+                  <div class="text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">訓練中 · 32:14</div>
+                  <div class="text-[15px] font-bold tracking-[-0.01em]">Push Day</div>
+                </div>
+                <span class="ico-22" style="color: hsl(var(--muted-foreground));"><i data-lucide="more-vertical"></i></span>
+              </div>
+              <div class="mt-5">
+                <div class="text-[20px] font-extrabold tracking-[-0.02em]">Bench Press</div>
+                <div class="mt-0.5 text-[12.5px]" style="color: hsl(var(--muted-foreground));">SET <span class="num">3</span> / <span class="num">4</span></div>
+              </div>
+              <div class="mt-4 space-y-1.5">
+                <div class="set-row done"><span class="lbl">S1</span><span><span class="num">80</span> kg × <span class="num">10</span></span><span class="num text-[12px]" style="color: hsl(var(--muted-foreground));">RPE 7</span><span class="ico-16" style="color: hsl(var(--success));"><i data-lucide="check"></i></span></div>
+                <div class="set-row done"><span class="lbl">S2</span><span><span class="num">80</span> kg × <span class="num">10</span></span><span class="num text-[12px]" style="color: hsl(var(--muted-foreground));">RPE 7</span><span class="ico-16" style="color: hsl(var(--success));"><i data-lucide="check"></i></span></div>
+                <div class="set-row" style="border: 1px solid hsl(var(--primary));"><span class="lbl" style="color: hsl(var(--primary));">S3</span><span class="num">80 × 10</span><span class="num text-[12px]" style="color: hsl(var(--muted-foreground));">—</span><span class="ico-16" style="color: hsl(var(--primary));"><i data-lucide="circle-dot"></i></span></div>
+                <div class="set-row" style="opacity: 0.55;"><span class="lbl">S4</span><span class="num">— × —</span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim"></div>
+
+          <!-- ALERT -->
+          <div class="alert">
+            <div class="px-6 pt-7 pb-2 flex justify-center">
+              <span class="iconbadge warn"><span class="ico-24"><i data-lucide="flag"></i></span></span>
+            </div>
+            <div class="px-6 pt-4">
+              <h3 class="text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">結束本次訓練？</h3>
+              <p class="mt-2 text-[14px] leading-[1.55] text-center px-1" style="color: hsl(var(--muted-foreground));">
+                已紀錄的組會保留、未完成的組會丟失。
+              </p>
+              <!-- inline summary chip -->
+              <div class="mt-4 mx-auto inline-flex items-center justify-center gap-3 px-3.5 py-2 rounded-[10px] text-[12px]"
+                style="background: hsl(var(--muted));">
+                <span class="flex items-center gap-1.5"><span class="ico-14" style="color: hsl(var(--success));"><i data-lucide="check"></i></span><span class="font-medium"><span class="num">2</span> 組保留</span></span>
+                <span style="opacity:0.4">·</span>
+                <span class="flex items-center gap-1.5"><span class="ico-14" style="color: hsl(var(--muted-foreground));"><i data-lucide="x"></i></span><span class="font-medium"><span class="num">2</span> 組丟失</span></span>
+              </div>
+            </div>
+            <div class="px-6 pt-5 pb-6 grid grid-cols-2 gap-3">
+              <button class="btn btn-outline">取消</button>
+              <button class="btn btn-primary">結束訓練</button>
+            </div>
+          </div>
+
+          <div class="home-bar" style="opacity:0.85;"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Light · Primary CTA</div>
+      </div>
+
+      <!-- DARK -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone theme-dark" data-screen-label="18.1 End · Dark">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="flex items-center justify-between">
+                <span class="ico-22" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-down"></i></span>
+                <div class="text-center">
+                  <div class="text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">訓練中 · 32:14</div>
+                  <div class="text-[15px] font-bold tracking-[-0.01em]">Push Day</div>
+                </div>
+                <span class="ico-22" style="color: hsl(var(--muted-foreground));"><i data-lucide="more-vertical"></i></span>
+              </div>
+              <div class="mt-5">
+                <div class="text-[20px] font-extrabold tracking-[-0.02em]">Bench Press</div>
+                <div class="mt-0.5 text-[12.5px]" style="color: hsl(var(--muted-foreground));">SET <span class="num">3</span> / <span class="num">4</span></div>
+              </div>
+              <div class="mt-4 space-y-1.5">
+                <div class="set-row done"><span class="lbl">S1</span><span><span class="num">80</span> kg × <span class="num">10</span></span><span class="num text-[12px]" style="color: hsl(var(--muted-foreground));">RPE 7</span><span class="ico-16" style="color: hsl(var(--success));"><i data-lucide="check"></i></span></div>
+                <div class="set-row done"><span class="lbl">S2</span><span><span class="num">80</span> kg × <span class="num">10</span></span><span class="num text-[12px]" style="color: hsl(var(--muted-foreground));">RPE 7</span><span class="ico-16" style="color: hsl(var(--success));"><i data-lucide="check"></i></span></div>
+                <div class="set-row" style="border: 1px solid hsl(var(--primary));"><span class="lbl" style="color: hsl(var(--primary));">S3</span><span class="num">80 × 10</span><span class="num text-[12px]" style="color: hsl(var(--muted-foreground));">—</span><span class="ico-16" style="color: hsl(var(--primary));"><i data-lucide="circle-dot"></i></span></div>
+                <div class="set-row" style="opacity: 0.55;"><span class="lbl">S4</span><span class="num">— × —</span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="dim"></div>
+          <div class="alert">
+            <div class="px-6 pt-7 pb-2 flex justify-center">
+              <span class="iconbadge warn"><span class="ico-24"><i data-lucide="flag"></i></span></span>
+            </div>
+            <div class="px-6 pt-4">
+              <h3 class="text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">結束本次訓練？</h3>
+              <p class="mt-2 text-[14px] leading-[1.55] text-center px-1" style="color: hsl(var(--muted-foreground));">
+                已紀錄的組會保留、未完成的組會丟失。
+              </p>
+              <div class="mt-4 mx-auto inline-flex items-center justify-center gap-3 px-3.5 py-2 rounded-[10px] text-[12px]"
+                style="background: hsl(var(--muted));">
+                <span class="flex items-center gap-1.5"><span class="ico-14" style="color: hsl(var(--success));"><i data-lucide="check"></i></span><span class="font-medium"><span class="num">2</span> 組保留</span></span>
+                <span style="opacity:0.4">·</span>
+                <span class="flex items-center gap-1.5"><span class="ico-14" style="color: hsl(var(--muted-foreground));"><i data-lucide="x"></i></span><span class="font-medium"><span class="num">2</span> 組丟失</span></span>
+              </div>
+            </div>
+            <div class="px-6 pt-5 pb-6 grid grid-cols-2 gap-3">
+              <button class="btn btn-outline">取消</button>
+              <button class="btn btn-primary">結束訓練</button>
+            </div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Dark · Primary CTA</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §18.2 DISCARD WORKOUT                                        -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 mt-4">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§18.2</span>
+      <h2 class="h-section">放棄訓練</h2>
+      <span class="text-[13px] text-[#5a5b66]">整次抹除、不留 log · destructive 紅 CTA</span>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-10 place-items-center pb-12">
+
+      <!-- LIGHT -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone" data-screen-label="18.2 Discard · Light">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="flex items-center justify-between">
+                <span class="ico-22" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-down"></i></span>
+                <div class="text-center">
+                  <div class="text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">訓練中 · 14:02</div>
+                  <div class="text-[15px] font-bold tracking-[-0.01em]">Push Day</div>
+                </div>
+                <span class="ico-22" style="color: hsl(var(--muted-foreground));"><i data-lucide="more-vertical"></i></span>
+              </div>
+              <div class="mt-5">
+                <div class="text-[20px] font-extrabold tracking-[-0.02em]">Bench Press</div>
+                <div class="mt-0.5 text-[12.5px]" style="color: hsl(var(--muted-foreground));">SET <span class="num">1</span> / <span class="num">4</span></div>
+              </div>
+              <div class="mt-4 space-y-1.5">
+                <div class="set-row" style="border: 1px solid hsl(var(--primary));"><span class="lbl" style="color: hsl(var(--primary));">S1</span><span class="num">80 × 10</span><span class="num text-[12px]" style="color: hsl(var(--muted-foreground));">—</span><span class="ico-16" style="color: hsl(var(--primary));"><i data-lucide="circle-dot"></i></span></div>
+                <div class="set-row" style="opacity: 0.55;"><span class="lbl">S2</span><span class="num">— × —</span><span></span><span></span></div>
+                <div class="set-row" style="opacity: 0.55;"><span class="lbl">S3</span><span class="num">— × —</span><span></span><span></span></div>
+                <div class="set-row" style="opacity: 0.55;"><span class="lbl">S4</span><span class="num">— × —</span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="dim"></div>
+          <div class="alert">
+            <div class="px-6 pt-7 pb-2 flex justify-center">
+              <span class="iconbadge danger"><span class="ico-24"><i data-lucide="trash-2"></i></span></span>
+            </div>
+            <div class="px-6 pt-4">
+              <h3 class="text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">放棄這次訓練？</h3>
+              <p class="mt-2 text-[14px] leading-[1.55] text-center" style="color: hsl(var(--muted-foreground));">
+                未完成的訓練會被刪除、無法恢復。
+              </p>
+              <!-- inline warning chip -->
+              <div class="mt-4 mx-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-medium"
+                style="background: hsl(var(--destructive-soft)); color: hsl(var(--destructive));">
+                <span class="ico-14"><i data-lucide="alert-octagon"></i></span>不可復原
+              </div>
+            </div>
+            <div class="px-6 pt-5 pb-6 grid grid-cols-2 gap-3">
+              <button class="btn btn-outline">繼續訓練</button>
+              <button class="btn btn-destructive">放棄</button>
+            </div>
+          </div>
+          <div class="home-bar" style="opacity:0.85;"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Light · Destructive</div>
+      </div>
+
+      <!-- DARK -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone theme-dark" data-screen-label="18.2 Discard · Dark">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="flex items-center justify-between">
+                <span class="ico-22" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-down"></i></span>
+                <div class="text-center">
+                  <div class="text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">訓練中 · 14:02</div>
+                  <div class="text-[15px] font-bold tracking-[-0.01em]">Push Day</div>
+                </div>
+                <span class="ico-22" style="color: hsl(var(--muted-foreground));"><i data-lucide="more-vertical"></i></span>
+              </div>
+              <div class="mt-5">
+                <div class="text-[20px] font-extrabold tracking-[-0.02em]">Bench Press</div>
+                <div class="mt-0.5 text-[12.5px]" style="color: hsl(var(--muted-foreground));">SET <span class="num">1</span> / <span class="num">4</span></div>
+              </div>
+              <div class="mt-4 space-y-1.5">
+                <div class="set-row" style="border: 1px solid hsl(var(--primary));"><span class="lbl" style="color: hsl(var(--primary));">S1</span><span class="num">80 × 10</span><span class="num text-[12px]" style="color: hsl(var(--muted-foreground));">—</span><span class="ico-16" style="color: hsl(var(--primary));"><i data-lucide="circle-dot"></i></span></div>
+                <div class="set-row" style="opacity: 0.55;"><span class="lbl">S2</span><span class="num">— × —</span><span></span><span></span></div>
+                <div class="set-row" style="opacity: 0.55;"><span class="lbl">S3</span><span class="num">— × —</span><span></span><span></span></div>
+                <div class="set-row" style="opacity: 0.55;"><span class="lbl">S4</span><span class="num">— × —</span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="dim"></div>
+          <div class="alert">
+            <div class="px-6 pt-7 pb-2 flex justify-center">
+              <span class="iconbadge danger"><span class="ico-24"><i data-lucide="trash-2"></i></span></span>
+            </div>
+            <div class="px-6 pt-4">
+              <h3 class="text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">放棄這次訓練？</h3>
+              <p class="mt-2 text-[14px] leading-[1.55] text-center" style="color: hsl(var(--muted-foreground));">
+                未完成的訓練會被刪除、無法恢復。
+              </p>
+              <div class="mt-4 mx-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-medium"
+                style="background: hsl(var(--destructive-soft)); color: hsl(var(--destructive));">
+                <span class="ico-14"><i data-lucide="alert-octagon"></i></span>不可復原
+              </div>
+            </div>
+            <div class="px-6 pt-5 pb-6 grid grid-cols-2 gap-3">
+              <button class="btn btn-outline">繼續訓練</button>
+              <button class="btn btn-destructive">放棄</button>
+            </div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Dark · Destructive</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §18.3 NUCLEAR — CLEAR ALL DATA                               -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 mt-4">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§18.3</span>
+      <h2 class="h-section">清除所有資料</h2>
+      <span class="text-[13px] text-[#5a5b66]">type-to-confirm「我要清除」· 按鈕到輸入完成前 disabled</span>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-10 place-items-center pb-12">
+
+      <!-- LIGHT — disabled state -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone" data-screen-label="18.3 Clear · Light · Disabled">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <!-- bg: settings stub -->
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="flex items-center gap-3">
+                <span class="ico-22"><i data-lucide="chevron-left"></i></span>
+                <h2 class="text-[18px] font-bold tracking-[-0.015em]">設定</h2>
+              </div>
+              <div class="mt-6 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">資料</div>
+              <div class="mt-2 ghost-card overflow-hidden">
+                <div class="px-4 py-3.5 flex items-center justify-between" style="border-bottom: 1px solid hsl(var(--border));">
+                  <span class="text-[14px] font-medium">匯出 CSV</span>
+                  <span class="ico-16" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <div class="px-4 py-3.5 flex items-center justify-between" style="border-bottom: 1px solid hsl(var(--border));">
+                  <span class="text-[14px] font-medium">備份到 iCloud Drive</span>
+                  <span class="ico-16" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <div class="px-4 py-3.5 flex items-center justify-between">
+                  <span class="text-[14px] font-semibold" style="color: hsl(var(--destructive));">清除所有資料</span>
+                  <span class="ico-16" style="color: hsl(var(--destructive));"><i data-lucide="chevron-right"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim"></div>
+
+          <div class="alert">
+            <div class="px-6 pt-7 pb-2 flex justify-center">
+              <span class="iconbadge nuclear"><span class="ico-24"><i data-lucide="alert-triangle"></i></span></span>
+            </div>
+            <div class="px-6 pt-4">
+              <h3 class="text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">清除所有資料？</h3>
+              <p class="mt-3 text-[14px] leading-[1.55] text-center font-semibold" style="color: hsl(var(--foreground));">
+                此動作不可復原。
+              </p>
+              <p class="mt-1 text-[13.5px] leading-[1.55] text-center" style="color: hsl(var(--muted-foreground));">
+                所有訓練紀錄、自訂課表、設定都會永久刪除。
+              </p>
+
+              <!-- impact list -->
+              <div class="mt-4 rounded-[12px] p-3.5 space-y-1.5"
+                style="background: hsl(var(--destructive-soft)); border: 1px solid hsl(var(--destructive-border));">
+                <div class="flex items-center justify-between text-[12.5px]"><span style="color: hsl(var(--muted-foreground));">訓練紀錄</span><span class="mono font-semibold"><span class="num">147</span> 次</span></div>
+                <div class="flex items-center justify-between text-[12.5px]"><span style="color: hsl(var(--muted-foreground));">自訂課表</span><span class="mono font-semibold"><span class="num">6</span> 份</span></div>
+                <div class="flex items-center justify-between text-[12.5px]"><span style="color: hsl(var(--muted-foreground));">個人紀錄 PR</span><span class="mono font-semibold"><span class="num">23</span> 項</span></div>
+              </div>
+
+              <!-- type-to-confirm -->
+              <div class="mt-4">
+                <label class="block mono text-[10.5px] uppercase tracking-[1.4px] mb-1.5" style="color: hsl(var(--muted-foreground));">
+                  輸入「我要清除」以繼續
+                </label>
+                <input type="text" class="input" placeholder="我要清除" value="" />
+              </div>
+            </div>
+            <div class="px-6 pt-5 pb-6 grid grid-cols-2 gap-3">
+              <button class="btn btn-outline">取消</button>
+              <button class="btn btn-disabled">永久清除</button>
+            </div>
+          </div>
+          <div class="home-bar" style="opacity:0.85;"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Light · DISABLED · 等待輸入</div>
+      </div>
+
+      <!-- DARK — enabled state -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone theme-dark" data-screen-label="18.3 Clear · Dark · Enabled">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="flex items-center gap-3">
+                <span class="ico-22"><i data-lucide="chevron-left"></i></span>
+                <h2 class="text-[18px] font-bold tracking-[-0.015em]">設定</h2>
+              </div>
+              <div class="mt-6 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">資料</div>
+              <div class="mt-2 ghost-card overflow-hidden">
+                <div class="px-4 py-3.5 flex items-center justify-between" style="border-bottom: 1px solid hsl(var(--border));">
+                  <span class="text-[14px] font-medium">匯出 CSV</span>
+                  <span class="ico-16" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <div class="px-4 py-3.5 flex items-center justify-between" style="border-bottom: 1px solid hsl(var(--border));">
+                  <span class="text-[14px] font-medium">備份到 iCloud Drive</span>
+                  <span class="ico-16" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <div class="px-4 py-3.5 flex items-center justify-between">
+                  <span class="text-[14px] font-semibold" style="color: hsl(var(--destructive));">清除所有資料</span>
+                  <span class="ico-16" style="color: hsl(var(--destructive));"><i data-lucide="chevron-right"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim"></div>
+
+          <div class="alert">
+            <div class="px-6 pt-7 pb-2 flex justify-center">
+              <span class="iconbadge nuclear"><span class="ico-24"><i data-lucide="alert-triangle"></i></span></span>
+            </div>
+            <div class="px-6 pt-4">
+              <h3 class="text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">清除所有資料？</h3>
+              <p class="mt-3 text-[14px] leading-[1.55] text-center font-semibold" style="color: hsl(var(--foreground));">
+                此動作不可復原。
+              </p>
+              <p class="mt-1 text-[13.5px] leading-[1.55] text-center" style="color: hsl(var(--muted-foreground));">
+                所有訓練紀錄、自訂課表、設定都會永久刪除。
+              </p>
+
+              <div class="mt-4 rounded-[12px] p-3.5 space-y-1.5"
+                style="background: hsl(var(--destructive-soft)); border: 1px solid hsl(var(--destructive-border));">
+                <div class="flex items-center justify-between text-[12.5px]"><span style="color: hsl(var(--muted-foreground));">訓練紀錄</span><span class="mono font-semibold"><span class="num">147</span> 次</span></div>
+                <div class="flex items-center justify-between text-[12.5px]"><span style="color: hsl(var(--muted-foreground));">自訂課表</span><span class="mono font-semibold"><span class="num">6</span> 份</span></div>
+                <div class="flex items-center justify-between text-[12.5px]"><span style="color: hsl(var(--muted-foreground));">個人紀錄 PR</span><span class="mono font-semibold"><span class="num">23</span> 項</span></div>
+              </div>
+
+              <div class="mt-4">
+                <label class="block mono text-[10.5px] uppercase tracking-[1.4px] mb-1.5" style="color: hsl(var(--muted-foreground));">
+                  輸入「我要清除」以繼續
+                </label>
+                <div class="relative">
+                  <input type="text" class="input input-active" value="我要清除" />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 ico-16" style="color: hsl(var(--destructive));"><i data-lucide="check-circle-2"></i></span>
+                </div>
+              </div>
+            </div>
+            <div class="px-6 pt-5 pb-6 grid grid-cols-2 gap-3">
+              <button class="btn btn-outline">取消</button>
+              <button class="btn btn-destructive">永久清除</button>
+            </div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Dark · ENABLED · 輸入完成</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §18.4 UNSAVED CHANGES                                        -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 mt-4">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§18.4</span>
+      <h2 class="h-section">未儲存的變更</h2>
+      <span class="text-[13px] text-[#5a5b66]">三路抉擇 · 推薦動作（儲存）在頂、破壞動作（不儲存離開）在底用 ghost 紅</span>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-10 place-items-center pb-12">
+
+      <!-- LIGHT -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone" data-screen-label="18.4 Unsaved · Light">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <!-- bg: routine editor -->
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="flex items-center justify-between">
+                <span class="ico-22"><i data-lucide="x"></i></span>
+                <div class="text-center">
+                  <div class="text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">編輯課表</div>
+                  <div class="text-[15px] font-bold tracking-[-0.01em]">Push Day · 編輯中</div>
+                </div>
+                <span class="text-[14px] font-bold" style="color: hsl(var(--primary));">儲存</span>
+              </div>
+              <div class="mt-5 space-y-2">
+                <div class="ghost-card p-3 flex items-center gap-3">
+                  <span class="ico-16" style="color: hsl(var(--muted-foreground));"><i data-lucide="grip-vertical"></i></span>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold">Bench Press</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--muted-foreground));"><span class="num">4</span> × <span class="num">8–10</span></div>
+                  </div>
+                </div>
+                <div class="ghost-card p-3 flex items-center gap-3" style="border: 1px dashed hsl(var(--primary)); background: hsl(var(--accent));">
+                  <span class="ico-16" style="color: hsl(var(--primary));"><i data-lucide="plus"></i></span>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold" style="color: hsl(var(--primary));">Incline DB Press</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--primary));">新增 · 未儲存</div>
+                  </div>
+                </div>
+                <div class="ghost-card p-3 flex items-center gap-3">
+                  <span class="ico-16" style="color: hsl(var(--muted-foreground));"><i data-lucide="grip-vertical"></i></span>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold">Tricep Pushdown</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--muted-foreground));"><span class="num">3</span> × <span class="num">12</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dim"></div>
+
+          <div class="alert">
+            <div class="px-6 pt-7 pb-2 flex justify-center">
+              <span class="iconbadge info"><span class="ico-24"><i data-lucide="file-edit"></i></span></span>
+            </div>
+            <div class="px-6 pt-4">
+              <h3 class="text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">未儲存的變更會丟失</h3>
+              <p class="mt-2 text-[14px] leading-[1.55] text-center" style="color: hsl(var(--muted-foreground));">
+                確定要離開嗎？
+              </p>
+              <!-- changed summary -->
+              <div class="mt-4 mx-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-medium mono"
+                style="background: hsl(var(--accent)); color: hsl(var(--primary));">
+                <span class="ico-14"><i data-lucide="circle-dot"></i></span>1 個動作未存
+              </div>
+            </div>
+            <div class="px-6 pt-5 pb-5 space-y-2.5">
+              <button class="btn btn-primary">儲存並離開</button>
+              <button class="btn btn-outline">繼續編輯</button>
+              <button class="btn btn-ghost-destructive">不儲存離開</button>
+            </div>
+          </div>
+          <div class="home-bar" style="opacity:0.85;"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Light · 3-way</div>
+      </div>
+
+      <!-- DARK -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone theme-dark" data-screen-label="18.4 Unsaved · Dark">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="flex items-center justify-between">
+                <span class="ico-22"><i data-lucide="x"></i></span>
+                <div class="text-center">
+                  <div class="text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">編輯課表</div>
+                  <div class="text-[15px] font-bold tracking-[-0.01em]">Push Day · 編輯中</div>
+                </div>
+                <span class="text-[14px] font-bold" style="color: hsl(var(--primary));">儲存</span>
+              </div>
+              <div class="mt-5 space-y-2">
+                <div class="ghost-card p-3 flex items-center gap-3">
+                  <span class="ico-16" style="color: hsl(var(--muted-foreground));"><i data-lucide="grip-vertical"></i></span>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold">Bench Press</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--muted-foreground));"><span class="num">4</span> × <span class="num">8–10</span></div>
+                  </div>
+                </div>
+                <div class="ghost-card p-3 flex items-center gap-3" style="border: 1px dashed hsl(var(--primary)); background: hsl(var(--accent));">
+                  <span class="ico-16" style="color: hsl(var(--primary));"><i data-lucide="plus"></i></span>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold" style="color: hsl(var(--primary));">Incline DB Press</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--primary));">新增 · 未儲存</div>
+                  </div>
+                </div>
+                <div class="ghost-card p-3 flex items-center gap-3">
+                  <span class="ico-16" style="color: hsl(var(--muted-foreground));"><i data-lucide="grip-vertical"></i></span>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold">Tricep Pushdown</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--muted-foreground));"><span class="num">3</span> × <span class="num">12</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dim"></div>
+          <div class="alert">
+            <div class="px-6 pt-7 pb-2 flex justify-center">
+              <span class="iconbadge info"><span class="ico-24"><i data-lucide="file-edit"></i></span></span>
+            </div>
+            <div class="px-6 pt-4">
+              <h3 class="text-[20px] font-bold tracking-[-0.02em] text-center leading-[1.3]">未儲存的變更會丟失</h3>
+              <p class="mt-2 text-[14px] leading-[1.55] text-center" style="color: hsl(var(--muted-foreground));">
+                確定要離開嗎？
+              </p>
+              <div class="mt-4 mx-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-medium mono"
+                style="background: hsl(var(--accent)); color: hsl(var(--primary));">
+                <span class="ico-14"><i data-lucide="circle-dot"></i></span>1 個動作未存
+              </div>
+            </div>
+            <div class="px-6 pt-5 pb-5 space-y-2.5">
+              <button class="btn btn-primary">儲存並離開</button>
+              <button class="btn btn-outline">繼續編輯</button>
+              <button class="btn btn-ghost-destructive">不儲存離開</button>
+            </div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Dark · 3-way</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §18.5 UPDATE BANNER                                          -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 mt-4">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§18.5</span>
+      <h2 class="h-section">新版可用 banner</h2>
+      <span class="text-[13px] text-[#5a5b66]">非阻塞 · 坐在 status bar 下方 · 可右滑 dismiss</span>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-10 place-items-center pb-12">
+
+      <!-- LIGHT -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone" data-screen-label="18.5 Update Banner · Light">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+
+          <!-- Banner at top -->
+          <div class="banner" style="top: 60px;">
+            <div class="flex items-center gap-3 px-4 py-3">
+              <span class="iconbadge" style="width: 36px; height: 36px; border-radius: 10px; background: hsl(var(--primary)); color: hsl(var(--primary-foreground));">
+                <span class="ico-18"><i data-lucide="download"></i></span>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="text-[14px] font-bold tracking-[-0.01em] leading-tight">有新版本可用</div>
+                <div class="mono text-[11px] mt-0.5" style="color: hsl(var(--muted-foreground));">v1.4.2 · <span class="num">2.1</span> MB</div>
+              </div>
+              <button class="btn-text text-[14px] px-2 py-1">立即更新</button>
+              <button class="ico-16 -mr-1" style="color: hsl(var(--muted-foreground));"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+
+          <!-- Today screen below banner -->
+          <div class="absolute left-0 right-0 px-4" style="top: 148px;">
+            <div class="text-[12px] font-medium" style="color: hsl(var(--muted-foreground));">五月 18 · 週一</div>
+            <div class="mt-0.5 text-[26px] font-extrabold tracking-[-0.025em]">嗨, Alex</div>
+
+            <div class="mt-6 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));"><span style="display:inline-block;width:6px;height:6px;border-radius:3px;background: hsl(var(--primary));vertical-align:1px;margin-right:8px;"></span>今天 · WK 03</div>
+            <div class="mt-2 ghost-card p-5">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-[20px] font-bold tracking-[-0.02em]">Push Day</div>
+                  <div class="mt-0.5 text-[13px]" style="color: hsl(var(--muted-foreground));">胸三頭 · <span class="num">5</span> 動作 · <span class="num">52</span> 分</div>
+                </div>
+                <span class="ico-20" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+              </div>
+
+              <div class="mt-4 pt-4 border-t flex items-center gap-3" style="border-color: hsl(var(--border));">
+                <div class="flex-1">
+                  <div class="mono text-[10.5px] uppercase tracking-[1.2px]" style="color: hsl(var(--muted-foreground));">上次</div>
+                  <div class="text-[13px] font-medium mt-0.5"><span class="num">5</span> 天前 · <span class="num">48</span> 分</div>
+                </div>
+                <button class="btn btn-primary" style="width: auto; padding: 0 18px; height: 44px;">開始</button>
+              </div>
+            </div>
+
+            <div class="mt-5 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">本週進度</div>
+            <div class="mt-2 ghost-card p-4 flex items-baseline gap-4">
+              <div>
+                <div class="num text-[28px] font-extrabold tracking-[-0.02em]">3 <span class="text-[14px] font-semibold" style="color: hsl(var(--muted-foreground));">/ 5</span></div>
+                <div class="text-[12px]" style="color: hsl(var(--muted-foreground));">已完成</div>
+              </div>
+              <div class="flex-1 h-1.5 rounded-full" style="background: hsl(var(--muted));">
+                <div class="h-full rounded-full" style="width: 60%; background: hsl(var(--primary));"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="home-bar" style="opacity:0.85;"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Light · Top Banner</div>
+      </div>
+
+      <!-- DARK -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone theme-dark" data-screen-label="18.5 Update Banner · Dark">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <div class="banner" style="top: 60px;">
+            <div class="flex items-center gap-3 px-4 py-3">
+              <span class="iconbadge" style="width: 36px; height: 36px; border-radius: 10px; background: hsl(var(--primary)); color: hsl(var(--primary-foreground));">
+                <span class="ico-18"><i data-lucide="download"></i></span>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="text-[14px] font-bold tracking-[-0.01em] leading-tight">有新版本可用</div>
+                <div class="mono text-[11px] mt-0.5" style="color: hsl(var(--muted-foreground));">v1.4.2 · <span class="num">2.1</span> MB</div>
+              </div>
+              <button class="btn-text text-[14px] px-2 py-1">立即更新</button>
+              <button class="ico-16 -mr-1" style="color: hsl(var(--muted-foreground));"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+          <div class="absolute left-0 right-0 px-4" style="top: 148px;">
+            <div class="text-[12px] font-medium" style="color: hsl(var(--muted-foreground));">五月 18 · 週一</div>
+            <div class="mt-0.5 text-[26px] font-extrabold tracking-[-0.025em]">嗨, Alex</div>
+
+            <div class="mt-6 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));"><span style="display:inline-block;width:6px;height:6px;border-radius:3px;background: hsl(var(--primary));vertical-align:1px;margin-right:8px;"></span>今天 · WK 03</div>
+            <div class="mt-2 ghost-card p-5">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-[20px] font-bold tracking-[-0.02em]">Push Day</div>
+                  <div class="mt-0.5 text-[13px]" style="color: hsl(var(--muted-foreground));">胸三頭 · <span class="num">5</span> 動作 · <span class="num">52</span> 分</div>
+                </div>
+                <span class="ico-20" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+              </div>
+              <div class="mt-4 pt-4 border-t flex items-center gap-3" style="border-color: hsl(var(--border));">
+                <div class="flex-1">
+                  <div class="mono text-[10.5px] uppercase tracking-[1.2px]" style="color: hsl(var(--muted-foreground));">上次</div>
+                  <div class="text-[13px] font-medium mt-0.5"><span class="num">5</span> 天前 · <span class="num">48</span> 分</div>
+                </div>
+                <button class="btn btn-primary" style="width: auto; padding: 0 18px; height: 44px;">開始</button>
+              </div>
+            </div>
+
+            <div class="mt-5 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">本週進度</div>
+            <div class="mt-2 ghost-card p-4 flex items-baseline gap-4">
+              <div>
+                <div class="num text-[28px] font-extrabold tracking-[-0.02em]">3 <span class="text-[14px] font-semibold" style="color: hsl(var(--muted-foreground));">/ 5</span></div>
+                <div class="text-[12px]" style="color: hsl(var(--muted-foreground));">已完成</div>
+              </div>
+              <div class="flex-1 h-1.5 rounded-full" style="background: hsl(var(--muted));">
+                <div class="h-full rounded-full" style="width: 60%; background: hsl(var(--primary));"></div>
+              </div>
+            </div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Dark · Top Banner</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §18.6 INSTALL SUCCESS TOAST                                  -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 mt-4">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§18.6</span>
+      <h2 class="h-section">安裝成功 toast</h2>
+      <span class="text-[13px] text-[#5a5b66]">底部浮現 · 3 秒進度條跑完自動消 · 不擋手指</span>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-10 place-items-center pb-12">
+
+      <!-- LIGHT -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone" data-screen-label="18.6 Install Toast · Light">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <!-- bg -->
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="text-[12px] font-medium" style="color: hsl(var(--muted-foreground));">五月 18 · 週一</div>
+              <div class="mt-0.5 text-[26px] font-extrabold tracking-[-0.025em]">嗨, Alex</div>
+
+              <div class="mt-6 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));"><span style="display:inline-block;width:6px;height:6px;border-radius:3px;background: hsl(var(--primary));vertical-align:1px;margin-right:8px;"></span>今天 · WK 03</div>
+              <div class="mt-2 ghost-card p-5">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <div class="text-[20px] font-bold tracking-[-0.02em]">Push Day</div>
+                    <div class="mt-0.5 text-[13px]" style="color: hsl(var(--muted-foreground));">胸三頭 · <span class="num">5</span> 動作 · <span class="num">52</span> 分</div>
+                  </div>
+                  <span class="ico-20" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <div class="mt-4 pt-4 border-t flex items-center gap-3" style="border-color: hsl(var(--border));">
+                  <div class="flex-1">
+                    <div class="mono text-[10.5px] uppercase tracking-[1.2px]" style="color: hsl(var(--muted-foreground));">上次</div>
+                    <div class="text-[13px] font-medium mt-0.5"><span class="num">5</span> 天前 · <span class="num">48</span> 分</div>
+                  </div>
+                  <button class="btn btn-primary" style="width: auto; padding: 0 18px; height: 44px;">開始</button>
+                </div>
+              </div>
+
+              <div class="mt-5 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">最近</div>
+              <div class="mt-2 space-y-2">
+                <div class="ghost-card p-3 flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-[8px] flex items-center justify-center" style="background: hsl(var(--accent)); color: hsl(var(--primary));"><span class="ico-18"><i data-lucide="dumbbell"></i></span></div>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold">Pull Day</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--muted-foreground));"><span class="num">2</span> 天前 · <span class="num">54</span> 分</div>
+                  </div>
+                  <span class="ico-16" style="color: hsl(var(--success));"><i data-lucide="check"></i></span>
+                </div>
+                <div class="ghost-card p-3 flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-[8px] flex items-center justify-center" style="background: hsl(var(--accent)); color: hsl(var(--primary));"><span class="ico-18"><i data-lucide="dumbbell"></i></span></div>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold">Leg Day</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--muted-foreground));"><span class="num">4</span> 天前 · <span class="num">61</span> 分</div>
+                  </div>
+                  <span class="ico-16" style="color: hsl(var(--success));"><i data-lucide="check"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- toast -->
+          <div class="toast">
+            <div class="flex items-center gap-3 px-4 py-3.5">
+              <span class="iconbadge success" style="width: 36px; height: 36px; border-radius: 10px;">
+                <span class="ico-18"><i data-lucide="check"></i></span>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="text-[14px] font-bold tracking-[-0.01em] leading-tight">FitForge 已安裝到主畫面</div>
+                <div class="text-[12px] mt-0.5" style="color: hsl(var(--muted-foreground));">下次直接從桌面開、不用瀏覽器</div>
+              </div>
+              <button class="ico-16 -mr-1" style="color: hsl(var(--muted-foreground));"><i data-lucide="x"></i></button>
+            </div>
+            <div class="toast-progress" style="background: hsl(var(--success));"></div>
+          </div>
+
+          <div class="home-bar" style="opacity:0.85;"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Light · Bottom Toast · 3s</div>
+      </div>
+
+      <!-- DARK -->
+      <div class="flex flex-col items-center gap-3">
+        <div class="phone theme-dark" data-screen-label="18.6 Install Toast · Dark">
+          <div class="notch"></div>
+          <div class="absolute top-0 left-0 right-0 h-[54px] flex items-center justify-between px-9 pt-2 z-10">
+            <span class="num text-[15px] font-semibold">9:41</span>
+            <div class="flex items-center gap-1.5">
+              <span class="ico-14"><i data-lucide="signal"></i></span>
+              <span class="ico-14"><i data-lucide="wifi"></i></span>
+              <span class="ico-16"><i data-lucide="battery-full"></i></span>
+            </div>
+          </div>
+          <div class="bg-screen">
+            <div class="px-4">
+              <div class="text-[12px] font-medium" style="color: hsl(var(--muted-foreground));">五月 18 · 週一</div>
+              <div class="mt-0.5 text-[26px] font-extrabold tracking-[-0.025em]">嗨, Alex</div>
+
+              <div class="mt-6 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));"><span style="display:inline-block;width:6px;height:6px;border-radius:3px;background: hsl(var(--primary));vertical-align:1px;margin-right:8px;"></span>今天 · WK 03</div>
+              <div class="mt-2 ghost-card p-5">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <div class="text-[20px] font-bold tracking-[-0.02em]">Push Day</div>
+                    <div class="mt-0.5 text-[13px]" style="color: hsl(var(--muted-foreground));">胸三頭 · <span class="num">5</span> 動作 · <span class="num">52</span> 分</div>
+                  </div>
+                  <span class="ico-20" style="color: hsl(var(--muted-foreground));"><i data-lucide="chevron-right"></i></span>
+                </div>
+                <div class="mt-4 pt-4 border-t flex items-center gap-3" style="border-color: hsl(var(--border));">
+                  <div class="flex-1">
+                    <div class="mono text-[10.5px] uppercase tracking-[1.2px]" style="color: hsl(var(--muted-foreground));">上次</div>
+                    <div class="text-[13px] font-medium mt-0.5"><span class="num">5</span> 天前 · <span class="num">48</span> 分</div>
+                  </div>
+                  <button class="btn btn-primary" style="width: auto; padding: 0 18px; height: 44px;">開始</button>
+                </div>
+              </div>
+
+              <div class="mt-5 text-[11px] font-bold tracking-[1.5px] uppercase mono" style="color: hsl(var(--muted-foreground));">最近</div>
+              <div class="mt-2 space-y-2">
+                <div class="ghost-card p-3 flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-[8px] flex items-center justify-center" style="background: hsl(var(--accent)); color: hsl(var(--primary));"><span class="ico-18"><i data-lucide="dumbbell"></i></span></div>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold">Pull Day</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--muted-foreground));"><span class="num">2</span> 天前 · <span class="num">54</span> 分</div>
+                  </div>
+                  <span class="ico-16" style="color: hsl(var(--success));"><i data-lucide="check"></i></span>
+                </div>
+                <div class="ghost-card p-3 flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-[8px] flex items-center justify-center" style="background: hsl(var(--accent)); color: hsl(var(--primary));"><span class="ico-18"><i data-lucide="dumbbell"></i></span></div>
+                  <div class="flex-1">
+                    <div class="text-[14px] font-semibold">Leg Day</div>
+                    <div class="mono text-[11.5px]" style="color: hsl(var(--muted-foreground));"><span class="num">4</span> 天前 · <span class="num">61</span> 分</div>
+                  </div>
+                  <span class="ico-16" style="color: hsl(var(--success));"><i data-lucide="check"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="toast">
+            <div class="flex items-center gap-3 px-4 py-3.5">
+              <span class="iconbadge success" style="width: 36px; height: 36px; border-radius: 10px;">
+                <span class="ico-18"><i data-lucide="check"></i></span>
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="text-[14px] font-bold tracking-[-0.01em] leading-tight">FitForge 已安裝到主畫面</div>
+                <div class="text-[12px] mt-0.5" style="color: hsl(var(--muted-foreground));">下次直接從桌面開、不用瀏覽器</div>
+              </div>
+              <button class="ico-16 -mr-1" style="color: hsl(var(--muted-foreground));"><i data-lucide="x"></i></button>
+            </div>
+            <div class="toast-progress" style="background: hsl(var(--success));"></div>
+          </div>
+
+          <div class="home-bar"></div>
+        </div>
+        <div class="mono text-[11px] text-[#8a8074] tracking-[1.2px] uppercase">Dark · Bottom Toast · 3s</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- COPYWRITING + SPEC                                           -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 pb-20">
+    <div class="grid md:grid-cols-3 gap-3">
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>文案規則</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.6]">
+          <li>· 標題用<strong class="font-semibold">疑問句</strong>、不用「警告！」</li>
+          <li>· 內容講<strong class="font-semibold">後果</strong>、不嚇人 — 「會丟失」不寫「將永遠失去」</li>
+          <li>· 動詞 CTA：「結束 / 放棄 / 清除」、不寫「確定 / OK」</li>
+          <li>· 安全按鈕用「繼續訓練」、不用「取消」（具體比通用好）</li>
+        </ul>
+      </div>
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>視覺權重</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.6]">
+          <li>· §18.1 <span class="mono">primary</span> · 中度後悔 · 1 秒可復原</li>
+          <li>· §18.2 <span class="mono" style="color: hsl(0 75% 50%);">destructive</span> · 整次刪</li>
+          <li>· §18.3 <span class="mono" style="color: hsl(0 75% 50%);">destructive + 鎖</span> · type-to-confirm</li>
+          <li>· §18.4 <span class="mono">3 路</span> · 提供逃生路徑（儲存）</li>
+          <li>· §18.5 / §18.6 · 不阻塞、用 inline color cue</li>
+        </ul>
+      </div>
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>互動細則</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.6]">
+          <li>· Esc / 點 dim → 觸發「安全按鈕」、不觸發 destructive</li>
+          <li>· 鍵盤 focus 預設落在<strong class="font-semibold">安全</strong>按鈕</li>
+          <li>· §18.3 input <code class="tok">autocomplete="off"</code> · IME 友善</li>
+          <li>· Banner 右滑 dismiss · 7 天內不再出</li>
+          <li>· Toast 不堆疊 · 新的取代舊的</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  </script>
+</body>
+</html>

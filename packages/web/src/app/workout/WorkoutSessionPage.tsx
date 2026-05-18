@@ -21,6 +21,7 @@ import { useRxQuery } from '@/lib/rxdb/useRxQuery';
 import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
 import { Chip } from '@/ui/Chip';
+import { ConfirmDialog } from '@/ui/ConfirmDialog';
 import { Sheet } from '@/ui/Sheet';
 import { NumberStepper } from '@/ui/NumberStepper';
 import { ExerciseThumb } from '@/features/exercises/ExerciseThumb';
@@ -344,15 +345,26 @@ function ActiveSession({ workout, exerciseMap, navigate }: ActiveSessionProps) {
         lastSet={lastCompletedSet}
       />
 
-      {/* Finish confirm */}
-      {confirmingFinish ? (
-        <ConfirmFinish
-          completedSets={completedSetsCount}
-          totalSets={totalSetsCount}
-          onCancel={() => setConfirmingFinish(false)}
-          onConfirm={finishWorkout}
-        />
-      ) : null}
+      {/* Finish confirm — §22.1 中度破壞、CTA 用 primary 色 */}
+      <ConfirmDialog
+        open={confirmingFinish}
+        variant="primary"
+        title="結束本次訓練？"
+        description="已紀錄的組會保留、未完成的組會丟失。"
+        meta={
+          <span className="inline-flex items-center gap-3 rounded-[10px] bg-muted px-3.5 py-2 text-[12px]">
+            <span className="num font-medium">{completedSetsCount} 組保留</span>
+            <span className="opacity-40">·</span>
+            <span className="num font-medium text-muted-foreground">
+              {totalSetsCount - completedSetsCount} 組丟失
+            </span>
+          </span>
+        }
+        confirmLabel="結束"
+        cancelLabel="繼續訓練"
+        onCancel={() => setConfirmingFinish(false)}
+        onConfirm={finishWorkout}
+      />
     </div>
   );
 }
@@ -775,50 +787,6 @@ function FullScreenLoader() {
   return (
     <div className="flex h-full items-center justify-center text-muted-foreground">
       <div className="h-7 w-7 animate-spin rounded-full border-2 border-border border-t-primary" />
-    </div>
-  );
-}
-
-// ===========================================================================
-// Confirm finish
-// ===========================================================================
-
-function ConfirmFinish({
-  completedSets,
-  totalSets,
-  onCancel,
-  onConfirm,
-}: {
-  completedSets: number;
-  totalSets: number;
-  onCancel: () => void;
-  onConfirm: () => void;
-}) {
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-6 backdrop-blur-sm"
-      onClick={onCancel}
-    >
-      <Card
-        onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm p-5 text-center shadow-ds-lg"
-      >
-        <h3 className="text-[18px] font-bold">結束本次訓練？</h3>
-        <p className="mt-2 text-[13.5px] leading-snug text-muted-foreground">
-          已完成 <span className="num font-bold text-foreground">{completedSets}</span> / {totalSets}{' '}
-          組。已紀錄的會保留、未完成的組會丟失。
-        </p>
-        <div className="mt-5 flex gap-2">
-          <Button variant="outline" size="md" block onClick={onCancel}>
-            繼續訓練
-          </Button>
-          <Button variant="destructive" size="md" block onClick={onConfirm}>
-            結束
-          </Button>
-        </div>
-      </Card>
     </div>
   );
 }

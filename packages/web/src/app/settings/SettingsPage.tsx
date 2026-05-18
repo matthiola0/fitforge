@@ -16,6 +16,7 @@ import { useRxQuery } from '@/lib/rxdb/useRxQuery';
 import { PageHeader } from '@/app/_layout/PageHeader';
 import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
+import { ConfirmDialog } from '@/ui/ConfirmDialog';
 import { useUiStore } from '@/stores/uiStore';
 import { cn } from '@/lib/cn';
 
@@ -230,9 +231,21 @@ export function SettingsPage() {
         </p>
       </div>
 
-      {confirmReset ? (
-        <DangerConfirm onCancel={() => setConfirmReset(false)} onConfirm={handleReset} />
-      ) : null}
+      <ConfirmDialog
+        open={confirmReset}
+        variant="nuclear"
+        title="清除所有資料？"
+        description={
+          <>
+            <strong className="text-foreground">此動作不可復原。</strong>
+            所有訓練紀錄、自訂課表、設定都會永久刪除。
+          </>
+        }
+        typeToConfirm="我要清除"
+        confirmLabel="永久清除"
+        onCancel={() => setConfirmReset(false)}
+        onConfirm={handleReset}
+      />
     </>
   );
 }
@@ -452,57 +465,3 @@ function SmallNumber({
   );
 }
 
-// ---------------------------------------------------------------------------
-// Confirm
-// ---------------------------------------------------------------------------
-
-function DangerConfirm({
-  onCancel,
-  onConfirm,
-}: {
-  onCancel: () => void;
-  onConfirm: () => void;
-}) {
-  const [text, setText] = useState('');
-  const canConfirm = text.trim() === '我要清除';
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-6 backdrop-blur-sm"
-      onClick={onCancel}
-    >
-      <Card
-        onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm p-5 shadow-ds-lg"
-      >
-        <h3 className="text-center text-[17px] font-bold text-destructive">清除所有資料？</h3>
-        <p className="mt-2 text-center text-[13px] leading-snug text-muted-foreground">
-          <strong className="text-foreground">此動作不可復原。</strong>
-          所有訓練紀錄、自訂課表、設定都會永久刪除。
-        </p>
-        <div className="mt-4 space-y-2">
-          <label className="block text-[11.5px] font-semibold text-muted-foreground">
-            輸入「<span className="text-foreground">我要清除</span>」確認
-          </label>
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="我要清除"
-            className="h-10 w-full rounded-md border border-input bg-card px-3 text-[14px] outline-none focus-visible:ring-2 focus-visible:ring-destructive"
-          />
-        </div>
-        <div className="mt-4 flex gap-2">
-          <Button variant="outline" size="md" block onClick={onCancel}>
-            取消
-          </Button>
-          <Button variant="destructive" size="md" block onClick={onConfirm} disabled={!canConfirm}>
-            永久清除
-          </Button>
-        </div>
-      </Card>
-    </div>
-  );
-}

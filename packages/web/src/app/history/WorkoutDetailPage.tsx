@@ -7,6 +7,7 @@ import { useRxQuery } from '@/lib/rxdb/useRxQuery';
 import { PageHeader } from '@/app/_layout/PageHeader';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
+import { ConfirmDialog } from '@/ui/ConfirmDialog';
 import { Chip } from '@/ui/Chip';
 import { useUiStore } from '@/stores/uiStore';
 import { formatDuration } from '@/lib/time/formatDuration';
@@ -191,9 +192,15 @@ export function WorkoutDetailPage() {
         </div>
       </div>
 
-      {confirmDelete ? (
-        <DeleteConfirm onCancel={() => setConfirmDelete(false)} onConfirm={handleDelete} />
-      ) : null}
+      <ConfirmDialog
+        open={confirmDelete}
+        variant="destructive"
+        title="移除這筆訓練？"
+        description="軟刪除、可從匯出 JSON 復原。"
+        confirmLabel="移除"
+        onCancel={() => setConfirmDelete(false)}
+        onConfirm={handleDelete}
+      />
     </>
   );
 }
@@ -361,36 +368,3 @@ function volume(we: WorkoutExercise): number {
   return v;
 }
 
-// ---------------------------------------------------------------------------
-// Delete confirm
-// ---------------------------------------------------------------------------
-
-function DeleteConfirm({
-  onCancel,
-  onConfirm,
-}: {
-  onCancel: () => void;
-  onConfirm: () => void;
-}) {
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-6 backdrop-blur-sm"
-      onClick={onCancel}
-    >
-      <Card onClick={(e) => e.stopPropagation()} className="w-full max-w-sm p-5 text-center shadow-ds-lg">
-        <h3 className="text-[16px] font-bold">移除這筆訓練？</h3>
-        <p className="mt-2 text-[13px] text-muted-foreground">軟刪除、可從匯出 JSON 復原。</p>
-        <div className="mt-4 flex gap-2">
-          <Button variant="outline" size="md" block onClick={onCancel}>
-            取消
-          </Button>
-          <Button variant="destructive" size="md" block onClick={onConfirm}>
-            移除
-          </Button>
-        </div>
-      </Card>
-    </div>
-  );
-}

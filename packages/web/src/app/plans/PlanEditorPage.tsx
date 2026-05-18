@@ -17,7 +17,10 @@ import { PageHeader } from '@/app/_layout/PageHeader';
 import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
 import { Chip } from '@/ui/Chip';
+import { ConfirmDialog } from '@/ui/ConfirmDialog';
+import { EmptyState } from '@/ui/EmptyState';
 import { Sheet } from '@/ui/Sheet';
+import { Skeleton } from '@/ui/Skeleton';
 import { Input } from '@/ui/Input';
 import { ExerciseThumb } from '@/features/exercises/ExerciseThumb';
 import { useExercises } from '@/features/exercises/useExercises';
@@ -289,19 +292,26 @@ export function PlanEditorPage() {
 
       <SaveBar dirty={dirty} saving={saving} onSave={onSave} onCancel={onClose} />
 
-      {confirmExit ? (
-        <ExitConfirm
-          onCancel={() => setConfirmExit(false)}
-          onDiscard={() => {
+      <ConfirmDialog
+        open={confirmExit}
+        variant="warning"
+        title="未儲存的變更會丟失"
+        description="想先儲存嗎？"
+        confirmLabel="儲存並關閉"
+        cancelLabel="繼續編輯"
+        tertiary={{
+          label: '不儲存、直接離開',
+          onClick: () => {
             setConfirmExit(false);
             navigate(`/plans/${planId}`);
-          }}
-          onSave={async () => {
-            setConfirmExit(false);
-            await onSave();
-          }}
-        />
-      ) : null}
+          },
+        }}
+        onCancel={() => setConfirmExit(false)}
+        onConfirm={async () => {
+          setConfirmExit(false);
+          await onSave();
+        }}
+      />
     </>
   );
 }
@@ -750,13 +760,13 @@ function ExercisePickerSheet({
       {/* List */}
       <div className="px-3 py-2">
         {isLoading ? (
-          <div className="space-y-2">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="h-[64px] animate-pulse rounded-lg bg-muted/40" />
-            ))}
-          </div>
+          <Skeleton variant="row" count={3} />
         ) : (exercises ?? []).length === 0 ? (
-          <p className="px-2 py-8 text-center text-[13px] text-muted-foreground">沒有符合的動作</p>
+          <EmptyState
+            className="py-8"
+            title="沒有符合的動作"
+            description="換個關鍵字或部位試試。"
+          />
         ) : (
           <ul className="space-y-1.5">
             {(exercises ?? []).map((ex) => (
@@ -812,41 +822,6 @@ function SaveBar({
           {saving ? '儲存中...' : dirty ? '儲存' : '已儲存'}
         </Button>
       </div>
-    </div>
-  );
-}
-
-function ExitConfirm({
-  onCancel,
-  onDiscard,
-  onSave,
-}: {
-  onCancel: () => void;
-  onDiscard: () => void;
-  onSave: () => void;
-}) {
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-6 backdrop-blur-sm"
-      onClick={onCancel}
-    >
-      <Card onClick={(e) => e.stopPropagation()} className="w-full max-w-sm p-5 text-center shadow-ds-lg">
-        <h3 className="text-[17px] font-bold">未儲存的變更會丟失</h3>
-        <p className="mt-2 text-[13.5px] text-muted-foreground">想先儲存嗎？</p>
-        <div className="mt-4 grid gap-2">
-          <Button size="md" block onClick={onSave}>
-            儲存並關閉
-          </Button>
-          <Button variant="destructive" size="md" block onClick={onDiscard}>
-            不儲存、直接離開
-          </Button>
-          <Button variant="outline" size="md" block onClick={onCancel}>
-            繼續編輯
-          </Button>
-        </div>
-      </Card>
     </div>
   );
 }

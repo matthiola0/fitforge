@@ -1,0 +1,1546 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · §19 空 / 載入 / 錯誤狀態</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          bg: 'hsl(var(--bg) / <alpha-value>)',
+          fg: 'hsl(var(--fg) / <alpha-value>)',
+          card: 'hsl(var(--card) / <alpha-value>)',
+          primary: 'hsl(var(--primary) / <alpha-value>)',
+          'primary-fg': 'hsl(var(--primary-fg) / <alpha-value>)',
+          muted: 'hsl(var(--muted) / <alpha-value>)',
+          'muted-fg': 'hsl(var(--muted-fg) / <alpha-value>)',
+          border: 'hsl(var(--border) / <alpha-value>)',
+          destructive: 'hsl(var(--destructive) / <alpha-value>)',
+          warning: 'hsl(var(--warning) / <alpha-value>)',
+          accent: 'hsl(var(--accent) / <alpha-value>)',
+        },
+        fontFamily: {
+          sans: ['Inter', 'Noto Sans TC', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+      } }
+    };
+  </script>
+  <style>
+    :root {
+      --bg: 30 25% 99%;
+      --fg: 240 12% 10%;
+      --card: 0 0% 100%;
+      --primary: 8 78% 55%;
+      --primary-fg: 0 0% 100%;
+      --muted: 30 8% 95%;
+      --muted-2: 30 8% 90%;
+      --muted-fg: 240 5% 45%;
+      --accent: 15 100% 96%;
+      --border: 30 10% 88%;
+      --destructive: 0 75% 50%;
+      --destructive-soft: 0 78% 96%;
+      --warning: 38 94% 50%;
+      --success: 150 62% 38%;
+    }
+    .theme-dark {
+      --bg: 240 10% 7%;
+      --fg: 30 20% 95%;
+      --card: 240 8% 11%;
+      --primary: 8 85% 62%;
+      --primary-fg: 240 30% 8%;
+      --muted: 240 6% 14%;
+      --muted-2: 240 6% 18%;
+      --muted-fg: 240 5% 64%;
+      --accent: 240 6% 18%;
+      --border: 240 6% 22%;
+      --destructive: 0 74% 60%;
+      --destructive-soft: 0 50% 16%;
+      --warning: 38 90% 56%;
+      --success: 150 58% 50%;
+    }
+
+    html, body {
+      font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background:
+        radial-gradient(1200px 600px at 30% 10%, #efe9dd 0%, transparent 60%),
+        radial-gradient(900px 700px at 80% 90%, #e7dfd0 0%, transparent 55%),
+        #ebe4d5;
+      color: #17181F;
+    }
+    .num, .mono { font-variant-numeric: tabular-nums lining-nums; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .eyebrow-page {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.8px; text-transform: uppercase;
+      color: #6B6D77;
+    }
+    .eyebrow-page .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: #E14B36; vertical-align: 1px; margin-right: 8px;
+    }
+    code.tok {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; padding: 1px 6px; border-radius: 4px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #E1DDD7;
+      color: #17181F;
+    }
+    .var-eyebrow {
+      font-size: 10.5px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; color: #8a8074;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .h-section {
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* ====== mini phone screen ====== */
+    .screen {
+      width: 290px;
+      height: 580px;
+      border-radius: 28px;
+      background: hsl(var(--bg));
+      overflow: hidden;
+      position: relative;
+      color: hsl(var(--fg));
+      box-shadow:
+        0 24px 40px -16px rgba(20, 16, 10, 0.22),
+        0 8px 16px -8px rgba(20, 16, 10, 0.14),
+        0 0 0 8px #15151b,
+        0 0 0 9px #2a2a32;
+    }
+    .notch {
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 88px; height: 22px; border-radius: 13px;
+      background: #0a0a10; z-index: 20;
+    }
+    .home-bar {
+      position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
+      width: 96px; height: 4px; border-radius: 2px;
+      background: hsl(var(--fg)); opacity: 0.5; z-index: 30;
+    }
+    .sbar {
+      position: absolute; top: 0; left: 0; right: 0; height: 38px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 22px 0;
+      z-index: 10;
+    }
+    .sbar .t { font-size: 11.5px; font-weight: 600; }
+    .sbar .r { display: flex; align-items: center; gap: 4px; }
+    .sbar svg { width: 11px; height: 11px; stroke-width: 2; }
+
+    /* topbar: title under status bar */
+    .topbar {
+      padding: 44px 18px 0;
+    }
+    .topbar .crumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px;
+      color: hsl(var(--muted-fg));
+    }
+    .topbar .ttl {
+      margin-top: 4px;
+      font-size: 18px; font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    /* tabbar */
+    .tabbar {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 64px;
+      background: hsl(var(--card));
+      border-top: 1px solid hsl(var(--border));
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 6px 0 16px;
+    }
+    .tabbar .tab {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2px;
+      font-size: 10px;
+      color: hsl(var(--muted-fg));
+      font-weight: 500;
+    }
+    .tabbar .tab.on {
+      color: hsl(var(--primary));
+      font-weight: 600;
+    }
+    .tabbar .tab svg { width: 18px; height: 18px; stroke-width: 2; }
+
+    /* ====== icons (raw lucide) ====== */
+    .ico-12 svg { width: 12px; height: 12px; stroke-width: 2; }
+    .ico-14 svg { width: 14px; height: 14px; stroke-width: 2; }
+    .ico-16 svg { width: 16px; height: 16px; stroke-width: 2; }
+    .ico-18 svg { width: 18px; height: 18px; stroke-width: 2; }
+    .ico-20 svg { width: 20px; height: 20px; stroke-width: 2; }
+
+    /* ====== empty state body ====== */
+    .empty-body {
+      position: absolute;
+      top: 90px; left: 0; right: 0; bottom: 64px;
+      padding: 0 20px;
+      display: flex; flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .empty-art {
+      width: 160px; height: 160px;
+    }
+    .empty-title {
+      margin-top: 18px;
+      font-size: 17px; font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+    .empty-sub {
+      margin-top: 6px;
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: hsl(var(--muted-fg));
+      max-width: 22ch;
+    }
+    .empty-cta {
+      margin-top: 22px;
+      height: 44px;
+      padding: 0 22px;
+      border-radius: 11px;
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-fg));
+      font-weight: 700;
+      font-size: 13.5px;
+      display: inline-flex;
+      align-items: center; gap: 6px;
+    }
+    .empty-cta.outline {
+      background: transparent;
+      border: 1px solid hsl(var(--border));
+      color: hsl(var(--fg));
+    }
+
+    /* ====== buttons (in shells) ====== */
+    .btn-primary {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-fg));
+      font-weight: 700;
+    }
+
+    /* ====== skeleton & shimmer ====== */
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .skel {
+      position: relative;
+      background: hsl(var(--muted));
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .skel::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        hsl(var(--bg) / 0.6) 50%,
+        transparent 100%);
+      animation: shimmer 1.6s infinite;
+    }
+    .theme-dark .skel::after {
+      background: linear-gradient(90deg,
+        transparent 0%,
+        hsl(var(--muted-2) / 0.9) 50%,
+        transparent 100%);
+    }
+
+    /* ====== spinner ====== */
+    @keyframes spinForge {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .spinner {
+      width: 48px; height: 48px;
+      animation: spinForge 1.1s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+    }
+
+    /* ====== error icon container ====== */
+    .err-icon {
+      width: 72px; height: 72px;
+      border-radius: 22px;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .err-icon.danger {
+      background: hsl(var(--destructive-soft));
+      color: hsl(var(--destructive));
+    }
+    .err-icon.offline {
+      background: hsl(var(--muted));
+      color: hsl(var(--muted-fg));
+    }
+    .err-icon.notfound {
+      background: hsl(var(--accent));
+      color: hsl(var(--primary));
+    }
+
+    /* ====== page card ====== */
+    .page-card {
+      background: white;
+      border: 1px solid #E1DDD7;
+      border-radius: 16px;
+    }
+
+    /* pattern card (groups light+dark) */
+    .pattern-card {
+      background: white;
+      border: 1px solid #E1DDD7;
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .pattern-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+    .pattern-card .lab {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #8a8074;
+      font-weight: 700;
+    }
+    .pattern-card .lab .pp {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 3px;
+      background: #E14B36;
+      vertical-align: 1px; margin-right: 6px;
+    }
+
+    /* shimmer tag dot */
+    .live-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 999px;
+      background: hsl(var(--success));
+      animation: livePulse 1.2s ease-in-out infinite;
+      vertical-align: 1px; margin-right: 6px;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+    .live-cap {
+      display: inline-flex; align-items: center;
+      font-size: 10.5px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: hsl(var(--success));
+      font-weight: 700;
+    }
+    .theme-dark .live-cap { color: hsl(var(--success)); }
+
+    /* ====== compact "screen pair" wrap ====== */
+    .pair {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    /* labelled tag */
+    .tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: hsl(var(--muted));
+      color: hsl(var(--muted-fg));
+      border: 1px solid hsl(var(--border));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skel::after, .spinner, .live-dot { animation: none !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ============================================================ -->
+  <!-- MASTHEAD                                                     -->
+  <!-- ============================================================ -->
+  <header class="max-w-[1320px] mx-auto px-8 pt-16 pb-10">
+    <div class="eyebrow-page"><span class="dot"></span>FITFORGE · §19 · NON-HAPPY PATTERNS</div>
+    <h1 class="mt-3 text-[44px] md:text-[52px] font-extrabold tracking-[-0.035em] leading-[1.02]">
+      空、載入、出錯 — <span style="color:#E14B36;">三種真實狀態</span>
+    </h1>
+    <p class="mt-5 text-[16px] text-[#5a5b66] leading-[1.65] max-w-[68ch]">
+      90% 的設計時間在快樂路徑、10% 在這裡。但使用者在這 10% 形成你 90% 的印象。
+      <strong class="font-semibold text-[#17181F]">空狀態要邀請、載入要誠實、錯誤要可救援。</strong>
+    </p>
+    <div class="mt-7 py-3 border-t border-b border-[#dcd6c9] flex flex-wrap gap-x-7 gap-y-2 text-[12.5px] text-[#5a5b66]">
+      <span><strong class="text-[#17181F] font-bold">11 個 pattern</strong> · Light + Dark</span>
+      <span><strong class="text-[#17181F] font-bold">插圖</strong> · 線稿 · primary 單色 · 200×200</span>
+      <span><strong class="text-[#17181F] font-bold">Loading</strong> · skeleton 優先 · spinner 最多 2 秒</span>
+      <span class="mono ml-auto text-[#8a8074]">本頁所有 skeleton / spinner 為真實動畫</span>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- §19.1 EMPTY STATES                                           -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 pb-4">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§19.1</span>
+      <h2 class="h-section">空狀態 · Empty</h2>
+      <span class="text-[13px] text-[#5a5b66]">第一次 / 沒結果 / 還沒做 — 永遠給一個下一步</span>
+    </div>
+
+    <!-- Anatomy strip -->
+    <div class="mt-5 page-card p-5 grid grid-cols-12 gap-5 items-center">
+      <div class="col-span-3">
+        <div class="eyebrow-page"><span class="dot"></span>解剖</div>
+        <p class="mt-2 text-[13px] text-[#17181F] leading-[1.55]">
+          四個元素垂直置中、間距固定、CTA 永遠在底。
+          副標講<strong class="font-semibold">為什麼空</strong>、不講「沒有資料」。
+        </p>
+      </div>
+      <div class="col-span-9">
+        <div class="grid grid-cols-4 gap-3 text-[12px]">
+          <div class="rounded-[10px] p-3" style="background: hsl(30 8% 95%); border: 1px solid hsl(30 10% 88%);">
+            <div class="mono text-[10px] uppercase tracking-[1.2px] text-[#8a8074]">01 · ART</div>
+            <div class="mt-1 font-semibold">線稿插圖</div>
+            <div class="mt-0.5 text-[#5a5b66]">200×200 · single stroke · primary 60%</div>
+          </div>
+          <div class="rounded-[10px] p-3" style="background: hsl(30 8% 95%); border: 1px solid hsl(30 10% 88%);">
+            <div class="mono text-[10px] uppercase tracking-[1.2px] text-[#8a8074]">02 · TITLE</div>
+            <div class="mt-1 font-semibold">H3 · 17–20px</div>
+            <div class="mt-0.5 text-[#5a5b66]">陳述事實、不哀求</div>
+          </div>
+          <div class="rounded-[10px] p-3" style="background: hsl(30 8% 95%); border: 1px solid hsl(30 10% 88%);">
+            <div class="mono text-[10px] uppercase tracking-[1.2px] text-[#8a8074]">03 · SUB</div>
+            <div class="mt-1 font-semibold">Body · 12.5–14px · muted</div>
+            <div class="mt-0.5 text-[#5a5b66]">解釋下一步是什麼</div>
+          </div>
+          <div class="rounded-[10px] p-3" style="background: hsl(30 8% 95%); border: 1px solid hsl(30 10% 88%);">
+            <div class="mono text-[10px] uppercase tracking-[1.2px] text-[#8a8074]">04 · CTA</div>
+            <div class="mt-1 font-semibold">Primary · 動詞開頭</div>
+            <div class="mt-0.5 text-[#5a5b66]">「開始 / 去選 / 清除」</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Empty patterns grid ===== -->
+    <div class="mt-6 grid grid-cols-2 gap-5">
+
+      <!-- ============ 1. 還沒有訓練紀錄 ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>EMPTY · 01</div>
+            <h3 class="mt-1">還沒有訓練紀錄</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">首次使用 · 歷史 tab</p>
+          </div>
+          <span class="tag">FIRST RUN</span>
+        </div>
+
+        <div class="mt-5 pair">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.1.1 Empty History · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="history"></i></span>歷史</div>
+              <div class="ttl">訓練紀錄</div>
+            </div>
+            <div class="empty-body">
+              <svg viewBox="0 0 200 200" class="empty-art">
+                <!-- notebook lines, empty -->
+                <rect x="44" y="38" width="112" height="132" rx="6" fill="none" stroke="hsl(var(--primary))" stroke-width="2.2"/>
+                <line x1="60" y1="38" x2="60" y2="170" stroke="hsl(var(--primary))" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5"/>
+                <!-- empty rows (dashed) -->
+                <line x1="68" y1="60" x2="148" y2="60" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <line x1="68" y1="82" x2="138" y2="82" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <line x1="68" y1="104" x2="148" y2="104" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <line x1="68" y1="126" x2="124" y2="126" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <line x1="68" y1="148" x2="140" y2="148" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <!-- corner accent -->
+                <circle cx="156" cy="50" r="10" fill="hsl(var(--primary))"/>
+                <path d="M 152 50 L 156 54 L 161 47" stroke="hsl(var(--primary-fg))" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- bookmark -->
+                <path d="M 84 32 L 84 56 L 96 48 L 108 56 L 108 32" fill="none" stroke="hsl(var(--primary))" stroke-width="2.2" stroke-linejoin="round"/>
+              </svg>
+              <div class="empty-title">還沒有訓練紀錄</div>
+              <div class="empty-sub">完成第一次訓練後、就會出現在這裡</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="play"></i></span>開始第一次訓練</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab on"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark" data-screen-label="19.1.1 Empty History · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="history"></i></span>歷史</div>
+              <div class="ttl">訓練紀錄</div>
+            </div>
+            <div class="empty-body">
+              <svg viewBox="0 0 200 200" class="empty-art">
+                <rect x="44" y="38" width="112" height="132" rx="6" fill="none" stroke="hsl(var(--primary))" stroke-width="2.2"/>
+                <line x1="60" y1="38" x2="60" y2="170" stroke="hsl(var(--primary))" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5"/>
+                <line x1="68" y1="60" x2="148" y2="60" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <line x1="68" y1="82" x2="138" y2="82" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <line x1="68" y1="104" x2="148" y2="104" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <line x1="68" y1="126" x2="124" y2="126" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <line x1="68" y1="148" x2="140" y2="148" stroke="hsl(var(--muted-fg))" stroke-width="1.4" stroke-dasharray="3 4" opacity="0.4"/>
+                <circle cx="156" cy="50" r="10" fill="hsl(var(--primary))"/>
+                <path d="M 152 50 L 156 54 L 161 47" stroke="hsl(var(--primary-fg))" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M 84 32 L 84 56 L 96 48 L 108 56 L 108 32" fill="none" stroke="hsl(var(--primary))" stroke-width="2.2" stroke-linejoin="round"/>
+              </svg>
+              <div class="empty-title">還沒有訓練紀錄</div>
+              <div class="empty-sub">完成第一次訓練後、就會出現在這裡</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="play"></i></span>開始第一次訓練</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab on"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 2. 篩選找不到動作 ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>EMPTY · 02</div>
+            <h3 class="mt-1">篩選找不到動作</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">使用者主動篩 · 動作 tab</p>
+          </div>
+          <span class="tag">ZERO RESULT</span>
+        </div>
+
+        <div class="mt-5 pair">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.1.2 No Filter Result · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <!-- Filter context bar -->
+            <div class="absolute top-[38px] left-0 right-0 px-3.5 pb-3">
+              <div class="rounded-[10px] flex items-center gap-2 px-3 py-2" style="background: hsl(var(--muted)); border: 1px solid hsl(var(--border));">
+                <span class="ico-14" style="color: hsl(var(--muted-fg));"><i data-lucide="search"></i></span>
+                <span class="text-[12px] flex-1">啞鈴</span>
+                <span class="ico-12" style="color: hsl(var(--muted-fg));"><i data-lucide="x"></i></span>
+              </div>
+              <div class="mt-2 flex gap-1.5">
+                <span class="tag" style="background: hsl(var(--accent)); color: hsl(var(--primary)); border-color: transparent;">背部 ×</span>
+                <span class="tag" style="background: hsl(var(--accent)); color: hsl(var(--primary)); border-color: transparent;">家中可做 ×</span>
+              </div>
+            </div>
+            <div class="empty-body" style="top: 138px;">
+              <svg viewBox="0 0 200 200" class="empty-art">
+                <!-- magnifier -->
+                <circle cx="86" cy="86" r="44" fill="none" stroke="hsl(var(--primary))" stroke-width="3"/>
+                <line x1="120" y1="120" x2="160" y2="160" stroke="hsl(var(--primary))" stroke-width="3" stroke-linecap="round"/>
+                <!-- inside: empty hatching -->
+                <line x1="64" y1="86" x2="108" y2="86" stroke="hsl(var(--muted-fg))" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5"/>
+                <line x1="70" y1="76" x2="102" y2="76" stroke="hsl(var(--muted-fg))" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5"/>
+                <line x1="70" y1="96" x2="102" y2="96" stroke="hsl(var(--muted-fg))" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5"/>
+                <!-- diagonal slash through -->
+                <line x1="58" y1="56" x2="116" y2="116" stroke="hsl(var(--primary))" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+              </svg>
+              <div class="empty-title">沒有符合的動作</div>
+              <div class="empty-sub">「啞鈴 · 背部 · 家中可做」目前沒有結果</div>
+              <button class="empty-cta outline"><span class="ico-14"><i data-lucide="filter-x"></i></span>清除篩選</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab on"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark" data-screen-label="19.1.2 No Filter Result · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="absolute top-[38px] left-0 right-0 px-3.5 pb-3">
+              <div class="rounded-[10px] flex items-center gap-2 px-3 py-2" style="background: hsl(var(--muted)); border: 1px solid hsl(var(--border));">
+                <span class="ico-14" style="color: hsl(var(--muted-fg));"><i data-lucide="search"></i></span>
+                <span class="text-[12px] flex-1">啞鈴</span>
+                <span class="ico-12" style="color: hsl(var(--muted-fg));"><i data-lucide="x"></i></span>
+              </div>
+              <div class="mt-2 flex gap-1.5">
+                <span class="tag" style="background: hsl(var(--accent)); color: hsl(var(--primary)); border-color: transparent;">背部 ×</span>
+                <span class="tag" style="background: hsl(var(--accent)); color: hsl(var(--primary)); border-color: transparent;">家中可做 ×</span>
+              </div>
+            </div>
+            <div class="empty-body" style="top: 138px;">
+              <svg viewBox="0 0 200 200" class="empty-art">
+                <circle cx="86" cy="86" r="44" fill="none" stroke="hsl(var(--primary))" stroke-width="3"/>
+                <line x1="120" y1="120" x2="160" y2="160" stroke="hsl(var(--primary))" stroke-width="3" stroke-linecap="round"/>
+                <line x1="64" y1="86" x2="108" y2="86" stroke="hsl(var(--muted-fg))" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5"/>
+                <line x1="70" y1="76" x2="102" y2="76" stroke="hsl(var(--muted-fg))" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5"/>
+                <line x1="70" y1="96" x2="102" y2="96" stroke="hsl(var(--muted-fg))" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.5"/>
+                <line x1="58" y1="56" x2="116" y2="116" stroke="hsl(var(--primary))" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+              </svg>
+              <div class="empty-title">沒有符合的動作</div>
+              <div class="empty-sub">「啞鈴 · 背部 · 家中可做」目前沒有結果</div>
+              <button class="empty-cta outline"><span class="ico-14"><i data-lucide="filter-x"></i></span>清除篩選</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab on"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 3. 還沒選課表 ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>EMPTY · 03</div>
+            <h3 class="mt-1">還沒選課表</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">今天 tab · 課表未選</p>
+          </div>
+          <span class="tag">PRE-SETUP</span>
+        </div>
+
+        <div class="mt-5 pair">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.1.3 No Plan · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb">五月 18 · 週一</div>
+              <div class="ttl">嗨, Alex</div>
+            </div>
+            <div class="empty-body">
+              <svg viewBox="0 0 200 200" class="empty-art">
+                <!-- stacked clipboards -->
+                <rect x="40" y="50" width="92" height="118" rx="6" fill="none" stroke="hsl(var(--muted-fg))" stroke-width="1.6" opacity="0.5"/>
+                <rect x="52" y="42" width="92" height="118" rx="6" fill="none" stroke="hsl(var(--muted-fg))" stroke-width="1.6" opacity="0.75"/>
+                <rect x="64" y="34" width="92" height="118" rx="6" fill="hsl(var(--bg))" stroke="hsl(var(--primary))" stroke-width="2.4"/>
+                <!-- clip top -->
+                <rect x="92" y="26" width="36" height="14" rx="3" fill="hsl(var(--primary))"/>
+                <!-- content lines -->
+                <line x1="78" y1="62" x2="142" y2="62" stroke="hsl(var(--primary))" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="78" y1="80" x2="120" y2="80" stroke="hsl(var(--muted-fg))" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+                <line x1="78" y1="96" x2="132" y2="96" stroke="hsl(var(--muted-fg))" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+                <line x1="78" y1="112" x2="116" y2="112" stroke="hsl(var(--muted-fg))" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+                <!-- selection arrow -->
+                <path d="M 160 110 L 174 96 M 174 96 L 168 96 M 174 96 L 174 102" stroke="hsl(var(--primary))" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="174" cy="96" r="3" fill="hsl(var(--primary))"/>
+              </svg>
+              <div class="empty-title">還沒選課表</div>
+              <div class="empty-sub">選一份適合的、或從空白開始打造</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="layout-grid"></i></span>去選課表</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab on"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark" data-screen-label="19.1.3 No Plan · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb">五月 18 · 週一</div>
+              <div class="ttl">嗨, Alex</div>
+            </div>
+            <div class="empty-body">
+              <svg viewBox="0 0 200 200" class="empty-art">
+                <rect x="40" y="50" width="92" height="118" rx="6" fill="none" stroke="hsl(var(--muted-fg))" stroke-width="1.6" opacity="0.5"/>
+                <rect x="52" y="42" width="92" height="118" rx="6" fill="none" stroke="hsl(var(--muted-fg))" stroke-width="1.6" opacity="0.75"/>
+                <rect x="64" y="34" width="92" height="118" rx="6" fill="hsl(var(--bg))" stroke="hsl(var(--primary))" stroke-width="2.4"/>
+                <rect x="92" y="26" width="36" height="14" rx="3" fill="hsl(var(--primary))"/>
+                <line x1="78" y1="62" x2="142" y2="62" stroke="hsl(var(--primary))" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="78" y1="80" x2="120" y2="80" stroke="hsl(var(--muted-fg))" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+                <line x1="78" y1="96" x2="132" y2="96" stroke="hsl(var(--muted-fg))" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+                <line x1="78" y1="112" x2="116" y2="112" stroke="hsl(var(--muted-fg))" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+                <path d="M 160 110 L 174 96 M 174 96 L 168 96 M 174 96 L 174 102" stroke="hsl(var(--primary))" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="174" cy="96" r="3" fill="hsl(var(--primary))"/>
+              </svg>
+              <div class="empty-title">還沒選課表</div>
+              <div class="empty-sub">選一份適合的、或從空白開始打造</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="layout-grid"></i></span>去選課表</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab on"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ 4. 還沒自訂課表 ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>EMPTY · 04</div>
+            <h3 class="mt-1">還沒自訂課表</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">課表 tab · 「我的」分頁</p>
+          </div>
+          <span class="tag">PERSONAL EMPTY</span>
+        </div>
+
+        <div class="mt-5 pair">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.1.4 No Custom · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="clipboard-list"></i></span>課表</div>
+              <div class="ttl">我的課表</div>
+            </div>
+            <!-- segmented control mock -->
+            <div class="absolute top-[100px] left-0 right-0 px-4">
+              <div class="rounded-[10px] p-1 flex" style="background: hsl(var(--muted));">
+                <div class="flex-1 text-center py-1.5 text-[12px] font-medium" style="color: hsl(var(--muted-fg));">推薦</div>
+                <div class="flex-1 text-center py-1.5 text-[12px] font-bold rounded-md" style="background: hsl(var(--card)); color: hsl(var(--fg)); box-shadow: 0 1px 2px rgba(0,0,0,0.04);">我的</div>
+              </div>
+            </div>
+            <div class="empty-body" style="top: 156px;">
+              <svg viewBox="0 0 200 200" class="empty-art">
+                <!-- blueprint grid -->
+                <rect x="36" y="40" width="128" height="120" rx="6" fill="none" stroke="hsl(var(--primary))" stroke-width="2.2" stroke-dasharray="6 4"/>
+                <!-- grid lines inside -->
+                <g opacity="0.35" stroke="hsl(var(--muted-fg))" stroke-width="0.8">
+                  <line x1="68" y1="40" x2="68" y2="160"/>
+                  <line x1="100" y1="40" x2="100" y2="160"/>
+                  <line x1="132" y1="40" x2="132" y2="160"/>
+                  <line x1="36" y1="70" x2="164" y2="70"/>
+                  <line x1="36" y1="100" x2="164" y2="100"/>
+                  <line x1="36" y1="130" x2="164" y2="130"/>
+                </g>
+                <!-- central plus -->
+                <circle cx="100" cy="100" r="22" fill="hsl(var(--primary))"/>
+                <line x1="100" y1="90" x2="100" y2="110" stroke="hsl(var(--primary-fg))" stroke-width="3" stroke-linecap="round"/>
+                <line x1="90" y1="100" x2="110" y2="100" stroke="hsl(var(--primary-fg))" stroke-width="3" stroke-linecap="round"/>
+                <!-- corner dots -->
+                <circle cx="36" cy="40" r="3" fill="hsl(var(--primary))"/>
+                <circle cx="164" cy="40" r="3" fill="hsl(var(--primary))"/>
+                <circle cx="36" cy="160" r="3" fill="hsl(var(--primary))"/>
+                <circle cx="164" cy="160" r="3" fill="hsl(var(--primary))"/>
+              </svg>
+              <div class="empty-title">還沒自訂課表</div>
+              <div class="empty-sub">從零開始、或複製推薦課表再改</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="plus"></i></span>新增空白課表</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab on"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark" data-screen-label="19.1.4 No Custom · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="clipboard-list"></i></span>課表</div>
+              <div class="ttl">我的課表</div>
+            </div>
+            <div class="absolute top-[100px] left-0 right-0 px-4">
+              <div class="rounded-[10px] p-1 flex" style="background: hsl(var(--muted));">
+                <div class="flex-1 text-center py-1.5 text-[12px] font-medium" style="color: hsl(var(--muted-fg));">推薦</div>
+                <div class="flex-1 text-center py-1.5 text-[12px] font-bold rounded-md" style="background: hsl(var(--card)); color: hsl(var(--fg));">我的</div>
+              </div>
+            </div>
+            <div class="empty-body" style="top: 156px;">
+              <svg viewBox="0 0 200 200" class="empty-art">
+                <rect x="36" y="40" width="128" height="120" rx="6" fill="none" stroke="hsl(var(--primary))" stroke-width="2.2" stroke-dasharray="6 4"/>
+                <g opacity="0.35" stroke="hsl(var(--muted-fg))" stroke-width="0.8">
+                  <line x1="68" y1="40" x2="68" y2="160"/>
+                  <line x1="100" y1="40" x2="100" y2="160"/>
+                  <line x1="132" y1="40" x2="132" y2="160"/>
+                  <line x1="36" y1="70" x2="164" y2="70"/>
+                  <line x1="36" y1="100" x2="164" y2="100"/>
+                  <line x1="36" y1="130" x2="164" y2="130"/>
+                </g>
+                <circle cx="100" cy="100" r="22" fill="hsl(var(--primary))"/>
+                <line x1="100" y1="90" x2="100" y2="110" stroke="hsl(var(--primary-fg))" stroke-width="3" stroke-linecap="round"/>
+                <line x1="90" y1="100" x2="110" y2="100" stroke="hsl(var(--primary-fg))" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="36" cy="40" r="3" fill="hsl(var(--primary))"/>
+                <circle cx="164" cy="40" r="3" fill="hsl(var(--primary))"/>
+                <circle cx="36" cy="160" r="3" fill="hsl(var(--primary))"/>
+                <circle cx="164" cy="160" r="3" fill="hsl(var(--primary))"/>
+              </svg>
+              <div class="empty-title">還沒自訂課表</div>
+              <div class="empty-sub">從零開始、或複製推薦課表再改</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="plus"></i></span>新增空白課表</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab on"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §19.2 LOADING                                                -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 pb-4 mt-12">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§19.2</span>
+      <h2 class="h-section">載入狀態 · Loading</h2>
+      <span class="text-[13px] text-[#5a5b66]"><span class="live-cap"><span class="live-dot"></span>LIVE</span><span class="ml-3">所有 skeleton 為真實 CSS 動畫、shimmer 1.6s 循環</span></span>
+    </div>
+
+    <div class="mt-5 page-card p-5 grid grid-cols-12 gap-5">
+      <div class="col-span-3">
+        <div class="eyebrow-page"><span class="dot"></span>選用規則</div>
+        <p class="mt-2 text-[13px] text-[#17181F] leading-[1.55]">
+          已知內容形狀 → skeleton。
+          未知形狀 / &lt; 2 秒 → spinner。
+        </p>
+      </div>
+      <div class="col-span-9 grid grid-cols-4 gap-3 text-[12px]">
+        <div class="rounded-[10px] p-3" style="background: hsl(30 8% 95%); border: 1px solid hsl(30 10% 88%);">
+          <div class="mono text-[10px] uppercase tracking-[1.2px] text-[#8a8074]">圖庫</div>
+          <div class="mt-1 font-semibold">Grid Skeleton</div>
+          <div class="mt-0.5 text-[#5a5b66]">2 × 3 灰塊 + shimmer</div>
+        </div>
+        <div class="rounded-[10px] p-3" style="background: hsl(30 8% 95%); border: 1px solid hsl(30 10% 88%);">
+          <div class="mono text-[10px] uppercase tracking-[1.2px] text-[#8a8074]">歷史</div>
+          <div class="mt-1 font-semibold">Row Skeleton</div>
+          <div class="mt-0.5 text-[#5a5b66]">列表 5 列、頭像 + 兩行</div>
+        </div>
+        <div class="rounded-[10px] p-3" style="background: hsl(30 8% 95%); border: 1px solid hsl(30 10% 88%);">
+          <div class="mono text-[10px] uppercase tracking-[1.2px] text-[#8a8074]">詳情</div>
+          <div class="mt-1 font-semibold">Hero + 段落</div>
+          <div class="mt-0.5 text-[#5a5b66]">大圖 + 文字塊</div>
+        </div>
+        <div class="rounded-[10px] p-3" style="background: hsl(30 8% 95%); border: 1px solid hsl(30 10% 88%);">
+          <div class="mono text-[10px] uppercase tracking-[1.2px] text-[#8a8074]">推薦</div>
+          <div class="mt-1 font-semibold">Spinner</div>
+          <div class="mt-0.5 text-[#5a5b66]">「分析中…」max 2s</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-2 gap-5">
+
+      <!-- ============ Loading 1: Library grid ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>LOADING · 01</div>
+            <h3 class="mt-1">動作圖庫 · Grid Skeleton</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">2 × 3 卡片網格</p>
+          </div>
+          <span class="tag">SHIMMER</span>
+        </div>
+        <div class="mt-5 pair">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.2.1 Library Skel · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="dumbbell"></i></span>動作</div>
+              <div class="ttl">動作圖庫</div>
+            </div>
+            <!-- search bar skel -->
+            <div class="absolute top-[100px] left-0 right-0 px-4">
+              <div class="skel h-9 rounded-[10px]"></div>
+              <div class="mt-3 flex gap-2 overflow-hidden">
+                <div class="skel rounded-full" style="height: 26px; width: 56px;"></div>
+                <div class="skel rounded-full" style="height: 26px; width: 76px;"></div>
+                <div class="skel rounded-full" style="height: 26px; width: 64px;"></div>
+                <div class="skel rounded-full" style="height: 26px; width: 50px;"></div>
+              </div>
+            </div>
+            <!-- grid skel 2x3 -->
+            <div class="absolute left-0 right-0 px-4" style="top: 180px;">
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <div class="skel" style="height: 88px; border-radius: 12px;"></div>
+                  <div class="skel mt-1.5" style="height: 11px; width: 70%; border-radius: 4px;"></div>
+                  <div class="skel mt-1" style="height: 9px; width: 40%; border-radius: 4px;"></div>
+                </div>
+                <div>
+                  <div class="skel" style="height: 88px; border-radius: 12px;"></div>
+                  <div class="skel mt-1.5" style="height: 11px; width: 60%; border-radius: 4px;"></div>
+                  <div class="skel mt-1" style="height: 9px; width: 50%; border-radius: 4px;"></div>
+                </div>
+                <div>
+                  <div class="skel" style="height: 88px; border-radius: 12px;"></div>
+                  <div class="skel mt-1.5" style="height: 11px; width: 80%; border-radius: 4px;"></div>
+                  <div class="skel mt-1" style="height: 9px; width: 35%; border-radius: 4px;"></div>
+                </div>
+                <div>
+                  <div class="skel" style="height: 88px; border-radius: 12px;"></div>
+                  <div class="skel mt-1.5" style="height: 11px; width: 65%; border-radius: 4px;"></div>
+                  <div class="skel mt-1" style="height: 9px; width: 45%; border-radius: 4px;"></div>
+                </div>
+                <div>
+                  <div class="skel" style="height: 88px; border-radius: 12px;"></div>
+                  <div class="skel mt-1.5" style="height: 11px; width: 55%; border-radius: 4px;"></div>
+                </div>
+                <div>
+                  <div class="skel" style="height: 88px; border-radius: 12px;"></div>
+                  <div class="skel mt-1.5" style="height: 11px; width: 75%; border-radius: 4px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab on"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark" data-screen-label="19.2.1 Library Skel · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="dumbbell"></i></span>動作</div>
+              <div class="ttl">動作圖庫</div>
+            </div>
+            <div class="absolute top-[100px] left-0 right-0 px-4">
+              <div class="skel h-9 rounded-[10px]"></div>
+              <div class="mt-3 flex gap-2 overflow-hidden">
+                <div class="skel rounded-full" style="height: 26px; width: 56px;"></div>
+                <div class="skel rounded-full" style="height: 26px; width: 76px;"></div>
+                <div class="skel rounded-full" style="height: 26px; width: 64px;"></div>
+                <div class="skel rounded-full" style="height: 26px; width: 50px;"></div>
+              </div>
+            </div>
+            <div class="absolute left-0 right-0 px-4" style="top: 180px;">
+              <div class="grid grid-cols-2 gap-2.5">
+                <div><div class="skel" style="height: 88px; border-radius: 12px;"></div><div class="skel mt-1.5" style="height: 11px; width: 70%; border-radius: 4px;"></div><div class="skel mt-1" style="height: 9px; width: 40%; border-radius: 4px;"></div></div>
+                <div><div class="skel" style="height: 88px; border-radius: 12px;"></div><div class="skel mt-1.5" style="height: 11px; width: 60%; border-radius: 4px;"></div><div class="skel mt-1" style="height: 9px; width: 50%; border-radius: 4px;"></div></div>
+                <div><div class="skel" style="height: 88px; border-radius: 12px;"></div><div class="skel mt-1.5" style="height: 11px; width: 80%; border-radius: 4px;"></div><div class="skel mt-1" style="height: 9px; width: 35%; border-radius: 4px;"></div></div>
+                <div><div class="skel" style="height: 88px; border-radius: 12px;"></div><div class="skel mt-1.5" style="height: 11px; width: 65%; border-radius: 4px;"></div><div class="skel mt-1" style="height: 9px; width: 45%; border-radius: 4px;"></div></div>
+                <div><div class="skel" style="height: 88px; border-radius: 12px;"></div><div class="skel mt-1.5" style="height: 11px; width: 55%; border-radius: 4px;"></div></div>
+                <div><div class="skel" style="height: 88px; border-radius: 12px;"></div><div class="skel mt-1.5" style="height: 11px; width: 75%; border-radius: 4px;"></div></div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab on"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ Loading 2: History rows ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>LOADING · 02</div>
+            <h3 class="mt-1">訓練紀錄 · Row Skeleton</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">列表載入 · 5 列</p>
+          </div>
+          <span class="tag">SHIMMER</span>
+        </div>
+        <div class="mt-5 pair">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.2.2 History Skel · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="history"></i></span>歷史</div>
+              <div class="ttl">訓練紀錄</div>
+            </div>
+            <div class="absolute left-0 right-0 px-4 space-y-2.5" style="top: 110px;">
+              <!-- date heading skel -->
+              <div class="skel" style="height: 10px; width: 90px; border-radius: 3px; background: transparent;"></div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1">
+                  <div class="skel" style="height: 11px; width: 60%; border-radius: 4px;"></div>
+                  <div class="skel mt-2" style="height: 9px; width: 40%; border-radius: 4px;"></div>
+                </div>
+                <div class="skel" style="height: 22px; width: 40px; border-radius: 999px;"></div>
+              </div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1">
+                  <div class="skel" style="height: 11px; width: 70%; border-radius: 4px;"></div>
+                  <div class="skel mt-2" style="height: 9px; width: 35%; border-radius: 4px;"></div>
+                </div>
+                <div class="skel" style="height: 22px; width: 40px; border-radius: 999px;"></div>
+              </div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1">
+                  <div class="skel" style="height: 11px; width: 55%; border-radius: 4px;"></div>
+                  <div class="skel mt-2" style="height: 9px; width: 50%; border-radius: 4px;"></div>
+                </div>
+                <div class="skel" style="height: 22px; width: 40px; border-radius: 999px;"></div>
+              </div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1">
+                  <div class="skel" style="height: 11px; width: 65%; border-radius: 4px;"></div>
+                  <div class="skel mt-2" style="height: 9px; width: 30%; border-radius: 4px;"></div>
+                </div>
+              </div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); opacity: 0.6;">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1">
+                  <div class="skel" style="height: 11px; width: 50%; border-radius: 4px;"></div>
+                  <div class="skel mt-2" style="height: 9px; width: 45%; border-radius: 4px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab on"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark" data-screen-label="19.2.2 History Skel · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="history"></i></span>歷史</div>
+              <div class="ttl">訓練紀錄</div>
+            </div>
+            <div class="absolute left-0 right-0 px-4 space-y-2.5" style="top: 110px;">
+              <div class="skel" style="height: 10px; width: 90px; border-radius: 3px; background: transparent;"></div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1"><div class="skel" style="height: 11px; width: 60%; border-radius: 4px;"></div><div class="skel mt-2" style="height: 9px; width: 40%; border-radius: 4px;"></div></div>
+                <div class="skel" style="height: 22px; width: 40px; border-radius: 999px;"></div>
+              </div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1"><div class="skel" style="height: 11px; width: 70%; border-radius: 4px;"></div><div class="skel mt-2" style="height: 9px; width: 35%; border-radius: 4px;"></div></div>
+                <div class="skel" style="height: 22px; width: 40px; border-radius: 999px;"></div>
+              </div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1"><div class="skel" style="height: 11px; width: 55%; border-radius: 4px;"></div><div class="skel mt-2" style="height: 9px; width: 50%; border-radius: 4px;"></div></div>
+                <div class="skel" style="height: 22px; width: 40px; border-radius: 999px;"></div>
+              </div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border));">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1"><div class="skel" style="height: 11px; width: 65%; border-radius: 4px;"></div><div class="skel mt-2" style="height: 9px; width: 30%; border-radius: 4px;"></div></div>
+              </div>
+              <div class="rounded-[14px] p-3 flex items-center gap-3" style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); opacity: 0.6;">
+                <div class="skel rounded-[10px]" style="width: 40px; height: 40px;"></div>
+                <div class="flex-1"><div class="skel" style="height: 11px; width: 50%; border-radius: 4px;"></div><div class="skel mt-2" style="height: 9px; width: 45%; border-radius: 4px;"></div></div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab on"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ Loading 3: Exercise detail ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>LOADING · 03</div>
+            <h3 class="mt-1">動作詳情 · Hero + 段落</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">大圖佔位 + 文字塊</p>
+          </div>
+          <span class="tag">SHIMMER</span>
+        </div>
+        <div class="mt-5 pair">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.2.3 Detail Skel · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <!-- topbar with back arrow -->
+            <div class="absolute top-[44px] left-3 right-3 flex items-center justify-between">
+              <span class="ico-18"><i data-lucide="arrow-left"></i></span>
+              <span class="ico-18" style="color: hsl(var(--muted-fg));"><i data-lucide="bookmark"></i></span>
+            </div>
+            <!-- hero -->
+            <div class="absolute left-3 right-3" style="top: 80px;">
+              <div class="skel" style="height: 180px; border-radius: 16px;"></div>
+              <!-- title + meta -->
+              <div class="skel mt-4" style="height: 18px; width: 65%; border-radius: 5px;"></div>
+              <div class="mt-3 flex gap-1.5">
+                <div class="skel rounded-full" style="height: 22px; width: 56px;"></div>
+                <div class="skel rounded-full" style="height: 22px; width: 44px;"></div>
+                <div class="skel rounded-full" style="height: 22px; width: 60px;"></div>
+              </div>
+              <!-- paragraphs -->
+              <div class="mt-5 space-y-2">
+                <div class="skel" style="height: 10px; width: 100%; border-radius: 4px;"></div>
+                <div class="skel" style="height: 10px; width: 88%; border-radius: 4px;"></div>
+                <div class="skel" style="height: 10px; width: 70%; border-radius: 4px;"></div>
+              </div>
+              <div class="mt-3 space-y-2">
+                <div class="skel" style="height: 10px; width: 92%; border-radius: 4px;"></div>
+                <div class="skel" style="height: 10px; width: 55%; border-radius: 4px;"></div>
+              </div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark" data-screen-label="19.2.3 Detail Skel · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="absolute top-[44px] left-3 right-3 flex items-center justify-between">
+              <span class="ico-18"><i data-lucide="arrow-left"></i></span>
+              <span class="ico-18" style="color: hsl(var(--muted-fg));"><i data-lucide="bookmark"></i></span>
+            </div>
+            <div class="absolute left-3 right-3" style="top: 80px;">
+              <div class="skel" style="height: 180px; border-radius: 16px;"></div>
+              <div class="skel mt-4" style="height: 18px; width: 65%; border-radius: 5px;"></div>
+              <div class="mt-3 flex gap-1.5">
+                <div class="skel rounded-full" style="height: 22px; width: 56px;"></div>
+                <div class="skel rounded-full" style="height: 22px; width: 44px;"></div>
+                <div class="skel rounded-full" style="height: 22px; width: 60px;"></div>
+              </div>
+              <div class="mt-5 space-y-2">
+                <div class="skel" style="height: 10px; width: 100%; border-radius: 4px;"></div>
+                <div class="skel" style="height: 10px; width: 88%; border-radius: 4px;"></div>
+                <div class="skel" style="height: 10px; width: 70%; border-radius: 4px;"></div>
+              </div>
+              <div class="mt-3 space-y-2">
+                <div class="skel" style="height: 10px; width: 92%; border-radius: 4px;"></div>
+                <div class="skel" style="height: 10px; width: 55%; border-radius: 4px;"></div>
+              </div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ Loading 4: Spinner / analyzing ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>LOADING · 04</div>
+            <h3 class="mt-1">Onboarding 推薦 · Spinner</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">未知形狀 · max 2 秒</p>
+          </div>
+          <span class="tag">SPINNER</span>
+        </div>
+        <div class="mt-5 pair">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.2.4 Analyzing · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb">設定 · 步驟 <span class="num">3</span> / <span class="num">3</span></div>
+              <div class="ttl">為你打造</div>
+            </div>
+            <div class="empty-body" style="top: 100px;">
+              <!-- Spinner -->
+              <svg class="spinner" viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="20" fill="none" stroke="hsl(var(--muted))" stroke-width="4"/>
+                <circle cx="25" cy="25" r="20" fill="none" stroke="hsl(var(--primary))" stroke-width="4" stroke-linecap="round" stroke-dasharray="40 90" />
+              </svg>
+              <div class="empty-title" style="margin-top: 26px;">分析中…</div>
+              <div class="empty-sub">依據你的目標、可用器材、訓練頻率<br/>挑出最適合的 3 份課表</div>
+              <!-- mini progress steps -->
+              <div class="mt-6 flex items-center gap-2">
+                <span class="ico-14" style="color: hsl(var(--success));"><i data-lucide="check-circle-2"></i></span>
+                <span class="text-[11.5px]" style="color: hsl(var(--muted-fg));">讀取偏好</span>
+              </div>
+              <div class="mt-1.5 flex items-center gap-2">
+                <span class="ico-14" style="color: hsl(var(--primary));"><i data-lucide="circle-dot"></i></span>
+                <span class="text-[11.5px]" style="color: hsl(var(--fg)); font-weight: 600;">配對課表</span>
+              </div>
+              <div class="mt-1.5 flex items-center gap-2" style="opacity: 0.45;">
+                <span class="ico-14" style="color: hsl(var(--muted-fg));"><i data-lucide="circle"></i></span>
+                <span class="text-[11.5px]" style="color: hsl(var(--muted-fg));">排序推薦</span>
+              </div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark" data-screen-label="19.2.4 Analyzing · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb">設定 · 步驟 <span class="num">3</span> / <span class="num">3</span></div>
+              <div class="ttl">為你打造</div>
+            </div>
+            <div class="empty-body" style="top: 100px;">
+              <svg class="spinner" viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="20" fill="none" stroke="hsl(var(--muted))" stroke-width="4"/>
+                <circle cx="25" cy="25" r="20" fill="none" stroke="hsl(var(--primary))" stroke-width="4" stroke-linecap="round" stroke-dasharray="40 90" />
+              </svg>
+              <div class="empty-title" style="margin-top: 26px;">分析中…</div>
+              <div class="empty-sub">依據你的目標、可用器材、訓練頻率<br/>挑出最適合的 3 份課表</div>
+              <div class="mt-6 flex items-center gap-2">
+                <span class="ico-14" style="color: hsl(var(--success));"><i data-lucide="check-circle-2"></i></span>
+                <span class="text-[11.5px]" style="color: hsl(var(--muted-fg));">讀取偏好</span>
+              </div>
+              <div class="mt-1.5 flex items-center gap-2">
+                <span class="ico-14" style="color: hsl(var(--primary));"><i data-lucide="circle-dot"></i></span>
+                <span class="text-[11.5px]" style="color: hsl(var(--fg)); font-weight: 600;">配對課表</span>
+              </div>
+              <div class="mt-1.5 flex items-center gap-2" style="opacity: 0.45;">
+                <span class="ico-14" style="color: hsl(var(--muted-fg));"><i data-lucide="circle"></i></span>
+                <span class="text-[11.5px]" style="color: hsl(var(--muted-fg));">排序推薦</span>
+              </div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §19.3 ERRORS                                                 -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 pb-4 mt-12">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§19.3</span>
+      <h2 class="h-section">錯誤狀態 · Error</h2>
+      <span class="text-[13px] text-[#5a5b66]">永遠給一個動作 — retry / refresh / home</span>
+    </div>
+
+    <div class="mt-6 grid grid-cols-3 gap-5">
+
+      <!-- ============ Error 1: Generic ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>ERROR · 01</div>
+            <h3 class="mt-1">通用錯誤</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">未知 · 可重試</p>
+          </div>
+          <span class="tag">RETRY</span>
+        </div>
+        <div class="mt-5 pair" style="flex-direction: column; align-items: center;">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.3.1 Generic · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="history"></i></span>歷史</div>
+              <div class="ttl">訓練紀錄</div>
+            </div>
+            <div class="empty-body">
+              <span class="err-icon danger"><span style="font-size: 0; display: block;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span></span>
+              <div class="empty-title" style="margin-top: 22px;">發生錯誤</div>
+              <div class="empty-sub">無法載入紀錄、可能是暫時性問題</div>
+              <div class="mono text-[10px] mt-3" style="color: hsl(var(--muted-fg)); letter-spacing: 1px;">CODE · E-5021</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="refresh-cw"></i></span>重試</button>
+              <button class="text-[12px] font-semibold mt-3" style="color: hsl(var(--muted-fg));">回報問題</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab on"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+          <div class="mono text-[10.5px] text-[#8a8074] tracking-[1.2px] uppercase mt-1">Light</div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark mt-3" data-screen-label="19.3.1 Generic · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb"><span class="ico-12"><i data-lucide="history"></i></span>歷史</div>
+              <div class="ttl">訓練紀錄</div>
+            </div>
+            <div class="empty-body">
+              <span class="err-icon danger"><span style="font-size: 0; display: block;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span></span>
+              <div class="empty-title" style="margin-top: 22px;">發生錯誤</div>
+              <div class="empty-sub">無法載入紀錄、可能是暫時性問題</div>
+              <div class="mono text-[10px] mt-3" style="color: hsl(var(--muted-fg)); letter-spacing: 1px;">CODE · E-5021</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="refresh-cw"></i></span>重試</button>
+              <button class="text-[12px] font-semibold mt-3" style="color: hsl(var(--muted-fg));">回報問題</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab on"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+          <div class="mono text-[10.5px] text-[#8a8074] tracking-[1.2px] uppercase mt-1">Dark</div>
+        </div>
+      </div>
+
+      <!-- ============ Error 2: Offline ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>ERROR · 02</div>
+            <h3 class="mt-1">需要網路連線</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">V1 罕見 · 雲端同步時</p>
+          </div>
+          <span class="tag">OFFLINE</span>
+        </div>
+        <div class="mt-5 pair" style="flex-direction: column; align-items: center;">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.3.2 Offline · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="opacity:0.3"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/><line x1="2" y1="2" x2="22" y2="22" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb">設定 · 雲端同步</div>
+              <div class="ttl">同步資料</div>
+            </div>
+            <div class="empty-body">
+              <span class="err-icon offline">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 1l22 22"/>
+                  <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+                  <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+                  <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+                  <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                  <path d="M12 20h.01"/>
+                </svg>
+              </span>
+              <div class="empty-title" style="margin-top: 22px;">需要網路連線</div>
+              <div class="empty-sub">雲端同步需要連線、訓練本身仍可離線使用</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="refresh-cw"></i></span>重新整理</button>
+              <button class="text-[12px] font-semibold mt-3" style="color: hsl(var(--primary));">先離線繼續</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+          <div class="mono text-[10.5px] text-[#8a8074] tracking-[1.2px] uppercase mt-1">Light</div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark mt-3" data-screen-label="19.3.2 Offline · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="opacity:0.3"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/><line x1="2" y1="2" x2="22" y2="22" stroke-linecap="round"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="topbar">
+              <div class="crumb">設定 · 雲端同步</div>
+              <div class="ttl">同步資料</div>
+            </div>
+            <div class="empty-body">
+              <span class="err-icon offline">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 1l22 22"/>
+                  <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+                  <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+                  <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+                  <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                  <path d="M12 20h.01"/>
+                </svg>
+              </span>
+              <div class="empty-title" style="margin-top: 22px;">需要網路連線</div>
+              <div class="empty-sub">雲端同步需要連線、訓練本身仍可離線使用</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="refresh-cw"></i></span>重新整理</button>
+              <button class="text-[12px] font-semibold mt-3" style="color: hsl(var(--primary));">先離線繼續</button>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><i data-lucide="home"></i>今天</div>
+              <div class="tab"><i data-lucide="clipboard-list"></i>課表</div>
+              <div class="tab"><i data-lucide="dumbbell"></i>動作</div>
+              <div class="tab"><i data-lucide="history"></i>歷史</div>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+          <div class="mono text-[10.5px] text-[#8a8074] tracking-[1.2px] uppercase mt-1">Dark</div>
+        </div>
+      </div>
+
+      <!-- ============ Error 3: 404 ============ -->
+      <div class="pattern-card">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div class="lab"><span class="pp"></span>ERROR · 03</div>
+            <h3 class="mt-1">找不到此頁面</h3>
+            <p class="mt-1 text-[12.5px] text-[#5a5b66]">深連結 / 已刪除資源</p>
+          </div>
+          <span class="tag">404</span>
+        </div>
+        <div class="mt-5 pair" style="flex-direction: column; align-items: center;">
+          <!-- LIGHT -->
+          <div class="screen" data-screen-label="19.3.3 404 · Light">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="absolute top-[44px] left-3 right-3 flex items-center justify-between">
+              <span class="ico-18"><i data-lucide="arrow-left"></i></span>
+            </div>
+            <div class="empty-body" style="top: 80px;">
+              <!-- big 404 numeric -->
+              <div class="mono text-[64px] font-extrabold tracking-[-0.04em] leading-none" style="color: hsl(var(--primary));">
+                <span class="num">404</span>
+              </div>
+              <div class="mt-1 mono text-[10px] uppercase tracking-[2px]" style="color: hsl(var(--muted-fg));">PAGE NOT FOUND</div>
+              <div class="empty-title" style="margin-top: 22px;">找不到此頁面</div>
+              <div class="empty-sub">這個連結可能過期、或內容已被刪除</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="home"></i></span>回首頁</button>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+          <div class="mono text-[10.5px] text-[#8a8074] tracking-[1.2px] uppercase mt-1">Light</div>
+
+          <!-- DARK -->
+          <div class="screen theme-dark mt-3" data-screen-label="19.3.3 404 · Dark">
+            <div class="notch"></div>
+            <div class="sbar"><span class="t num">9:41</span><span class="r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 12 L12 12"/><path d="M12 4 L22 4"/><path d="M12 20 L22 20"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" fill="currentColor"/></svg></span></div>
+            <div class="absolute top-[44px] left-3 right-3 flex items-center justify-between">
+              <span class="ico-18"><i data-lucide="arrow-left"></i></span>
+            </div>
+            <div class="empty-body" style="top: 80px;">
+              <div class="mono text-[64px] font-extrabold tracking-[-0.04em] leading-none" style="color: hsl(var(--primary));">
+                <span class="num">404</span>
+              </div>
+              <div class="mt-1 mono text-[10px] uppercase tracking-[2px]" style="color: hsl(var(--muted-fg));">PAGE NOT FOUND</div>
+              <div class="empty-title" style="margin-top: 22px;">找不到此頁面</div>
+              <div class="empty-sub">這個連結可能過期、或內容已被刪除</div>
+              <button class="empty-cta"><span class="ico-14"><i data-lucide="home"></i></span>回首頁</button>
+            </div>
+            <div class="home-bar"></div>
+          </div>
+          <div class="mono text-[10.5px] text-[#8a8074] tracking-[1.2px] uppercase mt-1">Dark</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- COPYWRITING + IMPLEMENTATION                                 -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1320px] mx-auto px-8 mt-12 pb-20">
+    <h2 class="h-section">§19.4 · 規則總覽</h2>
+    <div class="mt-5 grid grid-cols-3 gap-3">
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>文案三要</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.6]">
+          <li>· 標題講<strong class="font-semibold">事實</strong>（還沒有 / 沒有符合 / 找不到）、不哀求</li>
+          <li>· 副標講<strong class="font-semibold">為什麼</strong>或<strong class="font-semibold">下一步是什麼</strong></li>
+          <li>· CTA 用<strong class="font-semibold">動詞 + 受詞</strong>（「開始第一次訓練」勝過「開始」）</li>
+          <li>· 不寫「Oops」「糟糕」「您好遺憾」</li>
+          <li>· 錯誤碼放底部 mono、給工程查、不嚇使用者</li>
+        </ul>
+      </div>
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>Skeleton 與 Spinner</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.6]">
+          <li>· skeleton 形狀<strong class="font-semibold">必須對應真實內容</strong>、最後一個 row 用 60% opacity 暗示「往下還有」</li>
+          <li>· shimmer <code class="tok">1.6s</code> · linear · 由左向右</li>
+          <li>· spinner 預期 <code class="tok">&lt; 2s</code>、超過 2s 換成 skeleton + 進度提示</li>
+          <li>· 永遠尊重 <code class="tok">prefers-reduced-motion</code> · 停止 shimmer 與 rotation</li>
+          <li>· 切換 loading → loaded 用 200ms fade、不 pop</li>
+        </ul>
+      </div>
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>錯誤救援階梯</div>
+        <ul class="mt-3 space-y-1.5 text-[13px] text-[#17181F] leading-[1.6]">
+          <li>· 第 1 步：<strong class="font-semibold">明顯 CTA</strong>（重試 / 重新整理 / 回首頁）</li>
+          <li>· 第 2 步：text button「回報問題」/「先離線繼續」</li>
+          <li>· 第 3 步：底部 mono 錯誤碼 · 截圖可貼工程</li>
+          <li>· <strong class="font-semibold">永遠</strong>提供「離線繼續」當第二路 — FitForge 訓練不該被網路綁架</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Implementation notes -->
+    <div class="mt-5 page-card p-5">
+      <div class="eyebrow-page"><span class="dot"></span>實作備忘</div>
+      <div class="mt-3 grid grid-cols-12 gap-5 text-[13px] text-[#17181F] leading-[1.6]">
+        <div class="col-span-4">
+          <div class="mono text-[10.5px] uppercase tracking-[1.2px] text-[#8a8074]">React 組件</div>
+          <ul class="mt-1 space-y-1">
+            <li>· <code class="tok">&lt;EmptyState art title sub action /&gt;</code></li>
+            <li>· <code class="tok">&lt;Skeleton variant="grid|row|hero" /&gt;</code></li>
+            <li>· <code class="tok">&lt;ErrorState kind="generic|offline|404" /&gt;</code></li>
+          </ul>
+        </div>
+        <div class="col-span-4">
+          <div class="mono text-[10.5px] uppercase tracking-[1.2px] text-[#8a8074]">插圖檔案</div>
+          <ul class="mt-1 space-y-1">
+            <li>· <code class="tok">/illustrations/empty-history.svg</code></li>
+            <li>· <code class="tok">/illustrations/empty-search.svg</code></li>
+            <li>· <code class="tok">/illustrations/empty-plan.svg</code></li>
+            <li>· <code class="tok">/illustrations/empty-custom.svg</code></li>
+          </ul>
+        </div>
+        <div class="col-span-4">
+          <div class="mono text-[10.5px] uppercase tracking-[1.2px] text-[#8a8074]">尺寸 / 顏色</div>
+          <ul class="mt-1 space-y-1">
+            <li>· art viewBox <code class="tok">0 0 200 200</code> · stroke <code class="tok">2.2</code></li>
+            <li>· primary 部分用 <code class="tok">currentColor</code> · 主題自動切</li>
+            <li>· dashed lines <code class="tok">stroke-dasharray: 2 3</code> · opacity 0.4–0.5</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  </script>
+</body>
+</html>

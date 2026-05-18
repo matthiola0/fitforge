@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Activity, BarChart3, ChevronRight, Sparkles, Timer, Trash2 } from 'lucide-react';
+import { Activity, BarChart3, ChevronRight, Timer, Trash2 } from 'lucide-react';
 import type { Workout } from '@fitforge/core';
 import { useCore } from '@/lib/core/CoreProvider';
 import { useRxQuery } from '@/lib/rxdb/useRxQuery';
@@ -8,6 +8,9 @@ import { PageHeader } from '@/app/_layout/PageHeader';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
 import { Chip } from '@/ui/Chip';
+import { ConfirmDialog } from '@/ui/ConfirmDialog';
+import { EmptyState } from '@/ui/EmptyState';
+import { Skeleton } from '@/ui/Skeleton';
 import { useUiStore } from '@/stores/uiStore';
 import { formatDuration } from '@/lib/time/formatDuration';
 import { cn } from '@/lib/cn';
@@ -39,9 +42,19 @@ export function HistoryPage() {
 
         {/* List or empty */}
         {recentQ.isLoading ? (
-          <Skeleton />
+          <Skeleton variant="row" count={4} className="mt-4" />
         ) : workouts.length === 0 ? (
-          <EmptyState />
+          <EmptyState
+            className="mt-12"
+            art={<Activity className="h-8 w-8" strokeWidth={2} />}
+            title="還沒有訓練紀錄"
+            description="完成第一次訓練後、會自動顯示在這裡。"
+            action={
+              <Link to="/today">
+                <Button size="md">回首頁 · 開始第一次</Button>
+              </Link>
+            }
+          />
         ) : (
           <div className="mt-4 space-y-5">
             {grouped.map((group) => (
@@ -292,70 +305,16 @@ function HistoryRow({ workout, avgVolume }: { workout: Workout; avgVolume: numbe
         </button>
       </div>
 
-      {confirming ? (
-        <div
-          role="dialog"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-6 backdrop-blur-sm"
-          onClick={() => setConfirming(false)}
-        >
-          <Card
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm p-5 text-center shadow-ds-lg"
-          >
-            <h3 className="text-[16px] font-bold">移除這筆紀錄？</h3>
-            <p className="mt-2 text-[13px] text-muted-foreground">
-              軟刪除、可由設定的「資料」區域復原。
-            </p>
-            <div className="mt-4 flex gap-2">
-              <Button variant="outline" size="md" block onClick={() => setConfirming(false)}>
-                取消
-              </Button>
-              <Button variant="destructive" size="md" block onClick={handleDelete}>
-                移除
-              </Button>
-            </div>
-          </Card>
-        </div>
-      ) : null}
+      <ConfirmDialog
+        open={confirming}
+        variant="destructive"
+        title="移除這筆紀錄？"
+        description="軟刪除、可由設定的「資料」區域復原。"
+        confirmLabel="移除"
+        onCancel={() => setConfirming(false)}
+        onConfirm={handleDelete}
+      />
     </Card>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Empty / Loading
-// ---------------------------------------------------------------------------
-
-function EmptyState() {
-  return (
-    <div className="mt-12 flex flex-col items-center text-center">
-      <div className="relative">
-        <div className="grid h-20 w-20 place-items-center rounded-full bg-accent text-primary">
-          <Activity size={36} strokeWidth={2} />
-        </div>
-        <Sparkles
-          size={16}
-          strokeWidth={2.4}
-          className="absolute -right-1 -top-1 text-primary"
-        />
-      </div>
-      <h3 className="mt-5 text-[18px] font-extrabold tracking-[-0.02em]">還沒有訓練紀錄</h3>
-      <p className="mt-1.5 max-w-[26ch] text-[13px] leading-[1.55] text-muted-foreground">
-        完成第一次訓練後、會自動顯示在這裡。
-      </p>
-      <Link to="/today" className="mt-5">
-        <Button size="md">回首頁 · 開始第一次</Button>
-      </Link>
-    </div>
-  );
-}
-
-function Skeleton() {
-  return (
-    <div className="mt-4 space-y-2">
-      {[0, 1, 2, 3].map((i) => (
-        <div key={i} className="h-[88px] animate-pulse rounded-lg bg-muted/40" />
-      ))}
-    </div>
   );
 }
 

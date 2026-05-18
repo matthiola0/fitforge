@@ -1,0 +1,1306 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · §17 動作動畫風格規範</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(30 25% 99%)',
+            paper: 'hsl(30 25% 97%)',
+            ink: 'hsl(240 12% 10%)',
+            ink2: 'hsl(240 8% 28%)',
+            muted: 'hsl(30 8% 95%)',
+            mutedFg: 'hsl(240 5% 45%)',
+            border: 'hsl(30 10% 88%)',
+            primary: 'hsl(8 78% 55%)',
+            primaryFg: '#ffffff',
+            primarySoft: 'hsl(15 100% 96%)',
+            success: 'hsl(150 62% 38%)',
+            warning: 'hsl(38 94% 50%)',
+            carbon: 'hsl(240 10% 7%)',
+            skin: 'hsl(28 25% 75%)',
+            skinShade: 'hsl(28 22% 64%)',
+            hair: 'hsl(240 15% 22%)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          borderRadius: { sm: '6px', md: '10px', lg: '14px', xl: '20px' },
+          transitionTimingFunction: { forge: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        }
+      }
+    };
+  </script>
+  <style>
+    html, body {
+      font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+      background: hsl(30 25% 99%);
+      color: hsl(240 12% 10%);
+      -webkit-font-smoothing: antialiased;
+    }
+    .num, .mono { font-variant-numeric: tabular-nums lining-nums; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: hsl(240 5% 45%);
+    }
+    .eyebrow .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: hsl(8 78% 55%); vertical-align: 1px; margin-right: 8px;
+    }
+    code.tok {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; padding: 1px 6px; border-radius: 4px;
+      background: hsl(30 8% 95%); color: hsl(240 12% 10%);
+      border: 1px solid hsl(30 10% 88%);
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid hsl(30 10% 88%);
+      border-radius: 14px;
+    }
+    .ico-14 svg { width: 14px; height: 14px; stroke-width: 2; }
+    .ico-16 svg { width: 16px; height: 16px; stroke-width: 2; }
+    .ico-18 svg { width: 18px; height: 18px; stroke-width: 2; }
+    .ico-20 svg { width: 20px; height: 20px; stroke-width: 2; }
+
+    /* ====== Animation stage ====== */
+    .stage {
+      background: hsl(30 8% 95%);
+      border: 1px solid hsl(30 10% 88%);
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stage-grid {
+      background-image:
+        linear-gradient(hsl(30 10% 88% / 0.6) 1px, transparent 1px),
+        linear-gradient(90deg, hsl(30 10% 88% / 0.6) 1px, transparent 1px);
+      background-size: 24px 24px;
+      background-position: -1px -1px;
+    }
+    .floor {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 1px; background: hsl(240 12% 10%);
+      opacity: 0.5;
+    }
+
+    /* ===== KEYFRAME ANIMATIONS ===== */
+    /* SQUAT — knees + hips bend, 3.5s loop */
+    @keyframes squatHip {
+      0%, 100% { transform: translateY(0); }
+      45%, 55% { transform: translateY(24px); }
+    }
+    @keyframes squatThigh {
+      0%, 100% { transform: rotate(0deg); }
+      45%, 55% { transform: rotate(-42deg); }
+    }
+    @keyframes squatShin {
+      0%, 100% { transform: rotate(0deg); }
+      45%, 55% { transform: rotate(28deg); }
+    }
+    @keyframes squatTorso {
+      0%, 100% { transform: rotate(0deg); }
+      45%, 55% { transform: rotate(14deg); }
+    }
+    @keyframes squatArrow {
+      0%, 100% { opacity: 0; transform: translateY(-4px); }
+      25%, 75% { opacity: 1; transform: translateY(2px); }
+    }
+    .sq-hip   { animation: squatHip   3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-box: fill-box; }
+    .sq-thigh { animation: squatThigh 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: 50% 8%; transform-box: fill-box; }
+    .sq-shin  { animation: squatShin  3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: 50% 8%; transform-box: fill-box; }
+    .sq-torso { animation: squatTorso 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: 50% 100%; transform-box: fill-box; }
+    .sq-arrow { animation: squatArrow 3.5s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+
+    /* BENCH PRESS — arms extend, 3.0s loop */
+    @keyframes bpArm {
+      0%, 100% { transform: rotate(-58deg); }
+      45%, 55% { transform: rotate(8deg); }
+    }
+    @keyframes bpForearm {
+      0%, 100% { transform: rotate(82deg); }
+      45%, 55% { transform: rotate(2deg); }
+    }
+    @keyframes bpBar {
+      0%, 100% { transform: translateY(0); }
+      45%, 55% { transform: translateY(-46px); }
+    }
+    @keyframes bpChest {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.97); }
+    }
+    .bp-arm     { animation: bpArm     3.0s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: 14% 50%; transform-box: fill-box; }
+    .bp-forearm { animation: bpForearm 3.0s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: 12% 50%; transform-box: fill-box; }
+    .bp-bar     { animation: bpBar     3.0s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+    .bp-chest   { animation: bpChest   3.0s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-origin: 50% 100%; transform-box: fill-box; }
+
+    /* PLANK — subtle breathing hold, 4.0s loop */
+    @keyframes plankBreath {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(1.5px); }
+    }
+    @keyframes plankBack {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(0.8px) rotate(0.2deg); }
+    }
+    @keyframes plankPulse {
+      0%, 100% { opacity: 0.35; r: 5; }
+      50% { opacity: 0.9; r: 7; }
+    }
+    .pl-body    { animation: plankBreath 4.0s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-box: fill-box; }
+    .pl-back    { animation: plankBack   4.0s cubic-bezier(0.45, 0, 0.55, 1) infinite; transform-box: fill-box; }
+    .pl-pulse   { animation: plankPulse  2.0s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+
+    /* progress bar */
+    @keyframes progressLoop {
+      0% { transform: scaleX(0); }
+      100% { transform: scaleX(1); }
+    }
+    .prog-3500 { animation: progressLoop 3.5s linear infinite; transform-origin: left center; }
+    .prog-3000 { animation: progressLoop 3.0s linear infinite; transform-origin: left center; }
+    .prog-4000 { animation: progressLoop 4.0s linear infinite; transform-origin: left center; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sq-hip, .sq-thigh, .sq-shin, .sq-torso, .sq-arrow,
+      .bp-arm, .bp-forearm, .bp-bar, .bp-chest,
+      .pl-body, .pl-back, .pl-pulse,
+      .prog-3500, .prog-3000, .prog-4000 {
+        animation: none !important;
+      }
+    }
+
+    /* Tick marks under timeline */
+    .tick { height: 1px; background: hsl(240 12% 10%); opacity: 0.25; }
+
+    /* Swatch */
+    .swatch {
+      width: 100%; aspect-ratio: 4 / 3;
+      border-radius: 8px;
+      border: 1px solid hsl(30 10% 88%);
+    }
+
+    /* annotation arrow callouts */
+    .callout-line {
+      stroke: hsl(8 78% 55%);
+      stroke-width: 1;
+      stroke-dasharray: 3 3;
+      fill: none;
+    }
+    .callout-dot {
+      fill: hsl(8 78% 55%);
+    }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.5px;
+      background: hsl(30 8% 95%);
+      color: hsl(240 8% 28%);
+      border: 1px solid hsl(30 10% 88%);
+    }
+    .pill.pri {
+      background: hsl(15 100% 96%);
+      color: hsl(8 78% 38%);
+      border-color: hsl(15 70% 86%);
+    }
+    .pill.ok {
+      background: hsl(150 50% 94%);
+      color: hsl(150 62% 28%);
+      border-color: hsl(150 35% 80%);
+    }
+    .pill.warn {
+      background: hsl(38 100% 94%);
+      color: hsl(38 80% 32%);
+      border-color: hsl(38 70% 80%);
+    }
+    .pill.no {
+      background: #fbeeec;
+      color: #b53d28;
+      border-color: #f0c5bc;
+    }
+
+    .h-section {
+      font-size: 24px; font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .h-card {
+      font-size: 18px; font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    /* spec table */
+    .spec-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 16px;
+      padding: 12px 0;
+      border-top: 1px solid hsl(30 10% 88%);
+    }
+    .spec-row:first-child { border-top: 0; }
+    .spec-row dt {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: hsl(240 5% 45%);
+      padding-top: 2px;
+    }
+    .spec-row dd {
+      font-size: 14px; line-height: 1.55;
+      color: hsl(240 12% 10%);
+    }
+    .spec-row dd .em { font-weight: 600; }
+
+    /* tick scale ruler */
+    .ruler {
+      height: 18px; position: relative;
+      border-top: 1px solid hsl(30 10% 88%);
+    }
+    .ruler-tick {
+      position: absolute; top: 0; width: 1px; height: 6px;
+      background: hsl(240 5% 45%);
+    }
+    .ruler-label {
+      position: absolute; top: 7px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      color: hsl(240 5% 45%);
+      transform: translateX(-50%);
+    }
+
+    .dont-x { color: #b53d28; }
+    .do-check { color: hsl(150 62% 28%); }
+
+    /* keyword chip */
+    .kw {
+      display: inline-flex; align-items: center;
+      padding: 6px 11px; border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 500;
+      background: white;
+      color: hsl(240 12% 10%);
+      border: 1px solid hsl(30 10% 88%);
+    }
+    .kw .pre {
+      color: hsl(8 78% 55%);
+      margin-right: 6px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ============================================================ -->
+  <!-- MASTHEAD                                                     -->
+  <!-- ============================================================ -->
+  <header class="max-w-[1200px] mx-auto px-8 pt-16 pb-10">
+    <div class="eyebrow"><span class="dot"></span>FITFORGE · §17 · MOTION SPEC · v0.1</div>
+    <h1 class="mt-3 text-[44px] md:text-[52px] font-extrabold tracking-[-0.035em] leading-[1.02]">
+      動作動畫風格規範
+      <span class="block mt-1 text-[#9b9588] font-medium tracking-[-0.025em]">Exercise Animation Style Guide</span>
+    </h1>
+    <p class="mt-6 text-[16px] text-ink2 leading-[1.65] max-w-[68ch]">
+      給未來動畫師、外包、AI 動畫工具的參考。<strong class="font-semibold text-ink">教學用、看得出關鍵點、保持插畫感</strong>。
+      不要擬真錄影、不要把人畫死。30 個動作、同一個 character、同一套規則。
+    </p>
+    <div class="mt-7 py-3 border-t border-b border-border flex flex-wrap gap-x-6 gap-y-2 text-[12.5px] text-ink2">
+      <span><strong class="font-bold text-ink">範圍</strong> · 30 動作 · Lottie JSON</span>
+      <span><strong class="font-bold text-ink">每支</strong> · &lt; 80KB · 3–4 秒 loop</span>
+      <span><strong class="font-bold text-ink">輸出</strong> · 60fps · 480 × 480 viewBox</span>
+      <span class="mono ml-auto text-[#8a8074]">本頁 SVG 為動畫意圖示意、非最終 deliverable</span>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- §1  CHARACTER STYLE SHEET                                    -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1200px] mx-auto px-8">
+    <div class="flex items-baseline justify-between flex-wrap gap-3">
+      <h2 class="h-section">§1 · 角色 Style Sheet</h2>
+      <span class="text-[13px] text-mutedFg">頭身比 1:5 · 性別中性 · 無種族特徵</span>
+    </div>
+
+    <div class="mt-6 card p-6">
+      <div class="grid grid-cols-12 gap-6">
+
+        <!-- Front view -->
+        <div class="col-span-3">
+          <div class="stage stage-grid h-[320px] flex items-end justify-center pb-1 relative">
+            <!-- guide lines -->
+            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 200 320" preserveAspectRatio="xMidYMid meet">
+              <line x1="100" y1="20" x2="100" y2="300" stroke="hsl(8 78% 55%)" stroke-width="0.5" stroke-dasharray="2 3" opacity="0.7"/>
+              <!-- proportion ticks -->
+              <g font-family="JetBrains Mono, monospace" font-size="7" fill="hsl(240 5% 45%)">
+                <line x1="156" y1="56" x2="164" y2="56" stroke="hsl(240 5% 45%)" stroke-width="0.5"/>
+                <text x="168" y="58">1H</text>
+                <line x1="156" y1="112" x2="164" y2="112" stroke="hsl(240 5% 45%)" stroke-width="0.5"/>
+                <text x="168" y="114">2H</text>
+                <line x1="156" y1="168" x2="164" y2="168" stroke="hsl(240 5% 45%)" stroke-width="0.5"/>
+                <text x="168" y="170">3H</text>
+                <line x1="156" y1="224" x2="164" y2="224" stroke="hsl(240 5% 45%)" stroke-width="0.5"/>
+                <text x="168" y="226">4H</text>
+                <line x1="156" y1="280" x2="164" y2="280" stroke="hsl(240 5% 45%)" stroke-width="0.5"/>
+                <text x="168" y="282">5H</text>
+              </g>
+
+              <!-- character (front, neutral pose) -->
+              <!-- head -->
+              <ellipse cx="100" cy="48" rx="22" ry="24" fill="hsl(28 25% 75%)"/>
+              <!-- hair cap -->
+              <path d="M 78 42 Q 100 22 122 42 Q 122 36 100 26 Q 78 36 78 42 Z" fill="hsl(240 15% 22%)"/>
+              <!-- eyes (just dots) -->
+              <circle cx="92" cy="50" r="1.5" fill="hsl(240 12% 10%)"/>
+              <circle cx="108" cy="50" r="1.5" fill="hsl(240 12% 10%)"/>
+              <!-- neck -->
+              <rect x="94" y="68" width="12" height="8" fill="hsl(28 22% 64%)"/>
+              <!-- torso (shirt — primary accent) -->
+              <path d="M 74 78 L 126 78 L 130 154 L 70 154 Z" fill="hsl(8 78% 55%)"/>
+              <!-- chest line -->
+              <line x1="100" y1="90" x2="100" y2="142" stroke="hsl(8 78% 38%)" stroke-width="0.8" opacity="0.5"/>
+              <!-- arms -->
+              <rect x="58" y="80" width="14" height="68" rx="7" fill="hsl(28 25% 75%)"/>
+              <rect x="128" y="80" width="14" height="68" rx="7" fill="hsl(28 25% 75%)"/>
+              <!-- hands -->
+              <circle cx="65" cy="155" r="7" fill="hsl(28 22% 64%)"/>
+              <circle cx="135" cy="155" r="7" fill="hsl(28 22% 64%)"/>
+              <!-- shorts -->
+              <path d="M 72 154 L 128 154 L 130 196 L 70 196 Z" fill="hsl(240 10% 22%)"/>
+              <line x1="100" y1="156" x2="100" y2="194" stroke="hsl(240 15% 10%)" stroke-width="1"/>
+              <!-- legs -->
+              <rect x="76" y="196" width="18" height="86" rx="6" fill="hsl(28 25% 75%)"/>
+              <rect x="106" y="196" width="18" height="86" rx="6" fill="hsl(28 25% 75%)"/>
+              <!-- shoes -->
+              <rect x="72" y="280" width="26" height="10" rx="3" fill="hsl(240 12% 10%)"/>
+              <rect x="102" y="280" width="26" height="10" rx="3" fill="hsl(240 12% 10%)"/>
+              <!-- shoe accent -->
+              <rect x="72" y="280" width="6" height="10" rx="2" fill="hsl(8 78% 55%)"/>
+              <rect x="102" y="280" width="6" height="10" rx="2" fill="hsl(8 78% 55%)"/>
+              <!-- floor -->
+              <line x1="20" y1="290" x2="180" y2="290" stroke="hsl(240 12% 10%)" stroke-width="0.6" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="mono text-[11px] uppercase tracking-[1.2px] text-mutedFg">前視 · Front</span>
+            <span class="mono text-[10.5px] text-mutedFg">1:5</span>
+          </div>
+        </div>
+
+        <!-- 45° side view -->
+        <div class="col-span-3">
+          <div class="stage stage-grid h-[320px] flex items-end justify-center pb-1 relative">
+            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 200 320" preserveAspectRatio="xMidYMid meet">
+              <!-- head -->
+              <ellipse cx="106" cy="48" rx="20" ry="24" fill="hsl(28 25% 75%)"/>
+              <ellipse cx="98" cy="50" rx="2" ry="3" fill="hsl(28 22% 64%)" opacity="0.6"/>
+              <!-- hair -->
+              <path d="M 86 40 Q 106 22 124 42 Q 124 30 106 24 Q 88 32 86 40 Z" fill="hsl(240 15% 22%)"/>
+              <!-- eye -->
+              <circle cx="112" cy="50" r="1.5" fill="hsl(240 12% 10%)"/>
+              <!-- neck -->
+              <rect x="100" y="68" width="12" height="9" fill="hsl(28 22% 64%)"/>
+              <!-- torso 3/4 -->
+              <path d="M 80 78 L 130 78 L 132 155 L 78 155 Z" fill="hsl(8 78% 55%)"/>
+              <!-- side seam -->
+              <line x1="128" y1="80" x2="130" y2="152" stroke="hsl(8 78% 38%)" stroke-width="0.8" opacity="0.5"/>
+              <!-- back arm -->
+              <rect x="78" y="82" width="13" height="68" rx="6" fill="hsl(28 22% 64%)"/>
+              <circle cx="84" cy="156" r="6" fill="hsl(28 22% 64%)"/>
+              <!-- front arm -->
+              <rect x="118" y="82" width="14" height="70" rx="7" fill="hsl(28 25% 75%)"/>
+              <circle cx="125" cy="158" r="7" fill="hsl(28 25% 75%)"/>
+              <!-- shorts -->
+              <path d="M 80 155 L 132 155 L 132 198 L 78 198 Z" fill="hsl(240 10% 22%)"/>
+              <!-- back leg -->
+              <rect x="80" y="198" width="18" height="84" rx="6" fill="hsl(28 22% 64%)"/>
+              <!-- front leg -->
+              <rect x="110" y="198" width="18" height="84" rx="6" fill="hsl(28 25% 75%)"/>
+              <!-- shoes -->
+              <rect x="76" y="280" width="26" height="10" rx="3" fill="hsl(240 12% 10%)"/>
+              <rect x="106" y="280" width="28" height="10" rx="3" fill="hsl(240 12% 10%)"/>
+              <rect x="106" y="280" width="6" height="10" rx="2" fill="hsl(8 78% 55%)"/>
+              <line x1="20" y1="290" x2="180" y2="290" stroke="hsl(240 12% 10%)" stroke-width="0.6" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="mono text-[11px] uppercase tracking-[1.2px] text-mutedFg">側面 45° · 預設視角</span>
+            <span class="pill pri">DEFAULT</span>
+          </div>
+        </div>
+
+        <!-- side profile -->
+        <div class="col-span-3">
+          <div class="stage stage-grid h-[320px] flex items-end justify-center pb-1 relative">
+            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 200 320" preserveAspectRatio="xMidYMid meet">
+              <!-- head -->
+              <ellipse cx="106" cy="48" rx="18" ry="23" fill="hsl(28 25% 75%)"/>
+              <!-- nose -->
+              <path d="M 124 50 Q 128 54 124 58 L 122 56 Z" fill="hsl(28 22% 64%)"/>
+              <!-- hair -->
+              <path d="M 88 42 Q 106 20 124 36 Q 122 30 106 26 Q 90 32 88 42 Z" fill="hsl(240 15% 22%)"/>
+              <!-- ear -->
+              <circle cx="92" cy="50" r="3" fill="hsl(28 22% 64%)"/>
+              <!-- eye -->
+              <circle cx="116" cy="50" r="1.4" fill="hsl(240 12% 10%)"/>
+              <!-- neck -->
+              <rect x="100" y="68" width="10" height="9" fill="hsl(28 22% 64%)"/>
+              <!-- torso side -->
+              <path d="M 90 78 L 122 78 L 126 155 L 86 155 Z" fill="hsl(8 78% 55%)"/>
+              <!-- arm -->
+              <rect x="98" y="82" width="14" height="70" rx="7" fill="hsl(28 25% 75%)"/>
+              <circle cx="105" cy="158" r="7" fill="hsl(28 25% 75%)"/>
+              <!-- shorts -->
+              <path d="M 88 155 L 126 155 L 126 198 L 86 198 Z" fill="hsl(240 10% 22%)"/>
+              <!-- leg -->
+              <rect x="96" y="198" width="18" height="84" rx="6" fill="hsl(28 25% 75%)"/>
+              <!-- shoe -->
+              <rect x="92" y="280" width="32" height="10" rx="3" fill="hsl(240 12% 10%)"/>
+              <rect x="92" y="280" width="6" height="10" rx="2" fill="hsl(8 78% 55%)"/>
+              <line x1="20" y1="290" x2="180" y2="290" stroke="hsl(240 12% 10%)" stroke-width="0.6" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="mt-2">
+            <span class="mono text-[11px] uppercase tracking-[1.2px] text-mutedFg">純側面 · 90°</span>
+          </div>
+        </div>
+
+        <!-- Anatomy of figure -->
+        <div class="col-span-3">
+          <div class="rounded-[10px] p-4 h-full" style="background: hsl(30 25% 97%); border: 1px solid hsl(30 10% 88%);">
+            <div class="eyebrow"><span class="dot"></span>解剖規則</div>
+            <ul class="mt-3 space-y-2.5 text-[13px] leading-[1.55]">
+              <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">01</span>頭身比 <strong class="font-semibold">1:5</strong>、稍 Q 但不卡通</li>
+              <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">02</span>無鼻、嘴；眼為 <strong class="font-semibold">小圓點</strong></li>
+              <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">03</span>無胸部、無臀線、<strong class="font-semibold">無性徵</strong></li>
+              <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">04</span>髮型統一 <strong class="font-semibold">短中性</strong></li>
+              <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">05</span>關節為 <strong class="font-semibold">圓角</strong>、不畫骨節線</li>
+              <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">06</span>身體輪廓 <strong class="font-semibold">無 stroke</strong>、純色塊</li>
+              <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">07</span>背側用 <strong class="font-semibold">深一階</strong>同色、不畫陰影</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Palette -->
+      <div class="mt-7 pt-6 border-t border-border">
+        <div class="eyebrow"><span class="dot"></span>角色配色 · 鎖死、所有動作沿用</div>
+        <div class="mt-4 grid grid-cols-6 gap-3">
+          <div>
+            <div class="swatch" style="background: hsl(28 25% 75%);"></div>
+            <div class="mt-2 text-[12px] font-semibold">皮膚</div>
+            <div class="mono text-[10.5px] text-mutedFg">hsl(28 25% 75%)</div>
+          </div>
+          <div>
+            <div class="swatch" style="background: hsl(28 22% 64%);"></div>
+            <div class="mt-2 text-[12px] font-semibold">皮膚 · 暗</div>
+            <div class="mono text-[10.5px] text-mutedFg">背側 / 深處</div>
+          </div>
+          <div>
+            <div class="swatch" style="background: hsl(8 78% 55%);"></div>
+            <div class="mt-2 text-[12px] font-semibold">上衣 · primary</div>
+            <div class="mono text-[10.5px] text-mutedFg">Forge Ember</div>
+          </div>
+          <div>
+            <div class="swatch" style="background: hsl(240 10% 22%);"></div>
+            <div class="mt-2 text-[12px] font-semibold">短褲</div>
+            <div class="mono text-[10.5px] text-mutedFg">深 carbon</div>
+          </div>
+          <div>
+            <div class="swatch" style="background: hsl(240 15% 22%);"></div>
+            <div class="mt-2 text-[12px] font-semibold">頭髮</div>
+            <div class="mono text-[10.5px] text-mutedFg">中性深</div>
+          </div>
+          <div>
+            <div class="swatch" style="background: hsl(240 12% 10%);"></div>
+            <div class="mt-2 text-[12px] font-semibold">鞋 + accent</div>
+            <div class="mono text-[10.5px] text-mutedFg">+ primary 條</div>
+          </div>
+        </div>
+        <p class="mt-4 text-[13px] text-ink2 leading-[1.6]">
+          皮膚色選定為 <strong class="font-semibold">中性暖灰調米色</strong>、<strong class="font-semibold">不對應任何種族</strong> — 像木質玩偶、不像照片。不另外做亮 / 暗膚色變體、避免「選膚色」的政治化分流。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §2  ENVIRONMENT                                              -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1200px] mx-auto px-8 mt-16">
+    <div class="flex items-baseline justify-between flex-wrap gap-3">
+      <h2 class="h-section">§2 · 環境 / 場景</h2>
+      <span class="text-[13px] text-mutedFg">純色 + 器材線稿 · 無健身房內裝</span>
+    </div>
+
+    <div class="mt-6 grid grid-cols-12 gap-5">
+
+      <!-- bg + equipment -->
+      <div class="col-span-7 card p-6">
+        <div class="eyebrow"><span class="dot"></span>器材線稿庫</div>
+        <div class="mt-4 grid grid-cols-3 gap-3">
+          <!-- barbell -->
+          <div class="stage h-[140px] flex items-center justify-center">
+            <svg viewBox="0 0 200 100" class="w-full h-full px-3">
+              <g fill="none" stroke="hsl(240 12% 10%)" stroke-width="3" stroke-linecap="round">
+                <line x1="40" y1="50" x2="160" y2="50"/>
+              </g>
+              <g fill="hsl(240 12% 10%)">
+                <rect x="20" y="36" width="8" height="28" rx="2"/>
+                <rect x="32" y="32" width="6" height="36" rx="2"/>
+                <rect x="162" y="32" width="6" height="36" rx="2"/>
+                <rect x="172" y="36" width="8" height="28" rx="2"/>
+              </g>
+            </svg>
+          </div>
+          <!-- dumbbell -->
+          <div class="stage h-[140px] flex items-center justify-center">
+            <svg viewBox="0 0 200 100" class="w-full h-full px-3">
+              <g fill="hsl(240 12% 10%)">
+                <rect x="50" y="34" width="14" height="32" rx="3"/>
+                <rect x="64" y="40" width="6" height="20" rx="1"/>
+                <rect x="130" y="40" width="6" height="20" rx="1"/>
+                <rect x="136" y="34" width="14" height="32" rx="3"/>
+              </g>
+              <line x1="70" y1="50" x2="130" y2="50" stroke="hsl(240 12% 10%)" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <!-- bench -->
+          <div class="stage h-[140px] flex items-center justify-center">
+            <svg viewBox="0 0 200 100" class="w-full h-full px-3">
+              <g fill="none" stroke="hsl(240 12% 10%)" stroke-width="3" stroke-linecap="round">
+                <rect x="40" y="46" width="120" height="10" rx="2" fill="hsl(240 12% 10%)" stroke="none"/>
+                <line x1="56" y1="56" x2="56" y2="84"/>
+                <line x1="144" y1="56" x2="144" y2="84"/>
+                <line x1="44" y1="84" x2="156" y2="84" opacity="0.5"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <p class="mt-4 text-[13px] text-ink2 leading-[1.6]">
+          器材一律 <strong class="font-semibold">純色塊或線稿</strong>、<code class="tok">stroke-width: 3</code>、所有端點 <code class="tok">round</code>。
+          重量片不畫斤兩數字、不畫品牌 logo。
+        </p>
+      </div>
+
+      <!-- rules -->
+      <div class="col-span-5 card p-6">
+        <div class="eyebrow"><span class="dot"></span>場景規則</div>
+        <dl class="mt-3">
+          <div class="spec-row">
+            <dt>BG</dt>
+            <dd>純 <code class="tok">bg-muted</code> hsl(30 8% 95%) · 不畫地板紋理、不畫牆</dd>
+          </div>
+          <div class="spec-row">
+            <dt>FLOOR</dt>
+            <dd>1px hairline · 黑 50% 透明、僅作為「地板提示」、不畫地磚</dd>
+          </div>
+          <div class="spec-row">
+            <dt>器材</dt>
+            <dd>只畫「當前動作必要」的器材、其他都不出現</dd>
+          </div>
+          <div class="spec-row">
+            <dt>禁止</dt>
+            <dd class="flex flex-wrap gap-1.5">
+              <span class="pill no">鏡子</span>
+              <span class="pill no">健身房 logo</span>
+              <span class="pill no">海報 / 標語</span>
+              <span class="pill no">手機 / 水瓶</span>
+              <span class="pill no">人群</span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §3  EXAMPLE EXERCISES — animated keyframes                   -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1200px] mx-auto px-8 mt-16">
+    <div class="flex items-baseline justify-between flex-wrap gap-3">
+      <h2 class="h-section">§3 · 三個範例動作</h2>
+      <span class="text-[13px] text-mutedFg">SVG 即時動畫 · 表達動畫意圖、實際輸出為 Lottie JSON</span>
+    </div>
+
+    <div class="mt-6 grid grid-cols-3 gap-5">
+
+      <!-- ============== SQUAT ============== -->
+      <div class="card overflow-hidden">
+        <div class="px-5 pt-5 pb-4 flex items-baseline justify-between">
+          <div>
+            <div class="eyebrow">EX-001 · LOWER</div>
+            <div class="mt-1 h-card">Squat 深蹲</div>
+          </div>
+          <span class="pill pri">3.5s LOOP</span>
+        </div>
+
+        <!-- Stage -->
+        <div class="stage stage-grid mx-5 h-[260px] relative">
+          <svg viewBox="0 0 280 260" class="w-full h-full">
+            <!-- floor -->
+            <line x1="20" y1="240" x2="260" y2="240" stroke="hsl(240 12% 10%)" stroke-width="0.6" opacity="0.5"/>
+
+            <!-- character (45°) -->
+            <g class="sq-hip" style="transform-origin: 140px 130px;">
+              <!-- legs group: torso animates separately, but hip translates whole upper body -->
+              <!-- back leg (shin from knee down) -->
+              <g class="sq-shin">
+                <rect x="118" y="170" width="14" height="68" rx="5" fill="hsl(28 22% 64%)"/>
+              </g>
+              <!-- front shin -->
+              <g class="sq-shin">
+                <rect x="142" y="170" width="14" height="68" rx="5" fill="hsl(28 25% 75%)"/>
+              </g>
+              <!-- back thigh -->
+              <g class="sq-thigh">
+                <rect x="119" y="130" width="14" height="48" rx="5" fill="hsl(28 22% 64%)"/>
+              </g>
+              <!-- front thigh -->
+              <g class="sq-thigh">
+                <rect x="141" y="130" width="14" height="48" rx="5" fill="hsl(28 25% 75%)"/>
+              </g>
+              <!-- torso assembly -->
+              <g class="sq-torso">
+                <!-- shorts -->
+                <path d="M 118 116 L 156 116 L 158 138 L 116 138 Z" fill="hsl(240 10% 22%)"/>
+                <!-- torso -->
+                <path d="M 116 64 L 158 64 L 156 116 L 118 116 Z" fill="hsl(8 78% 55%)"/>
+                <!-- arm extended forward -->
+                <rect x="146" y="68" width="12" height="58" rx="6" fill="hsl(28 25% 75%)" transform="rotate(20 152 68)"/>
+                <!-- back arm -->
+                <rect x="116" y="68" width="11" height="56" rx="5" fill="hsl(28 22% 64%)" transform="rotate(18 122 68)"/>
+                <!-- neck -->
+                <rect x="130" y="56" width="12" height="10" fill="hsl(28 22% 64%)"/>
+                <!-- head -->
+                <ellipse cx="142" cy="40" rx="18" ry="22" fill="hsl(28 25% 75%)"/>
+                <!-- hair -->
+                <path d="M 124 34 Q 142 14 160 32 Q 160 24 142 18 Q 126 26 124 34 Z" fill="hsl(240 15% 22%)"/>
+                <!-- eye -->
+                <circle cx="148" cy="42" r="1.4" fill="hsl(240 12% 10%)"/>
+              </g>
+            </g>
+
+            <!-- shoes (stay on floor) -->
+            <rect x="112" y="232" width="28" height="8" rx="2" fill="hsl(240 12% 10%)"/>
+            <rect x="142" y="232" width="30" height="8" rx="2" fill="hsl(240 12% 10%)"/>
+            <rect x="112" y="232" width="6" height="8" rx="1.5" fill="hsl(8 78% 55%)"/>
+            <rect x="142" y="232" width="6" height="8" rx="1.5" fill="hsl(8 78% 55%)"/>
+
+            <!-- annotation: knee alignment guide (vertical line from knee to toe) -->
+            <line x1="155" y1="170" x2="155" y2="232" stroke="hsl(8 78% 55%)" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.7"/>
+            <circle cx="155" cy="170" r="3" fill="hsl(8 78% 55%)"/>
+
+            <!-- direction arrow -->
+            <g class="sq-arrow">
+              <line x1="208" y1="100" x2="208" y2="160" stroke="hsl(8 78% 55%)" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M 203 154 L 208 162 L 213 154" fill="none" stroke="hsl(8 78% 55%)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="218" y="135" font-family="JetBrains Mono, monospace" font-size="9" fill="hsl(8 78% 55%)" font-weight="700">DOWN</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- timeline -->
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="mono text-[10.5px] uppercase tracking-[1.2px] text-mutedFg">Timeline · 3500ms · 1 rep</span>
+            <span class="mono text-[10.5px] text-mutedFg">~ 60fps</span>
+          </div>
+          <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+            <div class="h-full bg-primary prog-3500" style="background: hsl(8 78% 55%);"></div>
+          </div>
+          <div class="ruler mt-1">
+            <div class="ruler-tick" style="left:0%"></div><div class="ruler-label" style="left:0%">0</div>
+            <div class="ruler-tick" style="left:25%"></div><div class="ruler-label" style="left:25%">0.9</div>
+            <div class="ruler-tick" style="left:50%"></div><div class="ruler-label" style="left:50%">1.75</div>
+            <div class="ruler-tick" style="left:75%"></div><div class="ruler-label" style="left:75%">2.6</div>
+            <div class="ruler-tick" style="left:100%"></div><div class="ruler-label" style="left:100%">3.5s</div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-4 gap-2 text-[11px]">
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">Phase 1</div>
+              <div class="mt-0.5">站立</div>
+            </div>
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">Phase 2</div>
+              <div class="mt-0.5">下蹲 1.1s</div>
+            </div>
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">Phase 3</div>
+              <div class="mt-0.5">底部停 0.4s</div>
+            </div>
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">Phase 4</div>
+              <div class="mt-0.5">站起 1.0s</div>
+            </div>
+          </div>
+
+          <ul class="mt-4 pt-4 border-t border-border space-y-1.5 text-[12.5px] text-ink2 leading-[1.55]">
+            <li class="flex gap-2"><span class="do-check ico-14 flex-shrink-0 mt-0.5"><i data-lucide="check"></i></span>膝蓋對齊腳尖（虛線輔助）</li>
+            <li class="flex gap-2"><span class="do-check ico-14 flex-shrink-0 mt-0.5"><i data-lucide="check"></i></span>髖向後推、背保持中立</li>
+            <li class="flex gap-2"><span class="dont-x ico-14 flex-shrink-0 mt-0.5"><i data-lucide="x"></i></span>不畫膝蓋內扣</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============== BENCH PRESS ============== -->
+      <div class="card overflow-hidden">
+        <div class="px-5 pt-5 pb-4 flex items-baseline justify-between">
+          <div>
+            <div class="eyebrow">EX-002 · UPPER</div>
+            <div class="mt-1 h-card">Bench Press 臥推</div>
+          </div>
+          <span class="pill pri">3.0s LOOP</span>
+        </div>
+
+        <div class="stage stage-grid mx-5 h-[260px] relative">
+          <svg viewBox="0 0 280 260" class="w-full h-full">
+            <line x1="20" y1="240" x2="260" y2="240" stroke="hsl(240 12% 10%)" stroke-width="0.6" opacity="0.5"/>
+
+            <!-- bench -->
+            <rect x="60" y="186" width="160" height="10" rx="2" fill="hsl(240 12% 10%)"/>
+            <line x1="76" y1="196" x2="76" y2="240" stroke="hsl(240 12% 10%)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="204" y1="196" x2="204" y2="240" stroke="hsl(240 12% 10%)" stroke-width="3" stroke-linecap="round"/>
+
+            <!-- character lying on bench (side view) -->
+            <!-- legs hanging off (feet on floor) -->
+            <rect x="38" y="186" width="48" height="14" rx="6" fill="hsl(240 10% 22%)"/>
+            <rect x="44" y="200" width="14" height="32" rx="5" fill="hsl(28 25% 75%)"/>
+            <rect x="68" y="200" width="14" height="32" rx="5" fill="hsl(28 22% 64%)"/>
+            <rect x="38" y="232" width="24" height="8" rx="2" fill="hsl(240 12% 10%)"/>
+            <rect x="64" y="232" width="24" height="8" rx="2" fill="hsl(240 12% 10%)"/>
+
+            <!-- torso (lying, breathing scale) -->
+            <g class="bp-chest" style="transform-origin: 130px 186px;">
+              <path d="M 86 174 L 174 174 L 178 186 L 86 186 Z" fill="hsl(8 78% 55%)"/>
+            </g>
+
+            <!-- head -->
+            <ellipse cx="190" cy="180" rx="20" ry="14" fill="hsl(28 25% 75%)"/>
+            <path d="M 174 174 Q 190 162 208 178 Q 210 168 192 164 Q 178 168 174 174 Z" fill="hsl(240 15% 22%)"/>
+            <circle cx="200" cy="180" r="1.4" fill="hsl(240 12% 10%)"/>
+
+            <!-- arms — upper arm pivots from shoulder, forearm extends -->
+            <!-- shoulder at (130, 174) -->
+            <g style="transform-origin: 130px 174px;">
+              <g class="bp-arm" style="transform-origin: 130px 174px;">
+                <!-- upper arm (~58px) -->
+                <rect x="124" y="170" width="58" height="14" rx="7" fill="hsl(28 25% 75%)"/>
+                <!-- forearm — separate pivot at elbow end (~182, 177) -->
+                <g class="bp-forearm" style="transform-origin: 182px 177px;">
+                  <rect x="178" y="170" width="56" height="14" rx="7" fill="hsl(28 22% 64%)"/>
+                </g>
+              </g>
+            </g>
+
+            <!-- barbell (moves up/down) -->
+            <g class="bp-bar">
+              <!-- bar -->
+              <line x1="50" y1="174" x2="210" y2="174" stroke="hsl(240 12% 10%)" stroke-width="3" stroke-linecap="round"/>
+              <!-- plates -->
+              <rect x="38" y="158" width="8" height="32" rx="2" fill="hsl(240 12% 10%)"/>
+              <rect x="50" y="162" width="6" height="24" rx="1.5" fill="hsl(240 12% 10%)"/>
+              <rect x="214" y="162" width="6" height="24" rx="1.5" fill="hsl(240 12% 10%)"/>
+              <rect x="222" y="158" width="8" height="32" rx="2" fill="hsl(240 12% 10%)"/>
+            </g>
+
+            <!-- direction arrow -->
+            <g opacity="0.7">
+              <line x1="20" y1="130" x2="20" y2="175" stroke="hsl(8 78% 55%)" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M 15 135 L 20 127 L 25 135" fill="none" stroke="hsl(8 78% 55%)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="30" y="155" font-family="JetBrains Mono, monospace" font-size="9" fill="hsl(8 78% 55%)" font-weight="700">UP</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="mono text-[10.5px] uppercase tracking-[1.2px] text-mutedFg">Timeline · 3000ms · 1 rep</span>
+            <span class="mono text-[10.5px] text-mutedFg">~ 60fps</span>
+          </div>
+          <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+            <div class="h-full prog-3000" style="background: hsl(8 78% 55%);"></div>
+          </div>
+          <div class="ruler mt-1">
+            <div class="ruler-tick" style="left:0%"></div><div class="ruler-label" style="left:0%">0</div>
+            <div class="ruler-tick" style="left:25%"></div><div class="ruler-label" style="left:25%">0.75</div>
+            <div class="ruler-tick" style="left:50%"></div><div class="ruler-label" style="left:50%">1.5</div>
+            <div class="ruler-tick" style="left:75%"></div><div class="ruler-label" style="left:75%">2.25</div>
+            <div class="ruler-tick" style="left:100%"></div><div class="ruler-label" style="left:100%">3.0s</div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-4 gap-2 text-[11px]">
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">Phase 1</div>
+              <div class="mt-0.5">頂端</div>
+            </div>
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">Phase 2</div>
+              <div class="mt-0.5">下放 1.0s</div>
+            </div>
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">Phase 3</div>
+              <div class="mt-0.5">觸胸 0.3s</div>
+            </div>
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">Phase 4</div>
+              <div class="mt-0.5">推起 1.0s</div>
+            </div>
+          </div>
+
+          <ul class="mt-4 pt-4 border-t border-border space-y-1.5 text-[12.5px] text-ink2 leading-[1.55]">
+            <li class="flex gap-2"><span class="do-check ico-14 flex-shrink-0 mt-0.5"><i data-lucide="check"></i></span>下放至胸口、不空懸</li>
+            <li class="flex gap-2"><span class="do-check ico-14 flex-shrink-0 mt-0.5"><i data-lucide="check"></i></span>腳掌全程貼地</li>
+            <li class="flex gap-2"><span class="dont-x ico-14 flex-shrink-0 mt-0.5"><i data-lucide="x"></i></span>不畫手肘鎖死</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============== PLANK ============== -->
+      <div class="card overflow-hidden">
+        <div class="px-5 pt-5 pb-4 flex items-baseline justify-between">
+          <div>
+            <div class="eyebrow">EX-003 · CORE</div>
+            <div class="mt-1 h-card">Plank 棒式</div>
+          </div>
+          <span class="pill pri">4.0s LOOP</span>
+        </div>
+
+        <div class="stage stage-grid mx-5 h-[260px] relative">
+          <svg viewBox="0 0 280 260" class="w-full h-full">
+            <line x1="20" y1="240" x2="260" y2="240" stroke="hsl(240 12% 10%)" stroke-width="0.6" opacity="0.5"/>
+
+            <!-- alignment guide line (back should be straight) -->
+            <line x1="40" y1="178" x2="240" y2="178" stroke="hsl(8 78% 55%)" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.6"/>
+
+            <!-- forearm + elbow at ground -->
+            <rect x="50" y="226" width="46" height="10" rx="3" fill="hsl(28 22% 64%)"/>
+            <circle cx="50" cy="231" r="6" fill="hsl(28 22% 64%)"/>
+            <!-- upper arm (from elbow up to shoulder ~58, 192) -->
+            <rect x="50" y="178" width="14" height="56" rx="6" fill="hsl(28 25% 75%)"/>
+
+            <!-- body line (torso + shorts + legs as one straight column) -->
+            <g class="pl-body">
+              <!-- shoulder to hip torso (orange shirt, horizontal) -->
+              <path d="M 58 176 L 152 174 L 154 190 L 58 192 Z" fill="hsl(8 78% 55%)"/>
+              <!-- back highlight crease -->
+              <line x1="62" y1="182" x2="148" y2="182" stroke="hsl(8 78% 38%)" stroke-width="0.6" opacity="0.4"/>
+              <!-- shorts -->
+              <path d="M 152 174 L 188 174 L 190 192 L 154 190 Z" fill="hsl(240 10% 22%)"/>
+              <!-- legs (extended back) -->
+              <g class="pl-back">
+                <rect x="188" y="176" width="56" height="14" rx="6" fill="hsl(28 25% 75%)"/>
+                <rect x="188" y="190" width="56" height="14" rx="6" fill="hsl(28 22% 64%)"/>
+              </g>
+              <!-- feet (toes on floor) -->
+              <rect x="240" y="216" width="14" height="22" rx="3" fill="hsl(240 12% 10%)"/>
+              <rect x="240" y="216" width="6" height="22" rx="1.5" fill="hsl(8 78% 55%)"/>
+            </g>
+
+            <!-- head (extended forward of shoulder) -->
+            <ellipse cx="44" cy="180" rx="18" ry="14" fill="hsl(28 25% 75%)"/>
+            <path d="M 30 174 Q 44 164 60 178 Q 58 168 44 166 Q 32 170 30 174 Z" fill="hsl(240 15% 22%)"/>
+            <circle cx="36" cy="180" r="1.4" fill="hsl(240 12% 10%)"/>
+
+            <!-- core engagement pulse -->
+            <circle cx="120" cy="184" r="6" class="pl-pulse" fill="hsl(8 78% 55%)"/>
+            <text x="120" y="158" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="hsl(8 78% 55%)" font-weight="700">CORE</text>
+
+            <!-- straight back arrow -->
+            <g opacity="0.6">
+              <text x="140" y="218" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="hsl(8 78% 55%)" font-weight="600">STRAIGHT LINE</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="px-5 pt-4 pb-5">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="mono text-[10.5px] uppercase tracking-[1.2px] text-mutedFg">Timeline · 4000ms · 呼吸週期</span>
+            <span class="mono text-[10.5px] text-mutedFg">~ 30fps</span>
+          </div>
+          <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+            <div class="h-full prog-4000" style="background: hsl(8 78% 55%);"></div>
+          </div>
+          <div class="ruler mt-1">
+            <div class="ruler-tick" style="left:0%"></div><div class="ruler-label" style="left:0%">0</div>
+            <div class="ruler-tick" style="left:25%"></div><div class="ruler-label" style="left:25%">1.0</div>
+            <div class="ruler-tick" style="left:50%"></div><div class="ruler-label" style="left:50%">2.0</div>
+            <div class="ruler-tick" style="left:75%"></div><div class="ruler-label" style="left:75%">3.0</div>
+            <div class="ruler-tick" style="left:100%"></div><div class="ruler-label" style="left:100%">4.0s</div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-2 gap-2 text-[11px]">
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">吸氣</div>
+              <div class="mt-0.5">2.0s · 軀幹微升</div>
+            </div>
+            <div>
+              <div class="mono text-[10px] uppercase tracking-[1px] text-mutedFg">吐氣</div>
+              <div class="mt-0.5">2.0s · 軀幹微降</div>
+            </div>
+          </div>
+
+          <ul class="mt-4 pt-4 border-t border-border space-y-1.5 text-[12.5px] text-ink2 leading-[1.55]">
+            <li class="flex gap-2"><span class="do-check ico-14 flex-shrink-0 mt-0.5"><i data-lucide="check"></i></span>頭 → 肩 → 髖 → 腳跟一直線</li>
+            <li class="flex gap-2"><span class="do-check ico-14 flex-shrink-0 mt-0.5"><i data-lucide="check"></i></span>核心區脈動點提示「啟動」</li>
+            <li class="flex gap-2"><span class="dont-x ico-14 flex-shrink-0 mt-0.5"><i data-lucide="x"></i></span>不畫腰下沉 / 屁股翹</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §4  CAMERA ANGLES                                            -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1200px] mx-auto px-8 mt-16">
+    <div class="flex items-baseline justify-between flex-wrap gap-3">
+      <h2 class="h-section">§4 · 視角決策</h2>
+      <span class="text-[13px] text-mutedFg">看不到關鍵點的視角 = 沒用的動畫</span>
+    </div>
+
+    <div class="mt-6 card overflow-hidden">
+      <table class="w-full text-[13px]">
+        <thead>
+          <tr class="text-left" style="background: hsl(30 25% 97%); border-bottom: 1px solid hsl(30 10% 88%);">
+            <th class="px-5 py-3 mono text-[11px] uppercase tracking-[1.2px] text-mutedFg font-bold">視角</th>
+            <th class="px-5 py-3 mono text-[11px] uppercase tracking-[1.2px] text-mutedFg font-bold">用於</th>
+            <th class="px-5 py-3 mono text-[11px] uppercase tracking-[1.2px] text-mutedFg font-bold">看得到</th>
+            <th class="px-5 py-3 mono text-[11px] uppercase tracking-[1.2px] text-mutedFg font-bold">例</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+          <tr>
+            <td class="px-5 py-3.5"><span class="pill pri">45°</span> <span class="ml-1 font-semibold">側面 ¾</span></td>
+            <td class="px-5 py-3.5">大部分動作 · 預設</td>
+            <td class="px-5 py-3.5 text-ink2">軀幹角度 + 髖膝彎曲 + 一點深度</td>
+            <td class="px-5 py-3.5 text-ink2">Squat · Bench Press · Deadlift · Row</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3.5"><span class="pill">90°</span> <span class="ml-1 font-semibold">純側面</span></td>
+            <td class="px-5 py-3.5">脊柱對齊是重點時</td>
+            <td class="px-5 py-3.5 text-ink2">背是否平、髖角度</td>
+            <td class="px-5 py-3.5 text-ink2">Plank · Hip Hinge · RDL</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3.5"><span class="pill">ISO</span> <span class="ml-1 font-semibold">等角</span></td>
+            <td class="px-5 py-3.5">需區分左右腳 / 不對稱</td>
+            <td class="px-5 py-3.5 text-ink2">兩側肢體互不遮擋</td>
+            <td class="px-5 py-3.5 text-ink2">Lunge · Bulgarian Split · Single-leg RDL</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3.5"><span class="pill">FRONT</span> <span class="ml-1 font-semibold">前視</span></td>
+            <td class="px-5 py-3.5">膝外展 / 內扣是重點</td>
+            <td class="px-5 py-3.5 text-ink2">膝蓋外展軌跡</td>
+            <td class="px-5 py-3.5 text-ink2">Sumo Squat · Goblet</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3.5"><span class="pill">BACK</span> <span class="ml-1 font-semibold">背視</span></td>
+            <td class="px-5 py-3.5">背部肌群 · 罕用</td>
+            <td class="px-5 py-3.5 text-ink2">肩胛運動</td>
+            <td class="px-5 py-3.5 text-ink2">Pull-up · Lat Pulldown</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §5  ANNOTATIONS                                              -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1200px] mx-auto px-8 mt-16">
+    <div class="flex items-baseline justify-between flex-wrap gap-3">
+      <h2 class="h-section">§5 · 標註系統</h2>
+      <span class="text-[13px] text-mutedFg">少而有用、不蓋住動作本身</span>
+    </div>
+
+    <div class="mt-6 grid grid-cols-4 gap-5">
+
+      <div class="card p-5">
+        <div class="stage h-[130px] flex items-center justify-center relative">
+          <svg viewBox="0 0 120 100" class="w-20 h-20">
+            <circle cx="60" cy="50" r="20" fill="hsl(28 25% 75%)"/>
+            <circle cx="60" cy="50" r="4" fill="hsl(8 78% 55%)"/>
+          </svg>
+        </div>
+        <div class="mt-3 mono text-[10.5px] uppercase tracking-[1.2px] text-mutedFg">關鍵點 · Dot</div>
+        <p class="mt-1 text-[12.5px] text-ink2 leading-[1.55]">primary 實心圓、半徑 4px、標關節 / 觸地點</p>
+      </div>
+
+      <div class="card p-5">
+        <div class="stage h-[130px] flex items-center justify-center">
+          <svg viewBox="0 0 120 100" class="w-24 h-20">
+            <line x1="20" y1="20" x2="20" y2="80" stroke="hsl(8 78% 55%)" stroke-width="0.8" stroke-dasharray="2 3"/>
+            <line x1="100" y1="20" x2="100" y2="80" stroke="hsl(8 78% 55%)" stroke-width="0.8" stroke-dasharray="2 3"/>
+          </svg>
+        </div>
+        <div class="mt-3 mono text-[10.5px] uppercase tracking-[1.2px] text-mutedFg">輔助線 · Dash</div>
+        <p class="mt-1 text-[12.5px] text-ink2 leading-[1.55]">虛線 0.8px · primary 60% · 對齊參考</p>
+      </div>
+
+      <div class="card p-5">
+        <div class="stage h-[130px] flex items-center justify-center">
+          <svg viewBox="0 0 120 100" class="w-24 h-20">
+            <line x1="60" y1="20" x2="60" y2="80" stroke="hsl(8 78% 55%)" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M 55 74 L 60 82 L 65 74" fill="none" stroke="hsl(8 78% 55%)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="mt-3 mono text-[10.5px] uppercase tracking-[1.2px] text-mutedFg">方向 · Arrow</div>
+        <p class="mt-1 text-[12.5px] text-ink2 leading-[1.55]">在離心 phase 顯示、向心 phase 隱藏</p>
+      </div>
+
+      <div class="card p-5">
+        <div class="stage h-[130px] flex items-center justify-center">
+          <svg viewBox="0 0 120 100" class="w-24 h-20">
+            <circle cx="60" cy="50" r="6" fill="hsl(8 78% 55%)" opacity="0.4"/>
+            <circle cx="60" cy="50" r="10" fill="none" stroke="hsl(8 78% 55%)" stroke-width="0.8" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="mt-3 mono text-[10.5px] uppercase tracking-[1.2px] text-mutedFg">啟動 · Pulse</div>
+        <p class="mt-1 text-[12.5px] text-ink2 leading-[1.55]">標核心 / 主動肌、脈動 2s 一次</p>
+      </div>
+
+    </div>
+
+    <div class="mt-5 card p-5 flex items-start gap-3">
+      <span class="ico-18 mt-0.5" style="color: hsl(8 78% 55%);"><i data-lucide="alert-triangle"></i></span>
+      <div class="text-[13px] text-ink2 leading-[1.6]">
+        <strong class="font-semibold text-ink">不加文字。</strong> 所有提示一律走外層 React overlay、由 i18n 翻譯。
+        動畫本體裡的 <code class="tok">CORE</code> / <code class="tok">DOWN</code> / <code class="tok">UP</code> 是本份 spec 的標註、實際 Lottie 不嵌字。
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §6  TIMING + FILE SIZE                                       -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1200px] mx-auto px-8 mt-16">
+    <div class="flex items-baseline justify-between flex-wrap gap-3">
+      <h2 class="h-section">§6 · 時長 / 速度 / 檔案大小</h2>
+      <span class="text-[13px] text-mutedFg">每支 &lt; 80KB · 3–4 秒 loop · 起終一致</span>
+    </div>
+
+    <div class="mt-6 grid grid-cols-12 gap-5">
+      <div class="col-span-7 card p-6">
+        <dl>
+          <div class="spec-row">
+            <dt>單一 REP</dt>
+            <dd><span class="em">3.0 – 4.0s</span> · 比真實 tempo 慢約 1.3×、給新手看清楚</dd>
+          </div>
+          <div class="spec-row">
+            <dt>LOOP</dt>
+            <dd>第 N 幀必須與第 0 幀 <span class="em">像素一致</span> · 動畫師需用 onion-skin 驗證</dd>
+          </div>
+          <div class="spec-row">
+            <dt>速度切換</dt>
+            <dd><span class="em">0.5× / 1× / 1.5×</span> 三檔 · 用 Lottie playSpeed、不重做動畫</dd>
+          </div>
+          <div class="spec-row">
+            <dt>EASING</dt>
+            <dd>離心慢於向心 · <code class="tok">cubic-bezier(0.45, 0, 0.55, 1)</code> · 不用 linear</dd>
+          </div>
+          <div class="spec-row">
+            <dt>FPS</dt>
+            <dd>動態動作 <span class="em">60fps</span> · 等長 hold（如 Plank）<span class="em">30fps</span> 即可</dd>
+          </div>
+          <div class="spec-row">
+            <dt>viewBox</dt>
+            <dd><span class="em">480 × 480</span> · 動作主體不超過中央 380 × 380 安全區</dd>
+          </div>
+          <div class="spec-row">
+            <dt>檔案大小</dt>
+            <dd>每支 <span class="em">&lt; 80 KB</span> · 30 動作 ≤ 2.4 MB 總量 · 不超過離線快取預算</dd>
+          </div>
+          <div class="spec-row">
+            <dt>顏色精度</dt>
+            <dd>用 hex 16 進位、不存 <code class="tok">rgba()</code> · 共享 swatch 由動畫師統一 import</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="col-span-5 flex flex-col gap-5">
+        <div class="card p-6">
+          <div class="eyebrow"><span class="dot"></span>瘦身策略 · 達到 80KB</div>
+          <ul class="mt-3 space-y-2 text-[13px] text-ink2 leading-[1.55]">
+            <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">·</span>用 <code class="tok">shape</code>、不用 <code class="tok">image</code></li>
+            <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">·</span>骨架共用、各動作只改 keyframe</li>
+            <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">·</span>路徑點 ≤ 6 / 段 · 不用毛邊曲線</li>
+            <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">·</span>輸出走 <code class="tok">lottiefiles --minify</code></li>
+            <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">·</span>不嵌字體 · 不嵌 PNG raster</li>
+          </ul>
+        </div>
+        <div class="card p-6">
+          <div class="eyebrow"><span class="dot"></span>無障礙</div>
+          <ul class="mt-3 space-y-2 text-[13px] text-ink2 leading-[1.55]">
+            <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">·</span>尊重 <code class="tok">prefers-reduced-motion</code> · 自動停在 mid-rep 靜態 frame</li>
+            <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">·</span>提供「下一步示意圖」靜態 PNG fallback</li>
+            <li class="flex gap-2"><span class="mono text-mutedFg flex-shrink-0">·</span><code class="tok">aria-label</code> 由 React overlay 提供、動畫本身 <code class="tok">aria-hidden</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §7  DO / DONT                                                -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1200px] mx-auto px-8 mt-16">
+    <h2 class="h-section">§7 · 該 / 不該</h2>
+
+    <div class="mt-6 grid grid-cols-2 gap-5">
+      <div class="card p-6">
+        <div class="flex items-center gap-2">
+          <span class="ico-18" style="color: hsl(150 62% 38%);"><i data-lucide="check-circle-2"></i></span>
+          <span class="mono text-[12px] uppercase tracking-[1.4px]" style="color: hsl(150 62% 28%);">DO</span>
+        </div>
+        <ul class="mt-3 space-y-2 text-[13.5px] leading-[1.6]">
+          <li class="flex gap-2.5"><span class="do-check ico-14 flex-shrink-0 mt-1"><i data-lucide="check"></i></span>讓動作起 / 終姿勢可辨識、即使靜止</li>
+          <li class="flex gap-2.5"><span class="do-check ico-14 flex-shrink-0 mt-1"><i data-lucide="check"></i></span>主動肌位置加 pulse、讓新手知道「哪裡該酸」</li>
+          <li class="flex gap-2.5"><span class="do-check ico-14 flex-shrink-0 mt-1"><i data-lucide="check"></i></span>離心 phase 慢、向心 phase 略快</li>
+          <li class="flex gap-2.5"><span class="do-check ico-14 flex-shrink-0 mt-1"><i data-lucide="check"></i></span>所有 30 個動作用同一個 character、同一個鏡頭距離</li>
+          <li class="flex gap-2.5"><span class="do-check ico-14 flex-shrink-0 mt-1"><i data-lucide="check"></i></span>器材線稿用同一個 stroke 粗細</li>
+        </ul>
+      </div>
+
+      <div class="card p-6">
+        <div class="flex items-center gap-2">
+          <span class="ico-18" style="color: #b53d28;"><i data-lucide="x-circle"></i></span>
+          <span class="mono text-[12px] uppercase tracking-[1.4px]" style="color: #b53d28;">DONT</span>
+        </div>
+        <ul class="mt-3 space-y-2 text-[13.5px] leading-[1.6]">
+          <li class="flex gap-2.5"><span class="dont-x ico-14 flex-shrink-0 mt-1"><i data-lucide="x"></i></span>不畫汗珠、肌肉抖動、表情</li>
+          <li class="flex gap-2.5"><span class="dont-x ico-14 flex-shrink-0 mt-1"><i data-lucide="x"></i></span>不畫品牌 logo / 重量數字 / 健身房</li>
+          <li class="flex gap-2.5"><span class="dont-x ico-14 flex-shrink-0 mt-1"><i data-lucide="x"></i></span>不用真人 rotoscope / motion capture trace</li>
+          <li class="flex gap-2.5"><span class="dont-x ico-14 flex-shrink-0 mt-1"><i data-lucide="x"></i></span>不畫錯誤示範與正確並列（另外做 EX-XXX-bad.json）</li>
+          <li class="flex gap-2.5"><span class="dont-x ico-14 flex-shrink-0 mt-1"><i data-lucide="x"></i></span>不用 gradient · 不用 shadow · 不用模糊</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §8  LOTTIEFILES KEYWORDS                                     -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1200px] mx-auto px-8 mt-16">
+    <div class="flex items-baseline justify-between flex-wrap gap-3">
+      <h2 class="h-section">§8 · LottieFiles 採購關鍵字</h2>
+      <span class="text-[13px] text-mutedFg">若自製成本過高、可採購後依本 spec 重繪</span>
+    </div>
+
+    <div class="mt-6 card p-6">
+      <p class="text-[13.5px] text-ink2 leading-[1.6] max-w-[68ch]">
+        關鍵字組合策略：<strong class="font-semibold">動作名 + 風格詞 + 視角詞 + 排除詞</strong>。
+        建議優先 <code class="tok">flat illustration</code> 與 <code class="tok">minimal</code>、避開 <code class="tok">3d</code> 與 <code class="tok">cartoon mascot</code>。
+      </p>
+
+      <div class="mt-6">
+        <div class="eyebrow">動作名 · ENGLISH</div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <span class="kw"><span class="pre">EX</span>squat</span>
+          <span class="kw"><span class="pre">EX</span>bench press</span>
+          <span class="kw"><span class="pre">EX</span>deadlift</span>
+          <span class="kw"><span class="pre">EX</span>plank</span>
+          <span class="kw"><span class="pre">EX</span>pushup</span>
+          <span class="kw"><span class="pre">EX</span>pullup</span>
+          <span class="kw"><span class="pre">EX</span>lunge</span>
+          <span class="kw"><span class="pre">EX</span>row</span>
+          <span class="kw"><span class="pre">EX</span>shoulder press</span>
+          <span class="kw"><span class="pre">EX</span>bicep curl</span>
+          <span class="kw"><span class="pre">EX</span>tricep extension</span>
+          <span class="kw"><span class="pre">EX</span>lat pulldown</span>
+          <span class="kw"><span class="pre">EX</span>RDL</span>
+          <span class="kw"><span class="pre">EX</span>hip thrust</span>
+          <span class="kw"><span class="pre">EX</span>leg press</span>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <div class="eyebrow">風格詞 · STYLE</div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <span class="kw"><span class="pre">+</span>flat illustration</span>
+          <span class="kw"><span class="pre">+</span>minimal</span>
+          <span class="kw"><span class="pre">+</span>character animation</span>
+          <span class="kw"><span class="pre">+</span>fitness icon</span>
+          <span class="kw"><span class="pre">+</span>workout illustration</span>
+          <span class="kw"><span class="pre">+</span>line art</span>
+          <span class="kw"><span class="pre">+</span>gender neutral</span>
+          <span class="kw"><span class="pre">+</span>limited palette</span>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <div class="eyebrow">視角詞 · ANGLE</div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <span class="kw"><span class="pre">+</span>side view</span>
+          <span class="kw"><span class="pre">+</span>3/4 view</span>
+          <span class="kw"><span class="pre">+</span>isometric</span>
+          <span class="kw"><span class="pre">+</span>profile</span>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <div class="eyebrow">排除詞 · NOT</div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <span class="kw" style="border-color:#f0c5bc; color:#b53d28;"><span class="pre" style="color:#b53d28;">−</span>3d</span>
+          <span class="kw" style="border-color:#f0c5bc; color:#b53d28;"><span class="pre" style="color:#b53d28;">−</span>realistic</span>
+          <span class="kw" style="border-color:#f0c5bc; color:#b53d28;"><span class="pre" style="color:#b53d28;">−</span>cartoon mascot</span>
+          <span class="kw" style="border-color:#f0c5bc; color:#b53d28;"><span class="pre" style="color:#b53d28;">−</span>anime</span>
+          <span class="kw" style="border-color:#f0c5bc; color:#b53d28;"><span class="pre" style="color:#b53d28;">−</span>chibi</span>
+          <span class="kw" style="border-color:#f0c5bc; color:#b53d28;"><span class="pre" style="color:#b53d28;">−</span>muscle bro</span>
+          <span class="kw" style="border-color:#f0c5bc; color:#b53d28;"><span class="pre" style="color:#b53d28;">−</span>gradient</span>
+          <span class="kw" style="border-color:#f0c5bc; color:#b53d28;"><span class="pre" style="color:#b53d28;">−</span>logo</span>
+        </div>
+      </div>
+
+      <div class="mt-7 pt-6 border-t border-border grid grid-cols-2 gap-5">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>範例 query · 好</div>
+          <div class="mt-2 p-3 rounded-md mono text-[12px] leading-[1.7]" style="background: hsl(150 50% 96%); border: 1px solid hsl(150 35% 80%); color: hsl(150 62% 22%);">
+            squat flat illustration side view minimal -3d -realistic -gradient
+          </div>
+        </div>
+        <div>
+          <div class="eyebrow"><span class="dot"></span>範例 query · 不好</div>
+          <div class="mt-2 p-3 rounded-md mono text-[12px] leading-[1.7]" style="background: #fbeeec; border: 1px solid #f0c5bc; color: #b53d28;">
+            workout man cool animation muscle
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-5 text-[12.5px] text-mutedFg leading-[1.55]">
+      採購後 <strong class="font-medium text-ink2">必須</strong> 依本 spec 重繪 character 與配色、不可直接使用原作者角色 — 確保 30 個動作視覺一致。
+    </p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- FOOTER                                                       -->
+  <!-- ============================================================ -->
+  <footer class="max-w-[1200px] mx-auto px-8 mt-16 mb-20 pt-8 border-t border-border flex flex-wrap items-baseline justify-between gap-3">
+    <div class="mono text-[11px] uppercase tracking-[1.4px] text-mutedFg">FITFORGE · §17 · motion-spec.md · v0.1</div>
+    <div class="text-[12px] text-mutedFg">疑問 → design@fitforge · 動畫師 onboarding 走 §17 + §1 design system</div>
+  </footer>
+
+  <script>
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  </script>
+</body>
+</html>

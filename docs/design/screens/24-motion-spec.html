@@ -1,0 +1,1624 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitForge · §20 Motion Spec</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg: 30 25% 99%;
+      --paper: 30 25% 97%;
+      --fg: 240 12% 10%;
+      --fg2: 240 8% 28%;
+      --muted: 30 8% 95%;
+      --muted-2: 30 8% 92%;
+      --muted-fg: 240 5% 45%;
+      --border: 30 10% 88%;
+      --primary: 8 78% 55%;
+      --primary-soft: 15 100% 96%;
+      --primary-fg: 0 0% 100%;
+      --success: 150 62% 38%;
+      --warning: 38 94% 50%;
+      --carbon: 240 10% 7%;
+      --ink-code: 240 25% 14%;
+    }
+
+    html, body {
+      font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background:
+        radial-gradient(1200px 600px at 30% 10%, #efe9dd 0%, transparent 60%),
+        radial-gradient(900px 700px at 80% 90%, #e7dfd0 0%, transparent 55%),
+        #ebe4d5;
+      color: #17181F;
+    }
+    .num, .mono { font-variant-numeric: tabular-nums lining-nums; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .eyebrow-page {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.8px; text-transform: uppercase;
+      color: #6B6D77;
+    }
+    .eyebrow-page .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 3px;
+      background: #E14B36; vertical-align: 1px; margin-right: 8px;
+    }
+    .var-eyebrow {
+      font-size: 10.5px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; color: #8a8074;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .h-section {
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    code.tok {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; padding: 1px 6px; border-radius: 4px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid #E1DDD7;
+      color: #17181F;
+    }
+    .page-card {
+      background: white;
+      border: 1px solid #E1DDD7;
+      border-radius: 16px;
+    }
+    .live-cap {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10.5px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: hsl(var(--success));
+      font-weight: 700;
+    }
+    .live-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 999px;
+      background: hsl(var(--success));
+      animation: livePulse 1.2s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: hsl(var(--muted));
+      color: hsl(var(--fg2));
+      border: 1px solid hsl(var(--border));
+    }
+    .tag.pri {
+      background: hsl(var(--primary-soft));
+      color: hsl(8 78% 38%);
+      border-color: hsl(15 70% 86%);
+    }
+    .tag.ok {
+      background: hsl(150 50% 94%);
+      color: hsl(150 62% 28%);
+      border-color: hsl(150 35% 80%);
+    }
+
+    /* ============== TOKEN SWATCHES ============== */
+    .token-card {
+      background: white;
+      border: 1px solid hsl(var(--border));
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .token-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: hsl(var(--muted-fg));
+    }
+    .token-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: hsl(var(--fg));
+      margin-top: 4px;
+    }
+
+    /* ============== CURVE VISUALIZATION ============== */
+    .curve-card {
+      background: hsl(var(--paper));
+      border: 1px solid hsl(var(--border));
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    /* ============== TABLE ============== */
+    table.spec {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    table.spec thead th {
+      text-align: left;
+      padding: 12px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: hsl(var(--muted-fg));
+      background: hsl(var(--paper));
+      border-bottom: 1px solid hsl(var(--border));
+    }
+    table.spec tbody td {
+      padding: 14px;
+      vertical-align: top;
+      border-top: 1px solid hsl(var(--border));
+      line-height: 1.55;
+    }
+    table.spec tbody tr:first-child td { border-top: 0; }
+    table.spec td.prop {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: hsl(var(--fg));
+      white-space: nowrap;
+    }
+    table.spec td.dur {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: hsl(var(--fg));
+    }
+    table.spec td.ease {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: hsl(var(--fg2));
+    }
+    table.spec td.note { color: hsl(var(--fg2)); }
+    table.spec tbody tr:hover td { background: hsl(var(--paper) / 0.5); }
+
+    /* ============== CODE BLOCK ============== */
+    pre.code {
+      background: hsl(var(--ink-code));
+      color: hsl(30 15% 92%);
+      border-radius: 12px;
+      padding: 18px 22px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.65;
+      overflow-x: auto;
+      border: 1px solid hsl(var(--ink-code));
+    }
+    pre.code .k  { color: #d6a0ff; }    /* keyword */
+    pre.code .t  { color: #ffb086; }    /* tag */
+    pre.code .a  { color: #fad481; }    /* attr */
+    pre.code .s  { color: #b9e4a4; }    /* string / value */
+    pre.code .n  { color: #94c8ff; }    /* number */
+    pre.code .c  { color: #6e7080; font-style: italic; } /* comment */
+    pre.code .p  { color: #d0d3da; }    /* punct */
+    pre.code .f  { color: #ffd380; }    /* function */
+
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px;
+      background: hsl(240 30% 9%);
+      color: #c7cad4;
+      border-radius: 12px 12px 0 0;
+      border: 1px solid hsl(var(--ink-code));
+      border-bottom: 1px solid hsl(240 30% 20%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .code-header + pre.code {
+      border-radius: 0 0 12px 12px;
+      border-top: 0;
+    }
+    .code-header .dot3 { display: flex; gap: 5px; }
+    .code-header .dot3 span {
+      width: 9px; height: 9px; border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* ============== DEMO STAGES ============== */
+    .demo {
+      position: relative;
+      background: hsl(var(--paper));
+      border: 1px solid hsl(var(--border));
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .demo-label {
+      position: absolute; top: 10px; left: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: hsl(var(--muted-fg));
+      font-weight: 700;
+      z-index: 5;
+    }
+
+    /* ============== A. PAGE TRANSITION DEMO ============== */
+    .pt-frame {
+      position: relative;
+      width: 240px; height: 380px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: hsl(var(--bg));
+      border: 1px solid hsl(var(--border));
+      margin: 24px auto;
+    }
+    .pt-screen {
+      position: absolute; inset: 0;
+      padding: 16px;
+    }
+    .pt-a { animation: ptA 3.8s cubic-bezier(0.16, 1, 0.3, 1) infinite; background: hsl(var(--bg)); }
+    .pt-b { animation: ptB 3.8s cubic-bezier(0.16, 1, 0.3, 1) infinite; background: hsl(var(--bg)); }
+    @keyframes ptA {
+      0% { transform: translateX(0); opacity: 1; }
+      45% { transform: translateX(0); opacity: 1; }
+      55% { transform: translateX(-20%); opacity: 0; }
+      90% { transform: translateX(-20%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes ptB {
+      0% { transform: translateX(100%); }
+      45% { transform: translateX(100%); }
+      55% { transform: translateX(0); }
+      90% { transform: translateX(0); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ============== B. MODAL SHEET DEMO ============== */
+    .ms-frame {
+      position: relative;
+      width: 240px; height: 380px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: hsl(var(--bg));
+      border: 1px solid hsl(var(--border));
+      margin: 24px auto;
+    }
+    .ms-dim {
+      position: absolute; inset: 0;
+      background: rgba(16, 12, 8, 0.42);
+      animation: msDim 4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    @keyframes msDim {
+      0% { opacity: 0; }
+      8% { opacity: 1; }
+      75% { opacity: 1; }
+      88% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+    .ms-sheet {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 240px;
+      background: white;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      animation: msSheet 4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    }
+    @keyframes msSheet {
+      0% { transform: translateY(100%); }
+      8% { transform: translateY(100%); }
+      14% { transform: translateY(-4%); }
+      18% { transform: translateY(0); }
+      75% { transform: translateY(0); }
+      85% { transform: translateY(100%); }
+      100% { transform: translateY(100%); }
+    }
+
+    /* ============== C. TOAST DEMO ============== */
+    .tt-frame {
+      position: relative;
+      width: 240px; height: 380px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: hsl(var(--bg));
+      border: 1px solid hsl(var(--border));
+      margin: 24px auto;
+    }
+    .tt-toast {
+      position: absolute; left: 12px; right: 12px; top: 36px;
+      background: hsl(var(--fg));
+      color: white;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px;
+      animation: ttToast 4.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    @keyframes ttToast {
+      0% { transform: translateY(-180%); opacity: 0; }
+      6% { transform: translateY(0); opacity: 1; }
+      75% { transform: translateY(0); opacity: 1; }
+      85% { transform: translateY(0); opacity: 0; }
+      100% { transform: translateY(-180%); opacity: 0; }
+    }
+
+    /* ============== D. SET COMPLETE DEMO ============== */
+    .set-btn {
+      width: 200px; height: 56px;
+      border-radius: 14px;
+      background: hsl(var(--primary));
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+      animation: setBtn 3.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      cursor: pointer;
+    }
+    @keyframes setBtn {
+      0% { background: hsl(var(--primary)); transform: scale(1); }
+      14% { transform: scale(0.95); }
+      22% { transform: scale(1); background: hsl(var(--primary)); }
+      32% { background: hsl(var(--success)); }
+      80% { background: hsl(var(--success)); }
+      95% { background: hsl(var(--primary)); }
+      100% { background: hsl(var(--primary)); transform: scale(1); }
+    }
+    .set-label-a, .set-label-b {
+      position: absolute;
+      animation-duration: 3.2s;
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      animation-iteration-count: infinite;
+    }
+    .set-label-a {
+      animation-name: setLabelA;
+    }
+    .set-label-b {
+      animation-name: setLabelB;
+      opacity: 0;
+    }
+    @keyframes setLabelA {
+      0%, 24% { opacity: 1; }
+      32%, 95% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes setLabelB {
+      0%, 24% { opacity: 0; }
+      32%, 80% { opacity: 1; }
+      95%, 100% { opacity: 0; }
+    }
+
+    /* ============== E. REST OVERLAY DEMO ============== */
+    .rest-frame {
+      position: relative;
+      width: 240px; height: 380px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: hsl(var(--carbon));
+      color: white;
+      margin: 24px auto;
+    }
+    .rest-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      animation: restFade 5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    }
+    @keyframes restFade {
+      0% { opacity: 0; }
+      8% { opacity: 0; }
+      18% { opacity: 1; }
+      80% { opacity: 1; }
+      92% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+    .rest-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 72px;
+      font-weight: 800;
+      line-height: 1;
+      color: white;
+      animation: restNum 5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    }
+    @keyframes restNum {
+      0% { transform: scale(0.8); }
+      8% { transform: scale(0.8); }
+      22% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
+    /* ============== F. PR HERO ============== */
+    .pr-card {
+      width: 220px;
+      padding: 22px 18px;
+      border-radius: 16px;
+      background: hsl(var(--primary));
+      color: white;
+      text-align: center;
+      position: relative;
+      margin: 24px auto;
+      animation: prHero 4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      box-shadow: 0 0 0 0 hsl(var(--primary) / 0.55);
+    }
+    @keyframes prHero {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.6); }
+      15% { transform: scale(1.05); box-shadow: 0 0 0 14px hsl(var(--primary) / 0); }
+      30% { transform: scale(1); }
+      40% { transform: scale(1.025); }
+      50% { transform: scale(1); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+    }
+    .sparkle {
+      position: absolute;
+      width: 12px; height: 12px;
+      opacity: 0;
+    }
+    .sparkle svg { width: 100%; height: 100%; }
+    .sparkle.s1 { top: -8px; left: 16%; animation: spk 4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s infinite; }
+    .sparkle.s2 { top: -12px; right: 22%; animation: spk 4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s infinite; }
+    .sparkle.s3 { top: 28%; left: -10px; animation: spk 4s cubic-bezier(0.16, 1, 0.3, 1) 0.18s infinite; }
+    .sparkle.s4 { top: 36%; right: -8px; animation: spk 4s cubic-bezier(0.16, 1, 0.3, 1) 0.32s infinite; }
+    .sparkle.s5 { bottom: -8px; left: 40%; animation: spk 4s cubic-bezier(0.16, 1, 0.3, 1) 0.22s infinite; }
+    @keyframes spk {
+      0% { transform: scale(0); opacity: 0; }
+      5% { transform: scale(0); opacity: 0; }
+      15% { transform: scale(1.4); opacity: 1; }
+      35% { transform: scale(0.9); opacity: 0.4; }
+      45% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    /* ============== G. STEPPER ============== */
+    .stepper {
+      display: inline-flex; align-items: center;
+      background: white;
+      border: 1px solid hsl(var(--border));
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .stepper button {
+      width: 44px; height: 44px;
+      background: white;
+      color: hsl(var(--fg));
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stepper button.btn-minus { animation: stepMinus 3s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+    .stepper button.btn-plus { animation: stepPlus 3s cubic-bezier(0.16, 1, 0.3, 1) 1.5s infinite; }
+    @keyframes stepMinus {
+      0%, 6% { transform: scale(1); }
+      10% { transform: scale(0.9); }
+      14% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes stepPlus {
+      0%, 6% { transform: scale(1); }
+      10% { transform: scale(0.9); }
+      14% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+    .stepper-num {
+      width: 64px; height: 44px;
+      background: hsl(var(--paper));
+      border-left: 1px solid hsl(var(--border));
+      border-right: 1px solid hsl(var(--border));
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .stepper-num span {
+      animation: numFade 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    @keyframes numFade {
+      0% { opacity: 1; }
+      5% { opacity: 0; }
+      10% { opacity: 1; }
+      48% { opacity: 1; }
+      53% { opacity: 0; }
+      58% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    /* ============== H. LOTTIE SPEED ============== */
+    .lott-box {
+      width: 200px; height: 200px;
+      background: hsl(var(--paper));
+      border-radius: 12px;
+      border: 1px solid hsl(var(--border));
+      margin: 16px auto;
+      position: relative;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lott-dot {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: hsl(var(--primary));
+      animation: lottDot 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+      transition: animation-duration 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .lott-box.slow .lott-dot { animation-duration: 4s; }
+    @keyframes lottDot {
+      0%, 100% { transform: translateX(-60px); }
+      50% { transform: translateX(60px); }
+    }
+    .lott-toggle {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      background: hsl(var(--muted));
+      gap: 0;
+    }
+    .lott-toggle button {
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: hsl(var(--muted-fg));
+    }
+    .lott-toggle button.on {
+      background: white;
+      color: hsl(var(--fg));
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    /* ============== CURVE GRID ============== */
+    .grid-bg { stroke: hsl(var(--border)); stroke-width: 0.5; }
+
+    /* ============== implementation card ============== */
+    .impl {
+      background: hsl(var(--paper));
+      border: 1px solid hsl(var(--border));
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .impl .imp-h {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: hsl(var(--muted-fg));
+    }
+
+    /* spec block heading */
+    .spec-block-h {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 12px;
+    }
+    .spec-block-h .num-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      color: hsl(var(--primary));
+    }
+    .spec-block-h h3 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      margin-top: 2px;
+    }
+    .spec-block-h p {
+      margin-top: 4px;
+      font-size: 13px;
+      color: hsl(var(--fg2));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ============================================================ -->
+  <!-- MASTHEAD                                                     -->
+  <!-- ============================================================ -->
+  <header class="max-w-[1280px] mx-auto px-8 pt-16 pb-10">
+    <div class="eyebrow-page"><span class="dot"></span>FITFORGE · §20 · MOTION SPEC · v1.0 · MAY 18, 2026</div>
+    <h1 class="mt-3 text-[44px] md:text-[52px] font-extrabold tracking-[-0.035em] leading-[1.02]">
+      動效規格 · <span style="color:#E14B36;">framer-motion handoff</span>
+    </h1>
+    <p class="mt-5 text-[16px] text-[#5a5b66] leading-[1.65] max-w-[68ch]">
+      v1 所有 motion、含 token、prop、與可貼即用的 <code class="tok">&lt;motion.div&gt;</code> 範例。
+      <strong class="font-semibold text-[#17181F]">動畫服務體感、不演戲。</strong>
+      頁面要俐落、modal 要鎮定、PR 那一刻允許興奮。
+    </p>
+    <div class="mt-7 py-3 border-t border-b border-[#dcd6c9] flex flex-wrap gap-x-7 gap-y-2 text-[12.5px] text-[#5a5b66]">
+      <span><strong class="text-[#17181F] font-bold">套件</strong> · framer-motion ≥ 11</span>
+      <span><strong class="text-[#17181F] font-bold">預設曲線</strong> · forge · <code class="tok">cubic-bezier(0.16, 1, 0.3, 1)</code></span>
+      <span><strong class="text-[#17181F] font-bold">時長階梯</strong> · 100 / 150 / 200 / 250 / 300 / 400 / 600</span>
+      <span class="ml-auto"><span class="live-cap"><span class="live-dot"></span>LIVE PREVIEW</span></span>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- §20.0 TOKENS                                                 -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1280px] mx-auto px-8 pb-4">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§20.0</span>
+      <h2 class="h-section">動效 Tokens · 鎖死、所有元件沿用</h2>
+    </div>
+
+    <div class="mt-6 grid grid-cols-12 gap-4">
+
+      <!-- Duration scale -->
+      <div class="col-span-7 page-card p-6">
+        <div class="eyebrow-page"><span class="dot"></span>Duration 階梯</div>
+        <p class="mt-2 text-[13px] text-[#5a5b66] leading-[1.55]">
+          只有這 7 個值。不寫 <code class="tok">175ms</code>、不寫 <code class="tok">220ms</code>。
+        </p>
+        <div class="mt-5 grid grid-cols-7 gap-2">
+          <div class="token-card text-center">
+            <div class="token-name">XS</div>
+            <div class="token-val">100<span class="text-[10px]">ms</span></div>
+            <div class="mt-2 mx-auto" style="width: 12%; height: 4px; background: hsl(var(--primary)); border-radius: 2px;"></div>
+            <div class="mt-2 text-[10px] text-[#8a8074]">tap</div>
+          </div>
+          <div class="token-card text-center">
+            <div class="token-name">SM</div>
+            <div class="token-val">150<span class="text-[10px]">ms</span></div>
+            <div class="mt-2 mx-auto" style="width: 18%; height: 4px; background: hsl(var(--primary)); border-radius: 2px;"></div>
+            <div class="mt-2 text-[10px] text-[#8a8074]">fade</div>
+          </div>
+          <div class="token-card text-center">
+            <div class="token-name">MD</div>
+            <div class="token-val">200<span class="text-[10px]">ms</span></div>
+            <div class="mt-2 mx-auto" style="width: 26%; height: 4px; background: hsl(var(--primary)); border-radius: 2px;"></div>
+            <div class="mt-2 text-[10px] text-[#8a8074]">toast in</div>
+          </div>
+          <div class="token-card text-center">
+            <div class="token-name">LG</div>
+            <div class="token-val">250<span class="text-[10px]">ms</span></div>
+            <div class="mt-2 mx-auto" style="width: 36%; height: 4px; background: hsl(var(--primary)); border-radius: 2px;"></div>
+            <div class="mt-2 text-[10px] text-[#8a8074]">page</div>
+          </div>
+          <div class="token-card text-center">
+            <div class="token-name">XL</div>
+            <div class="token-val">300<span class="text-[10px]">ms</span></div>
+            <div class="mt-2 mx-auto" style="width: 48%; height: 4px; background: hsl(var(--primary)); border-radius: 2px;"></div>
+            <div class="mt-2 text-[10px] text-[#8a8074]">modal</div>
+          </div>
+          <div class="token-card text-center">
+            <div class="token-name">2XL</div>
+            <div class="token-val">400<span class="text-[10px]">ms</span></div>
+            <div class="mt-2 mx-auto" style="width: 70%; height: 4px; background: hsl(var(--primary)); border-radius: 2px;"></div>
+            <div class="mt-2 text-[10px] text-[#8a8074]">rest in</div>
+          </div>
+          <div class="token-card text-center">
+            <div class="token-name">3XL</div>
+            <div class="token-val">600<span class="text-[10px]">ms</span></div>
+            <div class="mt-2 mx-auto" style="width: 100%; height: 4px; background: hsl(var(--primary)); border-radius: 2px;"></div>
+            <div class="mt-2 text-[10px] text-[#8a8074]">PR hero</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Easing curves -->
+      <div class="col-span-5 page-card p-6">
+        <div class="eyebrow-page"><span class="dot"></span>Easing 曲線</div>
+        <p class="mt-2 text-[13px] text-[#5a5b66] leading-[1.55]">
+          <code class="tok">forge</code> 預設、<code class="tok">spring</code> 給 modal / PR、<code class="tok">linear</code> 給 progress。
+        </p>
+        <div class="mt-5 grid grid-cols-3 gap-2">
+
+          <div class="curve-card">
+            <div class="token-name">FORGE</div>
+            <svg viewBox="0 0 100 100" class="w-full">
+              <g class="grid-bg">
+                <line x1="0" y1="25" x2="100" y2="25"/>
+                <line x1="0" y1="50" x2="100" y2="50"/>
+                <line x1="0" y1="75" x2="100" y2="75"/>
+                <line x1="25" y1="0" x2="25" y2="100"/>
+                <line x1="50" y1="0" x2="50" y2="100"/>
+                <line x1="75" y1="0" x2="75" y2="100"/>
+              </g>
+              <path d="M 0 100 C 16 0, 30 0, 100 0" fill="none" stroke="hsl(var(--primary))" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+            <div class="mono text-[10px] mt-2" style="color: hsl(var(--fg2));">cubic-bezier<br/>0.16, 1, 0.3, 1</div>
+          </div>
+
+          <div class="curve-card">
+            <div class="token-name">SPRING</div>
+            <svg viewBox="0 0 100 100" class="w-full">
+              <g class="grid-bg">
+                <line x1="0" y1="25" x2="100" y2="25"/>
+                <line x1="0" y1="50" x2="100" y2="50"/>
+                <line x1="0" y1="75" x2="100" y2="75"/>
+                <line x1="25" y1="0" x2="25" y2="100"/>
+                <line x1="50" y1="0" x2="50" y2="100"/>
+                <line x1="75" y1="0" x2="75" y2="100"/>
+              </g>
+              <!-- damped spring overshoot -->
+              <path d="M 0 100 C 20 100, 24 -20, 38 -8 S 56 18, 64 4 S 80 8, 100 0" fill="none" stroke="hsl(var(--primary))" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+            <div class="mono text-[10px] mt-2" style="color: hsl(var(--fg2));">stiffness 300<br/>damping 30</div>
+          </div>
+
+          <div class="curve-card">
+            <div class="token-name">SYMMETRIC</div>
+            <svg viewBox="0 0 100 100" class="w-full">
+              <g class="grid-bg">
+                <line x1="0" y1="25" x2="100" y2="25"/>
+                <line x1="0" y1="50" x2="100" y2="50"/>
+                <line x1="0" y1="75" x2="100" y2="75"/>
+                <line x1="25" y1="0" x2="25" y2="100"/>
+                <line x1="50" y1="0" x2="50" y2="100"/>
+                <line x1="75" y1="0" x2="75" y2="100"/>
+              </g>
+              <path d="M 0 100 C 45 100, 55 0, 100 0" fill="none" stroke="hsl(var(--primary))" stroke-width="2.4" stroke-linecap="round"/>
+            </svg>
+            <div class="mono text-[10px] mt-2" style="color: hsl(var(--fg2));">cubic-bezier<br/>0.45, 0, 0.55, 1</div>
+          </div>
+
+        </div>
+        <p class="mt-4 text-[12px] text-[#5a5b66] leading-[1.55]">
+          <code class="tok">SYMMETRIC</code> 給對稱循環動作（深蹲、臥推動畫）、不給 UI。
+        </p>
+      </div>
+
+      <!-- TS Token source -->
+      <div class="col-span-12">
+        <div class="code-header">
+          <div class="dot3">
+            <span style="background:#ff5f57"></span>
+            <span style="background:#febc2e"></span>
+            <span style="background:#28c840"></span>
+          </div>
+          <div class="text-[11px]">src/motion/tokens.ts · single source of truth</div>
+          <div></div>
+        </div>
+<pre class="code"><span class="k">export const</span> <span class="f">DURATION</span> = {
+  <span class="a">xs</span><span class="p">:</span>  <span class="n">0.10</span><span class="p">,</span>  <span class="c">// 100ms · button tap</span>
+  <span class="a">sm</span><span class="p">:</span>  <span class="n">0.15</span><span class="p">,</span>  <span class="c">// 150ms · toast out, number fade</span>
+  <span class="a">md</span><span class="p">:</span>  <span class="n">0.20</span><span class="p">,</span>  <span class="c">// 200ms · toast in, page exit, set click</span>
+  <span class="a">lg</span><span class="p">:</span>  <span class="n">0.25</span><span class="p">,</span>  <span class="c">// 250ms · page enter</span>
+  <span class="a">xl</span><span class="p">:</span>  <span class="n">0.30</span><span class="p">,</span>  <span class="c">// 300ms · modal enter, set→success</span>
+  <span class="a">xxl</span><span class="p">:</span> <span class="n">0.40</span><span class="p">,</span>  <span class="c">// 400ms · rest overlay enter</span>
+  <span class="a">xxxl</span><span class="p">:</span><span class="n">0.60</span><span class="p">,</span>  <span class="c">// 600ms · PR hero pop</span>
+} <span class="k">as const</span><span class="p">;</span>
+
+<span class="k">export const</span> <span class="f">EASE</span> = {
+  <span class="a">forge</span><span class="p">:</span>     [<span class="n">0.16</span><span class="p">,</span> <span class="n">1</span><span class="p">,</span> <span class="n">0.30</span><span class="p">,</span> <span class="n">1</span>]<span class="p">,</span>      <span class="c">// default — confident, decelerating</span>
+  <span class="a">symmetric</span><span class="p">:</span> [<span class="n">0.45</span><span class="p">,</span> <span class="n">0</span><span class="p">,</span> <span class="n">0.55</span><span class="p">,</span> <span class="n">1</span>]<span class="p">,</span>      <span class="c">// exercise loops only</span>
+  <span class="a">linear</span><span class="p">:</span>    [<span class="n">0</span><span class="p">,</span> <span class="n">0</span><span class="p">,</span> <span class="n">1</span><span class="p">,</span> <span class="n">1</span>]<span class="p">,</span>            <span class="c">// progress bars, lottie scrub</span>
+} <span class="k">as const</span><span class="p">;</span>
+
+<span class="k">export const</span> <span class="f">SPRING</span> = {
+  <span class="a">soft</span><span class="p">:</span>   { <span class="a">type</span><span class="p">:</span> <span class="s">"spring"</span><span class="p">,</span> <span class="a">stiffness</span><span class="p">:</span> <span class="n">300</span><span class="p">,</span> <span class="a">damping</span><span class="p">:</span> <span class="n">30</span> }<span class="p">,</span>  <span class="c">// modal, sheet</span>
+  <span class="a">bouncy</span><span class="p">:</span> { <span class="a">type</span><span class="p">:</span> <span class="s">"spring"</span><span class="p">,</span> <span class="a">stiffness</span><span class="p">:</span> <span class="n">400</span><span class="p">,</span> <span class="a">damping</span><span class="p">:</span> <span class="n">12</span> }<span class="p">,</span>  <span class="c">// rest overlay, PR</span>
+} <span class="k">as const</span><span class="p">;</span></pre>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §20.1 SPEC TABLE                                             -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1280px] mx-auto px-8 mt-12">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§20.1</span>
+      <h2 class="h-section">總表 · 所有 v1 動效</h2>
+      <span class="text-[13px] text-[#5a5b66]">9 個 motion · 全 ≤ 600ms · 全尊重 reduced-motion</span>
+    </div>
+
+    <div class="mt-6 page-card overflow-hidden">
+      <table class="spec">
+        <thead>
+          <tr>
+            <th style="width: 110px;">ID</th>
+            <th style="width: 200px;">場景</th>
+            <th>方向 / Prop</th>
+            <th style="width: 100px;">Duration</th>
+            <th style="width: 200px;">Easing</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td class="prop">M-01</td>
+            <td><strong>頁面切換 · 進入</strong></td>
+            <td class="prop">x: 100% → 0<br/>opacity: 1</td>
+            <td class="dur">250ms</td>
+            <td class="ease">forge</td>
+            <td class="note">下一頁從右滑入</td>
+          </tr>
+          <tr>
+            <td class="prop">M-02</td>
+            <td><strong>頁面切換 · 退出</strong></td>
+            <td class="prop">x: 0 → −20%<br/>opacity: 1 → 0</td>
+            <td class="dur">200ms</td>
+            <td class="ease">forge</td>
+            <td class="note">前頁微左移退場、不全出畫面</td>
+          </tr>
+
+          <tr>
+            <td class="prop">M-03</td>
+            <td><strong>Modal / Sheet · 進入</strong></td>
+            <td class="prop">y: 100% → 0<br/>backdrop opacity: 0 → 1</td>
+            <td class="dur">spring</td>
+            <td class="ease">spring.soft<br/><span style="color:#8a8074;">stiff 300 · damp 30</span></td>
+            <td class="note">輕微 overshoot (~4%)</td>
+          </tr>
+          <tr>
+            <td class="prop">M-04</td>
+            <td><strong>Modal / Sheet · 退出</strong></td>
+            <td class="prop">y: 0 → 100%<br/>backdrop opacity: 1 → 0</td>
+            <td class="dur">200ms</td>
+            <td class="ease">forge</td>
+            <td class="note">退場用 tween、不彈、避免猶豫</td>
+          </tr>
+
+          <tr>
+            <td class="prop">M-05</td>
+            <td><strong>Toast · 進入</strong></td>
+            <td class="prop">y: −100% → 0<br/>opacity: 0 → 1</td>
+            <td class="dur">200ms</td>
+            <td class="ease">forge</td>
+            <td class="note">頂端滑入</td>
+          </tr>
+          <tr>
+            <td class="prop">M-06</td>
+            <td><strong>Toast · 退出</strong></td>
+            <td class="prop">opacity: 1 → 0</td>
+            <td class="dur">150ms</td>
+            <td class="ease">forge</td>
+            <td class="note">不滑出、只淡出</td>
+          </tr>
+          <tr>
+            <td class="prop">M-07</td>
+            <td><strong>Toast · 自動關閉</strong></td>
+            <td class="prop">setTimeout</td>
+            <td class="dur">3000ms info<br/>5000ms error</td>
+            <td class="ease">—</td>
+            <td class="note">hover / focus 暫停倒數</td>
+          </tr>
+
+          <tr>
+            <td class="prop">M-08</td>
+            <td><strong>完成組 · 按鈕點擊</strong></td>
+            <td class="prop">scale: 1 → 0.95 → 1</td>
+            <td class="dur">200ms</td>
+            <td class="ease">forge</td>
+            <td class="note"><code class="tok">whileTap</code>、即時觸感反饋</td>
+          </tr>
+          <tr>
+            <td class="prop">M-09</td>
+            <td><strong>完成組 · 狀態變色</strong></td>
+            <td class="prop">backgroundColor:<br/>primary → success</td>
+            <td class="dur">300ms</td>
+            <td class="ease">forge</td>
+            <td class="note">點擊後接著跑、不打斷 scale</td>
+          </tr>
+          <tr>
+            <td class="prop">M-10</td>
+            <td><strong>休息 overlay · 進入</strong></td>
+            <td class="prop">overlay opacity: 0 → 1<br/>數字 scale: 0.8 → 1</td>
+            <td class="dur">400ms</td>
+            <td class="ease">spring.bouncy<br/><span style="color:#8a8074;">stiff 400 · damp 12</span></td>
+            <td class="note">數字輕彈、給「該休息了」儀式感</td>
+          </tr>
+
+          <tr>
+            <td class="prop">M-11</td>
+            <td><strong>PR 慶祝 · Hero</strong></td>
+            <td class="prop">scale: 1 → 1.05 → 1 → 1.025 → 1<br/>+ glow pulse</td>
+            <td class="dur">600ms</td>
+            <td class="ease">forge<br/><span style="color:#8a8074;">2 個 bounce</span></td>
+            <td class="note">primary glow ring 同步擴散</td>
+          </tr>
+          <tr>
+            <td class="prop">M-12</td>
+            <td><strong>PR 慶祝 · Sparkles</strong></td>
+            <td class="prop">scale: 0 → 1.4 → 0<br/>opacity: 0 → 1 → 0</td>
+            <td class="dur">400ms each</td>
+            <td class="ease">spring.bouncy</td>
+            <td class="note"><span class="num">3–5</span> 個、隨機位置與 100–300ms stagger</td>
+          </tr>
+
+          <tr>
+            <td class="prop">M-13</td>
+            <td><strong>Lottie · 速度切換</strong></td>
+            <td class="prop">playbackSpeed: 1 → 0.5</td>
+            <td class="dur">200ms</td>
+            <td class="ease">forge</td>
+            <td class="note">tween 過渡 speed、不卡頓</td>
+          </tr>
+
+          <tr>
+            <td class="prop">M-14</td>
+            <td><strong>Stepper · +/- 點擊</strong></td>
+            <td class="prop">scale: 1 → 0.9 → 1</td>
+            <td class="dur">100ms</td>
+            <td class="ease">forge</td>
+            <td class="note">whileTap、極短</td>
+          </tr>
+          <tr>
+            <td class="prop">M-15</td>
+            <td><strong>Stepper · 數字更新</strong></td>
+            <td class="prop">opacity: 1 → 0 → 1<br/>(crossfade)</td>
+            <td class="dur">150ms</td>
+            <td class="ease">forge</td>
+            <td class="note">AnimatePresence + key={value}</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §20.2  LIVE PREVIEWS + CODE                                  -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1280px] mx-auto px-8 mt-14">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§20.2</span>
+      <h2 class="h-section">逐項 demo + framer-motion 範例</h2>
+      <span class="text-[13px] text-[#5a5b66]"><span class="live-cap"><span class="live-dot"></span>LIVE</span><span class="ml-3">所有 demo 為真實 CSS 動畫、貼近 framer 行為</span></span>
+    </div>
+
+    <!-- ====== M-01/02 PAGE TRANSITION ====== -->
+    <div class="mt-7 page-card p-6">
+      <div class="spec-block-h">
+        <div>
+          <span class="num-id">M-01 / M-02</span>
+          <h3>頁面切換 · Page Transition</h3>
+          <p>右滑入、舊頁微左移淡出。tab 切換時改用 fade，避免方向誤導。</p>
+        </div>
+        <div class="flex gap-1.5">
+          <span class="tag pri">x: 100% → 0</span>
+          <span class="tag">250ms · forge</span>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-12 gap-5">
+        <!-- Demo -->
+        <div class="col-span-4 demo">
+          <span class="demo-label">LIVE · 3.8s LOOP</span>
+          <div class="pt-frame">
+            <!-- Page A -->
+            <div class="pt-screen pt-a">
+              <div class="mono text-[10px] uppercase tracking-[1.5px]" style="color: hsl(var(--muted-fg));">A · 課表列表</div>
+              <div class="mt-3 text-[15px] font-bold">推 / 拉 / 腿</div>
+              <div class="mt-3 space-y-2">
+                <div style="height: 38px; background: hsl(var(--paper)); border: 1px solid hsl(var(--border)); border-radius: 8px;"></div>
+                <div style="height: 38px; background: hsl(var(--paper)); border: 1px solid hsl(var(--border)); border-radius: 8px;"></div>
+                <div style="height: 38px; background: hsl(var(--paper)); border: 1px solid hsl(var(--border)); border-radius: 8px;"></div>
+              </div>
+            </div>
+            <!-- Page B -->
+            <div class="pt-screen pt-b">
+              <div class="mono text-[10px] uppercase tracking-[1.5px]" style="color: hsl(var(--muted-fg));">B · 課表詳情</div>
+              <div class="mt-3 text-[15px] font-bold">Push Day</div>
+              <div class="mt-3" style="height: 84px; background: hsl(var(--primary-soft)); border-radius: 10px;"></div>
+              <div class="mt-3 space-y-2">
+                <div style="height: 28px; background: hsl(var(--paper)); border-radius: 6px;"></div>
+                <div style="height: 28px; background: hsl(var(--paper)); border-radius: 6px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code -->
+        <div class="col-span-8">
+          <div class="code-header">
+            <div class="dot3"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div>routes/_layout.tsx</div>
+            <div></div>
+          </div>
+<pre class="code"><span class="k">import</span> { motion<span class="p">,</span> AnimatePresence } <span class="k">from</span> <span class="s">"framer-motion"</span><span class="p">;</span>
+<span class="k">import</span> { EASE<span class="p">,</span> DURATION } <span class="k">from</span> <span class="s">"@/motion/tokens"</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="f">pageVariants</span> = {
+  <span class="a">initial</span><span class="p">:</span>  { <span class="a">x</span><span class="p">:</span> <span class="s">"100%"</span><span class="p">,</span> <span class="a">opacity</span><span class="p">:</span> <span class="n">1</span> }<span class="p">,</span>
+  <span class="a">animate</span><span class="p">:</span>  { <span class="a">x</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span> <span class="a">opacity</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span>
+    <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.lg<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge } }<span class="p">,</span>
+  <span class="a">exit</span><span class="p">:</span>     { <span class="a">x</span><span class="p">:</span> <span class="s">"-20%"</span><span class="p">,</span> <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span>
+    <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.md<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge } }<span class="p">,</span>
+}<span class="p">;</span>
+
+<span class="k">export function</span> <span class="f">PageShell</span>({ children<span class="p">,</span> routeKey }) {
+  <span class="k">return</span> (
+    <span class="p">&lt;</span><span class="t">AnimatePresence</span> <span class="a">mode</span>=<span class="s">"wait"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">motion.div</span>
+        <span class="a">key</span>=<span class="p">{</span>routeKey<span class="p">}</span>
+        <span class="a">variants</span>=<span class="p">{</span>pageVariants<span class="p">}</span>
+        <span class="a">initial</span>=<span class="s">"initial"</span>
+        <span class="a">animate</span>=<span class="s">"animate"</span>
+        <span class="a">exit</span>=<span class="s">"exit"</span>
+      <span class="p">&gt;{</span>children<span class="p">}&lt;/</span><span class="t">motion.div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">AnimatePresence</span><span class="p">&gt;</span>
+  )<span class="p">;</span>
+}</pre>
+          <div class="impl mt-3">
+            <div class="imp-h">注意</div>
+            <div class="mt-1 text-[#17181F]">
+              · BottomNav 切 tab 用 <code class="tok">opacity</code> fade、不用 x 滑入（不要暗示「方向」）<br/>
+              · 詳情頁返回時、舊頁從 −20% 回到 0、新頁從 0 滑回 100% — 雙向都成立
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== M-03/04 MODAL SHEET ====== -->
+    <div class="mt-7 page-card p-6">
+      <div class="spec-block-h">
+        <div>
+          <span class="num-id">M-03 / M-04</span>
+          <h3>Modal / Bottom Sheet</h3>
+          <p>進入用 spring，輕微 overshoot。退出用 tween 200ms，避免決定性動作後還在彈。</p>
+        </div>
+        <div class="flex gap-1.5">
+          <span class="tag pri">y: 100% → 0</span>
+          <span class="tag">spring · 300/30</span>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-12 gap-5">
+        <div class="col-span-4 demo">
+          <span class="demo-label">LIVE · 4s LOOP</span>
+          <div class="ms-frame">
+            <div class="absolute inset-0 p-3">
+              <div style="height: 24px; width: 50%; background: hsl(var(--paper)); border-radius: 4px;"></div>
+              <div class="mt-3" style="height: 80px; background: hsl(var(--paper)); border: 1px solid hsl(var(--border)); border-radius: 10px;"></div>
+            </div>
+            <div class="ms-dim"></div>
+            <div class="ms-sheet">
+              <div class="flex justify-center pt-3"><div style="width: 36px; height: 4px; border-radius: 2px; background: hsl(var(--border));"></div></div>
+              <div class="px-4 mt-3">
+                <div style="height: 14px; width: 55%; background: hsl(var(--paper)); border-radius: 4px;"></div>
+                <div class="mt-2" style="height: 10px; width: 80%; background: hsl(var(--paper)); border-radius: 4px;"></div>
+                <div class="mt-5" style="height: 40px; background: hsl(var(--primary)); border-radius: 10px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-8">
+          <div class="code-header">
+            <div class="dot3"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div>components/BottomSheet.tsx</div>
+            <div></div>
+          </div>
+<pre class="code"><span class="k">import</span> { motion<span class="p">,</span> AnimatePresence } <span class="k">from</span> <span class="s">"framer-motion"</span><span class="p">;</span>
+<span class="k">import</span> { SPRING<span class="p">,</span> DURATION<span class="p">,</span> EASE } <span class="k">from</span> <span class="s">"@/motion/tokens"</span><span class="p">;</span>
+
+<span class="k">export function</span> <span class="f">BottomSheet</span>({ open<span class="p">,</span> onClose<span class="p">,</span> children }) {
+  <span class="k">return</span> (
+    <span class="p">&lt;</span><span class="t">AnimatePresence</span><span class="p">&gt;</span>
+      {open <span class="p">&amp;&amp;</span> (
+        <span class="p">&lt;&gt;</span>
+          <span class="p">&lt;</span><span class="t">motion.div</span>
+            <span class="a">className</span>=<span class="s">"fixed inset-0 bg-black/40"</span>
+            <span class="a">initial</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span> }<span class="p">}</span>
+            <span class="a">animate</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.md<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge } }<span class="p">}</span>
+            <span class="a">exit</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span> <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.md<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge } }<span class="p">}</span>
+            <span class="a">onClick</span>=<span class="p">{</span>onClose<span class="p">}</span> <span class="p">/&gt;</span>
+
+          <span class="p">&lt;</span><span class="t">motion.div</span>
+            <span class="a">className</span>=<span class="s">"fixed inset-x-0 bottom-0 bg-card rounded-t-2xl"</span>
+            <span class="a">initial</span>=<span class="p">{</span>{ <span class="a">y</span><span class="p">:</span> <span class="s">"100%"</span> }<span class="p">}</span>
+            <span class="a">animate</span>=<span class="p">{</span>{ <span class="a">y</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span> <span class="a">transition</span><span class="p">:</span> SPRING.soft }<span class="p">}</span>
+            <span class="a">exit</span>=<span class="p">{</span>{ <span class="a">y</span><span class="p">:</span> <span class="s">"100%"</span><span class="p">,</span> <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.md<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge } }<span class="p">}</span>
+            <span class="a">drag</span>=<span class="s">"y"</span> <span class="a">dragConstraints</span>=<span class="p">{</span>{ <span class="a">top</span><span class="p">:</span> <span class="n">0</span> }<span class="p">}</span>
+            <span class="a">onDragEnd</span>=<span class="p">{</span>(<span class="p">_,</span> info) <span class="k">=&gt;</span> info.offset.y <span class="p">&gt;</span> <span class="n">120</span> <span class="p">&amp;&amp;</span> <span class="f">onClose</span>()<span class="p">}</span>
+          <span class="p">&gt;{</span>children<span class="p">}&lt;/</span><span class="t">motion.div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/&gt;</span>
+      )}
+    <span class="p">&lt;/</span><span class="t">AnimatePresence</span><span class="p">&gt;</span>
+  )<span class="p">;</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== M-05/06/07 TOAST ====== -->
+    <div class="mt-7 page-card p-6">
+      <div class="spec-block-h">
+        <div>
+          <span class="num-id">M-05 / M-06 / M-07</span>
+          <h3>Toast</h3>
+          <p>從頂滑入、只 fade 出。hover 暫停倒數、給時間讀。</p>
+        </div>
+        <div class="flex gap-1.5">
+          <span class="tag pri">y: −100% → 0</span>
+          <span class="tag">200ms in · 150ms out</span>
+          <span class="tag">3s info · 5s error</span>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-12 gap-5">
+        <div class="col-span-4 demo">
+          <span class="demo-label">LIVE · 4.5s LOOP</span>
+          <div class="tt-frame">
+            <div class="absolute top-0 left-0 right-0 h-6" style="background: hsl(var(--bg));"></div>
+            <div class="tt-toast">
+              <span style="color: hsl(var(--success));">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span>已儲存進度</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-8">
+          <div class="code-header">
+            <div class="dot3"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div>components/Toast.tsx</div>
+            <div></div>
+          </div>
+<pre class="code"><span class="k">import</span> { motion<span class="p">,</span> AnimatePresence } <span class="k">from</span> <span class="s">"framer-motion"</span><span class="p">;</span>
+<span class="k">import</span> { DURATION<span class="p">,</span> EASE } <span class="k">from</span> <span class="s">"@/motion/tokens"</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="f">DISMISS</span> = { <span class="a">info</span><span class="p">:</span> <span class="n">3000</span><span class="p">,</span> <span class="a">error</span><span class="p">:</span> <span class="n">5000</span> } <span class="k">as const</span><span class="p">;</span>
+
+<span class="k">export function</span> <span class="f">Toast</span>({ kind<span class="p">,</span> message<span class="p">,</span> onDismiss }) {
+  <span class="k">const</span> [paused<span class="p">,</span> setPaused] = <span class="f">useState</span>(<span class="k">false</span>)<span class="p">;</span>
+
+  <span class="f">useEffect</span>(() <span class="k">=&gt;</span> {
+    <span class="k">if</span> (paused) <span class="k">return</span><span class="p">;</span>
+    <span class="k">const</span> id = <span class="f">setTimeout</span>(onDismiss<span class="p">,</span> DISMISS[kind])<span class="p">;</span>
+    <span class="k">return</span> () <span class="k">=&gt;</span> <span class="f">clearTimeout</span>(id)<span class="p">;</span>
+  }<span class="p">,</span> [paused<span class="p">,</span> kind])<span class="p">;</span>
+
+  <span class="k">return</span> (
+    <span class="p">&lt;</span><span class="t">motion.div</span>
+      <span class="a">role</span>=<span class="s">"status"</span>
+      <span class="a">onHoverStart</span>=<span class="p">{</span>() <span class="k">=&gt;</span> <span class="f">setPaused</span>(<span class="k">true</span>)<span class="p">}</span>
+      <span class="a">onHoverEnd</span>=<span class="p">{</span>() <span class="k">=&gt;</span> <span class="f">setPaused</span>(<span class="k">false</span>)<span class="p">}</span>
+      <span class="a">initial</span>=<span class="p">{</span>{ <span class="a">y</span><span class="p">:</span> <span class="s">"-100%"</span><span class="p">,</span> <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span> }<span class="p">}</span>
+      <span class="a">animate</span>=<span class="p">{</span>{ <span class="a">y</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span> <span class="a">opacity</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span>
+        <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.md<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge } }<span class="p">}</span>
+      <span class="a">exit</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span>
+        <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.sm<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge } }<span class="p">}</span>
+    <span class="p">&gt;{</span>message<span class="p">}&lt;/</span><span class="t">motion.div</span><span class="p">&gt;</span>
+  )<span class="p">;</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== M-08/09 SET COMPLETE ====== -->
+    <div class="mt-7 page-card p-6">
+      <div class="spec-block-h">
+        <div>
+          <span class="num-id">M-08 / M-09</span>
+          <h3>完成組按鈕 · Set Complete</h3>
+          <p>點下去 → scale punch → 變綠色。物理觸感 + 狀態確認、一連兩段。</p>
+        </div>
+        <div class="flex gap-1.5">
+          <span class="tag pri">scale 0.95</span>
+          <span class="tag ok">bg → success</span>
+          <span class="tag">200 + 300ms</span>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-12 gap-5">
+        <div class="col-span-4 demo flex items-center justify-center" style="min-height: 240px;">
+          <span class="demo-label">LIVE · 3.2s LOOP</span>
+          <div class="set-btn relative">
+            <span class="set-label-a relative" style="display:inline-flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+              完成這一組
+            </span>
+            <span class="set-label-b" style="display:inline-flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              已完成
+            </span>
+          </div>
+        </div>
+
+        <div class="col-span-8">
+          <div class="code-header">
+            <div class="dot3"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div>components/SetCompleteButton.tsx</div>
+            <div></div>
+          </div>
+<pre class="code"><span class="k">import</span> { motion } <span class="k">from</span> <span class="s">"framer-motion"</span><span class="p">;</span>
+<span class="k">import</span> { DURATION<span class="p">,</span> EASE } <span class="k">from</span> <span class="s">"@/motion/tokens"</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="f">PRIMARY</span> = <span class="s">"hsl(8 78% 55%)"</span><span class="p">;</span>
+<span class="k">const</span> <span class="f">SUCCESS</span> = <span class="s">"hsl(150 62% 38%)"</span><span class="p">;</span>
+
+<span class="k">export function</span> <span class="f">SetCompleteButton</span>({ done<span class="p">,</span> onTap }) {
+  <span class="k">return</span> (
+    <span class="p">&lt;</span><span class="t">motion.button</span>
+      <span class="a">onTap</span>=<span class="p">{</span>onTap<span class="p">}</span>
+      <span class="a">whileTap</span>=<span class="p">{</span>{ <span class="a">scale</span><span class="p">:</span> <span class="n">0.95</span> }<span class="p">}</span>
+      <span class="a">animate</span>=<span class="p">{</span>{
+        <span class="a">backgroundColor</span><span class="p">:</span> done <span class="p">?</span> SUCCESS <span class="p">:</span> PRIMARY<span class="p">,</span>
+      }<span class="p">}</span>
+      <span class="a">transition</span>=<span class="p">{</span>{
+        <span class="a">scale</span><span class="p">:</span>           { <span class="a">duration</span><span class="p">:</span> DURATION.md<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge }<span class="p">,</span>
+        <span class="a">backgroundColor</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.xl<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge }<span class="p">,</span>
+      }<span class="p">}</span>
+      <span class="a">className</span>=<span class="s">"h-14 px-6 rounded-[14px] text-white font-bold"</span>
+    <span class="p">&gt;</span>
+      {done <span class="p">?</span> <span class="s">"已完成"</span> <span class="p">:</span> <span class="s">"完成這一組"</span>}
+    <span class="p">&lt;/</span><span class="t">motion.button</span><span class="p">&gt;</span>
+  )<span class="p">;</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== M-10 REST OVERLAY ====== -->
+    <div class="mt-7 page-card p-6">
+      <div class="spec-block-h">
+        <div>
+          <span class="num-id">M-10</span>
+          <h3>休息倒數 · Rest Overlay</h3>
+          <p>整層 overlay 淡入、數字略 scale 進場、暗示「進入儀式」。</p>
+        </div>
+        <div class="flex gap-1.5">
+          <span class="tag pri">opacity 0→1</span>
+          <span class="tag">scale 0.8→1</span>
+          <span class="tag">400ms · spring.bouncy</span>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-12 gap-5">
+        <div class="col-span-4 demo">
+          <span class="demo-label">LIVE · 5s LOOP</span>
+          <div class="rest-frame">
+            <div class="absolute inset-0 p-3" style="opacity:0.5;">
+              <div class="mono text-[10px]" style="color: rgba(255,255,255,0.4);">SET 2 / 4</div>
+              <div class="mt-2" style="height: 32px; background: rgba(255,255,255,0.06); border-radius: 6px;"></div>
+              <div class="mt-2" style="height: 60px; background: rgba(255,255,255,0.06); border-radius: 6px;"></div>
+            </div>
+            <div class="rest-overlay">
+              <div class="mono text-[10px] uppercase tracking-[2px]" style="color: rgba(255,255,255,0.6);">REST</div>
+              <div class="rest-num mt-2 num">90</div>
+              <div class="mt-1 text-[12px]" style="color: rgba(255,255,255,0.7);">秒</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-8">
+          <div class="code-header">
+            <div class="dot3"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div>components/RestOverlay.tsx</div>
+            <div></div>
+          </div>
+<pre class="code"><span class="k">import</span> { motion<span class="p">,</span> AnimatePresence } <span class="k">from</span> <span class="s">"framer-motion"</span><span class="p">;</span>
+<span class="k">import</span> { SPRING<span class="p">,</span> DURATION<span class="p">,</span> EASE } <span class="k">from</span> <span class="s">"@/motion/tokens"</span><span class="p">;</span>
+
+<span class="k">export function</span> <span class="f">RestOverlay</span>({ seconds<span class="p">,</span> open }) {
+  <span class="k">return</span> (
+    <span class="p">&lt;</span><span class="t">AnimatePresence</span><span class="p">&gt;</span>
+      {open <span class="p">&amp;&amp;</span> (
+        <span class="p">&lt;</span><span class="t">motion.div</span>
+          <span class="a">className</span>=<span class="s">"fixed inset-0 bg-carbon flex flex-col items-center justify-center"</span>
+          <span class="a">initial</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span> }<span class="p">}</span>
+          <span class="a">animate</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.xxl<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge } }<span class="p">}</span>
+          <span class="a">exit</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span> <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.md } }<span class="p">}</span>
+        <span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">motion.div</span>
+            <span class="a">className</span>=<span class="s">"text-white font-mono font-extrabold text-[120px] tabular-nums"</span>
+            <span class="a">initial</span>=<span class="p">{</span>{ <span class="a">scale</span><span class="p">:</span> <span class="n">0.8</span> }<span class="p">}</span>
+            <span class="a">animate</span>=<span class="p">{</span>{ <span class="a">scale</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="a">transition</span><span class="p">:</span> SPRING.bouncy }<span class="p">}</span>
+          <span class="p">&gt;{</span>seconds<span class="p">}&lt;/</span><span class="t">motion.div</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">motion.div</span><span class="p">&gt;</span>
+      )}
+    <span class="p">&lt;/</span><span class="t">AnimatePresence</span><span class="p">&gt;</span>
+  )<span class="p">;</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== M-11/12 PR HERO ====== -->
+    <div class="mt-7 page-card p-6">
+      <div class="spec-block-h">
+        <div>
+          <span class="num-id">M-11 / M-12</span>
+          <h3>PR 慶祝 · Hero + Sparkles</h3>
+          <p>整個 hero card pump 兩次、3–5 顆 sparkle 隨機冒出 stagger 出現。<strong>唯一</strong>允許 glow 的場景。</p>
+        </div>
+        <div class="flex gap-1.5">
+          <span class="tag pri">scale → 1.05 → 1</span>
+          <span class="tag">bounce × 2 · 600ms</span>
+          <span class="tag">5 sparkles · stagger</span>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-12 gap-5">
+        <div class="col-span-4 demo flex items-center justify-center" style="min-height: 240px;">
+          <span class="demo-label">LIVE · 4s LOOP</span>
+          <div class="pr-card">
+            <span class="sparkle s1"><svg viewBox="0 0 24 24" fill="hsl(38 94% 60%)" stroke="white" stroke-width="1"><path d="M12 0 L14 9 L23 12 L14 15 L12 24 L10 15 L1 12 L10 9 Z"/></svg></span>
+            <span class="sparkle s2"><svg viewBox="0 0 24 24" fill="white" stroke="hsl(38 94% 60%)" stroke-width="1"><path d="M12 0 L14 9 L23 12 L14 15 L12 24 L10 15 L1 12 L10 9 Z"/></svg></span>
+            <span class="sparkle s3"><svg viewBox="0 0 24 24" fill="hsl(38 94% 60%)"><path d="M12 0 L14 9 L23 12 L14 15 L12 24 L10 15 L1 12 L10 9 Z"/></svg></span>
+            <span class="sparkle s4"><svg viewBox="0 0 24 24" fill="white"><path d="M12 0 L14 9 L23 12 L14 15 L12 24 L10 15 L1 12 L10 9 Z"/></svg></span>
+            <span class="sparkle s5"><svg viewBox="0 0 24 24" fill="hsl(38 94% 60%)"><path d="M12 0 L14 9 L23 12 L14 15 L12 24 L10 15 L1 12 L10 9 Z"/></svg></span>
+            <div class="mono text-[10px] uppercase tracking-[2px]" style="color: rgba(255,255,255,0.85);">PERSONAL RECORD</div>
+            <div class="mono num text-[42px] font-extrabold leading-none mt-2">85<span class="text-[20px] font-bold ml-0.5">kg</span></div>
+            <div class="mt-1 text-[12px]" style="color: rgba(255,255,255,0.85);">Bench Press · ×6</div>
+          </div>
+        </div>
+
+        <div class="col-span-8">
+          <div class="code-header">
+            <div class="dot3"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div>components/PRCelebration.tsx</div>
+            <div></div>
+          </div>
+<pre class="code"><span class="k">import</span> { motion } <span class="k">from</span> <span class="s">"framer-motion"</span><span class="p">;</span>
+<span class="k">import</span> { DURATION<span class="p">,</span> EASE<span class="p">,</span> SPRING } <span class="k">from</span> <span class="s">"@/motion/tokens"</span><span class="p">;</span>
+
+<span class="c">// Hero: 2 bounces in 600ms via keyframe array.</span>
+<span class="k">const</span> <span class="f">prHero</span> = {
+  <span class="a">scale</span><span class="p">:</span>    [<span class="n">1</span><span class="p">,</span> <span class="n">1.05</span><span class="p">,</span> <span class="n">1</span><span class="p">,</span> <span class="n">1.025</span><span class="p">,</span> <span class="n">1</span>]<span class="p">,</span>
+  <span class="a">boxShadow</span><span class="p">:</span> [
+    <span class="s">"0 0 0 0 hsl(8 78% 55% / 0.6)"</span><span class="p">,</span>
+    <span class="s">"0 0 0 14px hsl(8 78% 55% / 0)"</span><span class="p">,</span>
+    <span class="s">"0 0 0 0 hsl(8 78% 55% / 0)"</span><span class="p">,</span>
+  ]<span class="p">,</span>
+  <span class="a">transition</span><span class="p">:</span> { <span class="a">duration</span><span class="p">:</span> DURATION.xxxl<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge<span class="p">,</span> <span class="a">times</span><span class="p">:</span> [<span class="n">0</span><span class="p">,</span><span class="n">0.25</span><span class="p">,</span><span class="n">0.5</span><span class="p">,</span><span class="n">0.75</span><span class="p">,</span><span class="n">1</span>] }<span class="p">,</span>
+}<span class="p">;</span>
+
+<span class="k">function</span> <span class="f">Sparkle</span>({ x<span class="p">,</span> y<span class="p">,</span> delay }) {
+  <span class="k">return</span> (
+    <span class="p">&lt;</span><span class="t">motion.span</span>
+      <span class="a">style</span>=<span class="p">{</span>{ <span class="a">position</span><span class="p">:</span> <span class="s">"absolute"</span><span class="p">,</span> <span class="a">left</span><span class="p">:</span> x<span class="p">,</span> <span class="a">top</span><span class="p">:</span> y }<span class="p">}</span>
+      <span class="a">initial</span>=<span class="p">{</span>{ <span class="a">scale</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span> <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span> }<span class="p">}</span>
+      <span class="a">animate</span>=<span class="p">{</span>{ <span class="a">scale</span><span class="p">:</span> [<span class="n">0</span><span class="p">,</span> <span class="n">1.4</span><span class="p">,</span> <span class="n">0</span>]<span class="p">,</span> <span class="a">opacity</span><span class="p">:</span> [<span class="n">0</span><span class="p">,</span> <span class="n">1</span><span class="p">,</span> <span class="n">0</span>] }<span class="p">}</span>
+      <span class="a">transition</span>=<span class="p">{</span>{ <span class="a">duration</span><span class="p">:</span> <span class="n">0.4</span><span class="p">,</span> <span class="a">delay</span><span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge }<span class="p">}</span> <span class="p">/&gt;</span>
+  )<span class="p">;</span>
+}
+
+<span class="k">export function</span> <span class="f">PRCelebration</span>({ weight<span class="p">,</span> reps }) {
+  <span class="k">const</span> sparkles = <span class="f">useMemo</span>(
+    () <span class="k">=&gt;</span> <span class="f">Array.from</span>({ <span class="a">length</span><span class="p">:</span> <span class="n">5</span> }<span class="p">,</span> () <span class="k">=&gt;</span> ({
+      <span class="a">x</span><span class="p">:</span> <span class="f">Math.random</span>() <span class="p">*</span> <span class="n">220</span><span class="p">,</span>
+      <span class="a">y</span><span class="p">:</span> <span class="f">Math.random</span>() <span class="p">*</span> <span class="n">120</span><span class="p">,</span>
+      <span class="a">delay</span><span class="p">:</span> <span class="n">0.1</span> <span class="p">+</span> <span class="f">Math.random</span>() <span class="p">*</span> <span class="n">0.25</span><span class="p">,</span>
+    }))<span class="p">,</span> []
+  )<span class="p">;</span>
+  <span class="k">return</span> (
+    <span class="p">&lt;</span><span class="t">motion.div</span> <span class="a">className</span>=<span class="s">"relative bg-primary rounded-xl p-6 text-white"</span> <span class="a">animate</span>=<span class="p">{</span>prHero<span class="p">}&gt;</span>
+      {sparkles.<span class="f">map</span>((s<span class="p">,</span> i) <span class="k">=&gt;</span> <span class="p">&lt;</span><span class="t">Sparkle</span> <span class="a">key</span>=<span class="p">{</span>i<span class="p">}</span> <span class="a">{...s}</span> <span class="p">/&gt;</span>)}
+      <span class="p">&lt;</span><span class="t">div</span><span class="p">&gt;</span>PERSONAL RECORD<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">div</span> <span class="a">className</span>=<span class="s">"font-mono tabular-nums text-5xl"</span><span class="p">&gt;{</span>weight<span class="p">}</span>kg<span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">motion.div</span><span class="p">&gt;</span>
+  )<span class="p">;</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== M-13 LOTTIE ====== -->
+    <div class="mt-7 page-card p-6">
+      <div class="spec-block-h">
+        <div>
+          <span class="num-id">M-13</span>
+          <h3>Lottie · 動作動畫播放速度</h3>
+          <p>0.5× 學習速、1× 預設、1.5× 快速復習。切速度時 tween 過渡、不直接跳。</p>
+        </div>
+        <div class="flex gap-1.5">
+          <span class="tag pri">speed: 1 → 0.5</span>
+          <span class="tag">200ms tween</span>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-12 gap-5">
+        <div class="col-span-4 demo p-5" style="min-height: 280px;">
+          <span class="demo-label">LIVE · TOGGLE 速度</span>
+          <div class="lott-box" id="lottBox">
+            <div class="lott-dot"></div>
+          </div>
+          <div class="flex justify-center">
+            <div class="lott-toggle">
+              <button onclick="document.getElementById('lottBox').classList.add('slow')">0.5×</button>
+              <button class="on" onclick="document.getElementById('lottBox').classList.remove('slow')">1×</button>
+            </div>
+          </div>
+          <p class="mt-3 text-center text-[11px] mono" style="color: hsl(var(--muted-fg));">點按鈕、看 dot 速度平順過渡</p>
+        </div>
+
+        <div class="col-span-8">
+          <div class="code-header">
+            <div class="dot3"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div>components/ExerciseLottie.tsx</div>
+            <div></div>
+          </div>
+<pre class="code"><span class="k">import</span> Lottie<span class="p">,</span> { <span class="k">type</span> LottieRefCurrentProps } <span class="k">from</span> <span class="s">"lottie-react"</span><span class="p">;</span>
+<span class="k">import</span> { useMotionValue<span class="p">,</span> animate } <span class="k">from</span> <span class="s">"framer-motion"</span><span class="p">;</span>
+<span class="k">import</span> { DURATION<span class="p">,</span> EASE } <span class="k">from</span> <span class="s">"@/motion/tokens"</span><span class="p">;</span>
+
+<span class="k">export function</span> <span class="f">ExerciseLottie</span>({ data<span class="p">,</span> targetSpeed }) {
+  <span class="k">const</span> ref = <span class="f">useRef</span><span class="p">&lt;</span>LottieRefCurrentProps<span class="p">&gt;</span>(<span class="k">null</span>)<span class="p">;</span>
+  <span class="k">const</span> speed = <span class="f">useMotionValue</span>(<span class="n">1</span>)<span class="p">;</span>
+
+  <span class="f">useEffect</span>(() <span class="k">=&gt;</span> {
+    <span class="k">const</span> ctrl = <span class="f">animate</span>(speed<span class="p">,</span> targetSpeed<span class="p">,</span> {
+      <span class="a">duration</span><span class="p">:</span> DURATION.md<span class="p">,</span>
+      <span class="a">ease</span><span class="p">:</span> EASE.forge<span class="p">,</span>
+      <span class="a">onUpdate</span><span class="p">:</span> (v) <span class="k">=&gt;</span> ref.current<span class="p">?.</span><span class="f">setSpeed</span>(v)<span class="p">,</span>
+    })<span class="p">;</span>
+    <span class="k">return</span> () <span class="k">=&gt;</span> ctrl.<span class="f">stop</span>()<span class="p">;</span>
+  }<span class="p">,</span> [targetSpeed])<span class="p">;</span>
+
+  <span class="k">return</span> <span class="p">&lt;</span><span class="t">Lottie</span> <span class="a">lottieRef</span>=<span class="p">{</span>ref<span class="p">}</span> <span class="a">animationData</span>=<span class="p">{</span>data<span class="p">}</span> <span class="a">loop</span> <span class="a">autoplay</span> <span class="p">/&gt;;</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== M-14/15 STEPPER ====== -->
+    <div class="mt-7 page-card p-6">
+      <div class="spec-block-h">
+        <div>
+          <span class="num-id">M-14 / M-15</span>
+          <h3>數字 Stepper · +/-</h3>
+          <p>點按鈕 scale punch、數字 crossfade。鍵盤 / 長按連點時 throttle 動畫、不要每個 tick 都跳。</p>
+        </div>
+        <div class="flex gap-1.5">
+          <span class="tag pri">scale 0.9 · 100ms</span>
+          <span class="tag">crossfade · 150ms</span>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-12 gap-5">
+        <div class="col-span-4 demo flex flex-col items-center justify-center" style="min-height: 240px;">
+          <span class="demo-label">LIVE · 3s LOOP</span>
+          <div class="stepper">
+            <button class="btn-minus">−</button>
+            <div class="stepper-num"><span class="num">80</span></div>
+            <button class="btn-plus">+</button>
+          </div>
+          <p class="mt-4 text-center text-[11px] mono" style="color: hsl(var(--muted-fg));">−/+ scale 收縮 · 數字 fade 切換</p>
+        </div>
+
+        <div class="col-span-8">
+          <div class="code-header">
+            <div class="dot3"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+            <div>components/NumberStepper.tsx</div>
+            <div></div>
+          </div>
+<pre class="code"><span class="k">import</span> { motion<span class="p">,</span> AnimatePresence } <span class="k">from</span> <span class="s">"framer-motion"</span><span class="p">;</span>
+<span class="k">import</span> { DURATION<span class="p">,</span> EASE } <span class="k">from</span> <span class="s">"@/motion/tokens"</span><span class="p">;</span>
+
+<span class="k">export function</span> <span class="f">NumberStepper</span>({ value<span class="p">,</span> onChange<span class="p">,</span> step = <span class="n">2.5</span> }) {
+  <span class="k">return</span> (
+    <span class="p">&lt;</span><span class="t">div</span> <span class="a">className</span>=<span class="s">"inline-flex border rounded-xl"</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="t">motion.button</span>
+        <span class="a">whileTap</span>=<span class="p">{</span>{ <span class="a">scale</span><span class="p">:</span> <span class="n">0.9</span> }<span class="p">}</span>
+        <span class="a">transition</span>=<span class="p">{</span>{ <span class="a">duration</span><span class="p">:</span> DURATION.xs<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge }<span class="p">}</span>
+        <span class="a">onClick</span>=<span class="p">{</span>() <span class="k">=&gt;</span> <span class="f">onChange</span>(value <span class="p">-</span> step)<span class="p">}</span>
+      <span class="p">&gt;−&lt;/</span><span class="t">motion.button</span><span class="p">&gt;</span>
+
+      <span class="p">&lt;</span><span class="t">div</span> <span class="a">className</span>=<span class="s">"w-16 h-11 grid place-items-center relative overflow-hidden"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="t">AnimatePresence</span> <span class="a">mode</span>=<span class="s">"popLayout"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="t">motion.span</span>
+            <span class="a">key</span>=<span class="p">{</span>value<span class="p">}</span>
+            <span class="a">initial</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span> }<span class="p">}</span>
+            <span class="a">animate</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">1</span> }<span class="p">}</span>
+            <span class="a">exit</span>=<span class="p">{</span>{ <span class="a">opacity</span><span class="p">:</span> <span class="n">0</span> }<span class="p">}</span>
+            <span class="a">transition</span>=<span class="p">{</span>{ <span class="a">duration</span><span class="p">:</span> DURATION.sm<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge }<span class="p">}</span>
+            <span class="a">className</span>=<span class="s">"font-mono font-bold tabular-nums"</span>
+          <span class="p">&gt;{</span>value<span class="p">}&lt;/</span><span class="t">motion.span</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="t">AnimatePresence</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+
+      <span class="p">&lt;</span><span class="t">motion.button</span>
+        <span class="a">whileTap</span>=<span class="p">{</span>{ <span class="a">scale</span><span class="p">:</span> <span class="n">0.9</span> }<span class="p">}</span>
+        <span class="a">transition</span>=<span class="p">{</span>{ <span class="a">duration</span><span class="p">:</span> DURATION.xs<span class="p">,</span> <span class="a">ease</span><span class="p">:</span> EASE.forge }<span class="p">}</span>
+        <span class="a">onClick</span>=<span class="p">{</span>() <span class="k">=&gt;</span> <span class="f">onChange</span>(value <span class="p">+</span> step)<span class="p">}</span>
+      <span class="p">&gt;+&lt;/</span><span class="t">motion.button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="t">div</span><span class="p">&gt;</span>
+  )<span class="p">;</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- §20.3 GLOBAL RULES                                           -->
+  <!-- ============================================================ -->
+  <section class="max-w-[1280px] mx-auto px-8 mt-14 pb-20">
+    <div class="flex items-baseline gap-4 flex-wrap">
+      <span class="var-eyebrow">§20.3</span>
+      <h2 class="h-section">全域規則</h2>
+    </div>
+
+    <div class="mt-6 grid grid-cols-3 gap-3">
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>Reduced Motion</div>
+        <p class="mt-2 text-[13px] text-[#17181F] leading-[1.6]">
+          所有 motion 用 <code class="tok">useReducedMotion()</code> 包覆。為 true 時：
+        </p>
+        <ul class="mt-2 space-y-1 text-[12.5px] text-[#5a5b66] leading-[1.55]">
+          <li>· scale / spring 全改 opacity fade · 0.001s</li>
+          <li>· sparkles 完全跳過</li>
+          <li>· lottie autoplay 改成靜態首幀</li>
+          <li>· 頁面切換改 fade 不滑入</li>
+        </ul>
+      </div>
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>禁止項</div>
+        <ul class="mt-3 space-y-1 text-[12.5px] text-[#5a5b66] leading-[1.55]">
+          <li>· 不寫 <code class="tok">duration: 0.123</code> · 用 token</li>
+          <li>· 不在 modal 退場用 spring</li>
+          <li>· 不在 list 滾動時做 stagger animation</li>
+          <li>· 不對重要 CTA 加 idle pulse · 干擾感</li>
+          <li>· glow 只允許 PR · 別處不准</li>
+          <li>· 不超過 600ms · 訓練中沒空看你演戲</li>
+        </ul>
+      </div>
+
+      <div class="page-card p-5">
+        <div class="eyebrow-page"><span class="dot"></span>效能</div>
+        <ul class="mt-3 space-y-1 text-[12.5px] text-[#5a5b66] leading-[1.55]">
+          <li>· 優先 <code class="tok">transform</code> / <code class="tok">opacity</code> · GPU</li>
+          <li>· 避免動畫化 <code class="tok">width</code> / <code class="tok">height</code> / <code class="tok">top</code></li>
+          <li>· <code class="tok">layout</code> 動畫只用在必要的 list reorder</li>
+          <li>· 同時不超過 8 個元素 spring · 怕掉幀</li>
+          <li>· iOS Safari 上開啟 <code class="tok">will-change: transform</code> 僅在動畫期間</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- AI assistant -->
+    <div class="mt-5 page-card p-5">
+      <div class="eyebrow-page"><span class="dot"></span>給 AI 工具的速查</div>
+      <div class="mt-3 mono text-[12px] leading-[1.7]" style="color: hsl(var(--fg2));">
+        <strong style="color: hsl(var(--fg));">問：</strong>「這個動效該用什麼？」<br/>
+        <strong style="color: hsl(var(--fg));">答：</strong>
+        <span style="color: hsl(var(--fg2));">是進入動作？ →</span> spring.soft<br/>
+        <span class="ml-12" style="color: hsl(var(--fg2));">是退出動作？ →</span> tween · 200ms · forge<br/>
+        <span class="ml-12" style="color: hsl(var(--fg2));">是即時反饋？ →</span> whileTap 0.95 · 100–200ms · forge<br/>
+        <span class="ml-12" style="color: hsl(var(--fg2));">是慶祝？ →</span> 用 M-11/12 模板 · 不要自創<br/>
+        <span class="ml-12" style="color: hsl(var(--fg2));">是 idle 強調？ →</span> <strong style="color: #b53d28;">不要做</strong>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="max-w-[1280px] mx-auto px-8 mt-8 mb-20 pt-8 border-t border-[#dcd6c9] flex flex-wrap items-baseline justify-between gap-3">
+    <div class="mono text-[11px] uppercase tracking-[1.4px] text-[#8a8074]">FITFORGE · §20 · motion-spec · v1.0 · 2026-05-18</div>
+    <div class="text-[12px] text-[#8a8074]">問題 → design@fitforge · 變更需經設計 + 前端共識</div>
+  </footer>
+
+  <script>
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+
+    // toggle UI for the Lottie speed demo
+    document.querySelectorAll('.lott-toggle button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.currentTarget.parentNode.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+        e.currentTarget.classList.add('on');
+      });
+    });
+  </script>
+</body>
+</html>
