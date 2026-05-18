@@ -3,7 +3,7 @@ import type { Exercise } from '@fitforge/core';
 import { Chip } from '@/ui/Chip';
 import { cn } from '@/lib/cn';
 import { bodyPartLabel, muscleLabel } from '@/lib/labels';
-import { ExerciseThumb } from './ExerciseThumb';
+import { ExerciseAnimation } from './ExerciseAnimation';
 
 type Props = {
   exercise: Exercise;
@@ -33,7 +33,12 @@ export function ExerciseCard({ exercise, onClick, selected, selectable }: Props)
     >
       {/* Thumb area */}
       <div className="relative">
-        <ExerciseThumb exercise={exercise} size={160} className="!w-full !h-[120px] rounded-none" />
+        <ExerciseAnimation
+          exercise={exercise}
+          size={160}
+          animate
+          className="!w-full !h-[120px] rounded-none"
+        />
         {selectable ? (
           <div
             className={cn(

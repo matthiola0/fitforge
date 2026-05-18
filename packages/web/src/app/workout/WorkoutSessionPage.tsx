@@ -24,7 +24,7 @@ import { Chip } from '@/ui/Chip';
 import { ConfirmDialog } from '@/ui/ConfirmDialog';
 import { Sheet } from '@/ui/Sheet';
 import { NumberStepper } from '@/ui/NumberStepper';
-import { ExerciseThumb } from '@/features/exercises/ExerciseThumb';
+import { ExerciseAnimation } from '@/features/exercises/ExerciseAnimation';
 import { AddExerciseSheet } from '@/features/workout/AddExerciseSheet';
 import { SwapExerciseSheet } from '@/features/workout/SwapExerciseSheet';
 import { useRestTick } from '@/features/workout/useRestTick';
@@ -432,7 +432,7 @@ function MainVisual({
           className="relative grid h-[76px] w-[76px] shrink-0 place-items-center overflow-hidden rounded-xl bg-secondary"
           aria-label="放大示範"
         >
-          <ExerciseThumb exercise={exercise} size={76} className="!h-[76px] !w-[76px] rounded-xl" />
+          <ExerciseAnimation exercise={exercise} size={76} animate className="!h-[76px] !w-[76px] rounded-xl" />
           <span className="absolute bottom-1 right-1 grid h-[18px] w-[18px] place-items-center rounded-full bg-background/85 text-foreground">
             <Maximize2 size={9} strokeWidth={2.6} />
           </span>

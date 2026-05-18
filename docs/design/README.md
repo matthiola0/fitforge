@@ -70,7 +70,7 @@ docs/design/
 | 17 | HistoryPage                | ✅    | -   | ⏳    | 設計到位、待落地 (Today 已 reference) |
 | 18 | WorkoutDetailPage          | ✅    | -   | ⏳    | 設計到位、待落地 |
 | 19 | SettingsPage               | ✅    | -   | 🟡    | V1 簡版已實作、設計到位待升級 |
-| 20 | Lottie 風格規範            | ✅    | -   | 📖    | 純參考、給未來換真 Lottie 用 |
+| 20 | Lottie 風格規範            | ✅    | -   | ✅    | `features/exercises/ExerciseAnimation` — CSS-animated SVG、7 種 bodyPart motion 涵蓋全 30 動作。設計稿的 Lottie 視為動效規格、實作走 CSS keyframe |
 | 21 | 安裝引導 Bottom Sheet      | ✅    | -   | ✅    | `features/pwa/InstallPromptSheet` — Android 原生 + iOS 三步教學 |
 | 22 | Modal / Confirm 集合       | ✅    | -   | ✅    | `ui/ConfirmDialog` (4 variants: primary/destructive/nuclear/warning)、6 個 ad-hoc dialog 已 retrofit |
 | 23 | 空狀態 / Loading / Error patterns | ✅  | -   | ✅ | `ui/EmptyState` + `ui/Skeleton` + `ui/ErrorState`、3 個 ad-hoc empty state 已 retrofit |

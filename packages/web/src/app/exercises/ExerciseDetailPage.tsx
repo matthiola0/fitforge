@@ -5,7 +5,7 @@ import type { Exercise } from '@fitforge/core';
 import { useCore } from '@/lib/core/CoreProvider';
 import { PageHeader } from '@/app/_layout/PageHeader';
 import { Chip } from '@/ui/Chip';
-import { ExerciseThumb } from '@/features/exercises/ExerciseThumb';
+import { ExerciseAnimation } from '@/features/exercises/ExerciseAnimation';
 import {
   bodyPartLabel,
   difficultyLabel,
@@ -75,10 +75,10 @@ function Hero({ exercise }: { exercise: Exercise }) {
     <section className="relative">
       <div className="bg-muted px-6 py-8">
         <div className="mx-auto flex aspect-[5/4] max-w-sm items-center justify-center">
-          <ExerciseThumb
+          <ExerciseAnimation
             exercise={exercise}
             size={240}
-            animated={playing}
+            animate={playing}
             className="!h-[240px] !w-[240px] rounded-xl"
           />
         </div>
