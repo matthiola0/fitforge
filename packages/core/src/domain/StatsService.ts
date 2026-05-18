@@ -1,5 +1,16 @@
+import type { ExerciseRepository } from '../data/repositories/ExerciseRepository';
 import type { WorkoutRepository } from '../data/repositories/WorkoutRepository';
 import type { Workout } from '../data/schemas/workout.schema';
+
+/**
+ * 時間/距離型動作 — 不算 1RM PR (epley 公式對它們無意義)
+ *
+ * - plank: 純等長撐住、reps 欄位是秒數
+ * - farmers-carry: 距離 + 負重、reps 欄位是步數或秒數
+ *
+ * V2 可以加 'longest_hold' / 'farthest_carry' 等專屬 PR type。
+ */
+const TIME_BASED_SLUGS: ReadonlySet<string> = new Set(['plank', 'farmers-carry']);
 
 export type WorkoutSummary = {
   workoutId: string;
@@ -25,7 +36,9 @@ export type PRRecord = {
  * 對應 docs/05-domain-logic.md §4。
  */
 export class StatsService {
-  constructor(private deps: { workoutRepo: WorkoutRepository }) {}
+  constructor(
+    private deps: { workoutRepo: WorkoutRepository; exerciseRepo: ExerciseRepository },
+  ) {}
 
   /**
    * 計算單次訓練摘要
@@ -69,9 +82,18 @@ export class StatsService {
       (w) => w.id !== workout.id,
     );
 
+    // 撈本次出現過的 exercise meta、用來過濾時間型動作
+    const exerciseIds = Array.from(new Set(workout.exercises.map((we) => we.exerciseId)));
+    const exercises = await this.deps.exerciseRepo.getMany(exerciseIds);
+    const timeBasedIds = new Set(
+      exercises.filter((e) => TIME_BASED_SLUGS.has(e.slug)).map((e) => e.id),
+    );
+
     // 對本次每個 exercise，找最佳 1RM estimate / volume / reps@weight
     for (const we of workout.exercises) {
       const exerciseId = we.exerciseId;
+      if (timeBasedIds.has(exerciseId)) continue;
+
       const thisBestEstimate = bestEpley1RM(we.sets.filter((s) => s.isCompleted));
       const histBestEstimate = bestEpley1RMAcrossHistory(history, exerciseId);
 

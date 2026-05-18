@@ -51,7 +51,7 @@ export class WorkoutEngine {
       exerciseQuery: ExerciseQueryService;
     },
   ) {
-    this.stats = new StatsService({ workoutRepo: deps.workoutRepo });
+    this.stats = new StatsService({ workoutRepo: deps.workoutRepo, exerciseRepo: deps.exerciseRepo });
   }
 
   // ===== 啟動 ==============================================================

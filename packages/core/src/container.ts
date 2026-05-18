@@ -70,7 +70,7 @@ export async function createCore(deps: CoreDeps = {}) {
 
   // === Domain Services ===================================================
   const exerciseQuery = new ExerciseQueryService({ exerciseRepo });
-  const stats = new StatsService({ workoutRepo });
+  const stats = new StatsService({ workoutRepo, exerciseRepo });
   const planService = new PlanService({ planRepo, idGen, clock });
   const onboardingService = new OnboardingService({
     onboardingRepo,
