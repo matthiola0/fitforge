@@ -28,9 +28,64 @@
       />
     </noscript>
     <title>FitForge · 健身入門</title>
+    <!--
+      Inline boot splash: paints in <500 ms (no JS/CSS/font waterfall).
+      React's first render replaces the #root children — transition is
+      seamless since the React BootSplash matches this markup pixel-for-pixel.
+      Without this, FCP/LCP wait 2-3 s for the JS bundle to parse + hydrate.
+    -->
+    <style>
+      :root { color-scheme: light dark; }
+      body { margin: 0; background: #FDFCFA; }
+      @media (prefers-color-scheme: dark) { body { background: #1a1a1f; } }
+      #fitforge-boot-splash {
+        position: fixed; inset: 0;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 20px;
+        padding: 32px;
+        font-family: system-ui, -apple-system, 'Noto Sans TC', sans-serif;
+        text-align: center;
+      }
+      #fitforge-boot-splash .badge {
+        width: 64px; height: 64px; border-radius: 14px;
+        background: #E14B36;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 8px 20px rgba(225, 75, 54, 0.28);
+      }
+      #fitforge-boot-splash .title {
+        font-size: 32px; font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0;
+        color: #17181F;
+      }
+      #fitforge-boot-splash .label {
+        font-size: 13px; font-weight: 500;
+        color: #8a8a8f;
+        margin: 0;
+      }
+      @media (prefers-color-scheme: dark) {
+        #fitforge-boot-splash .title { color: #f5f5f7; }
+        #fitforge-boot-splash .label { color: #7a7a80; }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="fitforge-boot-splash" aria-label="FitForge 啟動中">
+        <div class="badge">
+          <svg viewBox="0 0 64 64" width="40" height="40" fill="#FFFFFF" aria-hidden="true">
+            <rect x="16" y="11" width="14" height="46" rx="7"/>
+            <rect x="16" y="11" width="24" height="14" rx="7"/>
+            <circle cx="45" cy="18" r="8.5"/>
+            <rect x="16" y="28" width="20" height="12" rx="6"/>
+            <circle cx="40" cy="34" r="7"/>
+          </svg>
+        </div>
+        <h1 class="title">FitForge</h1>
+        <p class="label">啟動中...</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

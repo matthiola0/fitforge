@@ -1,10 +1,35 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/**
+ * Convert the auto-injected `<link rel="stylesheet" ... index-xxx.css>` to a
+ * non-blocking `<link rel="preload" as="style" onload="this.rel='stylesheet'">`
+ * pattern. The inline `<style>` for the boot splash keeps the first paint
+ * styled while the main Tailwind sheet loads in parallel.
+ *
+ * Trades a small FOUC risk (React unmounts the splash → app paints unstyled
+ * for ~50 ms if main CSS hasn't loaded) for ~150 ms off LCP on Lighthouse
+ * mobile simulate.
+ */
+function nonBlockingCssPlugin(): Plugin {
+  return {
+    name: 'fitforge-non-blocking-css',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      return html.replace(
+        /<link rel="stylesheet" crossorigin href="([^"]+\.css)">/g,
+        (_, href) =>
+          `<link rel="preload" as="style" href="${href}" crossorigin onload="this.onload=null;this.rel='stylesheet'">` +
+          `<noscript><link rel="stylesheet" href="${href}" crossorigin></noscript>`,
+      );
+    },
+  };
+}
 
 export default defineConfig({
   resolve: {
@@ -14,9 +39,12 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    nonBlockingCssPlugin(),
     VitePWA({
       registerType: 'prompt',
-      injectRegister: 'auto',
+      // 'script-defer' — registerSW.js loads with defer so doesn't block
+      // initial paint. Lighthouse mobile was wasting ~170 ms on this script.
+      injectRegister: 'script-defer',
       strategies: 'generateSW',
       manifest: {
         name: 'FitForge',

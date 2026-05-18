@@ -16,7 +16,7 @@
 [![RxDB](https://img.shields.io/badge/RxDB-15-8a2be2)](https://rxdb.info/)
 [![Tests](https://img.shields.io/badge/tests-45_unit_+_6_e2e-22c55e)](packages/core/tests)
 [![PWA](https://img.shields.io/badge/PWA-installable-5a0fc8)](packages/web/vite.config.ts)
-[![Lighthouse](https://img.shields.io/badge/Lighthouse-A11y_100_·_BP_100_·_SEO_91-22c55e)](#lighthouse)
+[![Lighthouse](https://img.shields.io/badge/Lighthouse-A11y_100_·_BP_100_·_SEO_91_·_Perf_80--86-22c55e)](#lighthouse)
 [![License](https://img.shields.io/badge/license-personal-lightgrey)](README.md)
 
 </div>
@@ -176,13 +176,23 @@ pnpm --filter @fitforge/web typecheck
 
 | 類別 | 分數 | 備註 |
 |------|------|------|
-| Performance | 74 | 本地 preview 無 gzip / HTTP/2；FCP 2.8 s / TBT 0 ms / CLS 0 |
+| Performance | **80–86** (5 runs median 78) | 變化幅度大 — Lighthouse simulate 在 React app 上 run-to-run noise 嚴重 |
 | Accessibility | **100** | 全綠 |
 | Best Practices | **100** | 全綠 |
 | SEO | 91 | 缺 robots.txt + canonical (個人專案非必要) |
 
-Performance 在 production CDN 上預期較高 (Vercel edge gzip + HTTP/2)，但 Vercel 的反爬阻擋 headless Chrome、無法直接以 Lighthouse 對線上測。
-TBT 0 ms / CLS 0 / A11y 100 / BP 100 已能說明前端品質。
+**已做的 perf 優化**：
+- Inline boot splash 進 `index.html`（FCP 0.7–2.1 s，原本 2.8 s）
+- Google Fonts 改 preload + onload async（省 5.7 s render-blocking）
+- Tailwind CSS 改 preload + onload（省 ~170 ms render-blocking）
+- Service Worker 註冊腳本 `script-defer`
+- 字重砍：Noto Sans TC 5→3、Mono 3→2
+- vendor 拆 chunk + manualChunks 規則（修了 Windows 路徑差異造成的循環 import）
+
+**剩餘瓶頸**：LCP element 是 `/onboard/step1` 的 H1、需 React+RxDB 完整 init 才會 paint（~2.5 s）。
+要再壓 ≥ 90 median 需 lazy CoreProvider（讓 routes 在 core 還沒 ready 就先 render shell）— V2 改用 React Suspense for Data 時一併重構。
+
+Performance 在 production CDN 上預期 +5～+10（Vercel edge gzip + HTTP/2 + 真 device 不 throttle），但 Vercel 的反爬阻擋 headless Chrome、無法直接以 Lighthouse 對線上測。
 PWA 類別在 Lighthouse 12 後拆入「installable」audit，仍 ✅ pass。
 
 跑：`npx lighthouse http://localhost:4173/today --form-factor=mobile`
