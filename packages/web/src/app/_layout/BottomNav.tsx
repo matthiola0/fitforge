@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { Calendar, Dumbbell, History, ListTodo } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { t } from '@/lib/i18n';
 
 /**
  * BottomNav — 4 個底部 tab
@@ -19,10 +20,10 @@ type NavTab = {
 };
 
 const TABS: NavTab[] = [
-  { to: '/today', label: '今天', icon: Calendar, match: /^\/today/ },
-  { to: '/plans', label: '課表', icon: ListTodo, match: /^\/plans/ },
-  { to: '/exercises', label: '動作', icon: Dumbbell, match: /^\/exercises/ },
-  { to: '/history', label: '歷史', icon: History, match: /^\/history/ },
+  { to: '/today', label: t('nav.today'), icon: Calendar, match: /^\/today/ },
+  { to: '/plans', label: t('nav.plans'), icon: ListTodo, match: /^\/plans/ },
+  { to: '/exercises', label: t('nav.library'), icon: Dumbbell, match: /^\/exercises/ },
+  { to: '/history', label: t('nav.history'), icon: History, match: /^\/history/ },
 ];
 
 export function BottomNav() {

@@ -8,6 +8,7 @@ import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
 import { Skeleton } from '@/ui/Skeleton';
 import { cn } from '@/lib/cn';
+import { t } from '@/lib/i18n';
 import { bodyPartLabel } from '@/lib/labels';
 
 /**
@@ -125,12 +126,12 @@ export function ExerciseLibraryPage() {
         ) : total === 0 ? (
           <EmptyState
             art={<Search className="h-7 w-7" strokeWidth={2} />}
-            title="找不到符合的動作"
-            description="V1 還沒有這個組合 — 試試別的肌群、或先清掉篩選看看全部 30 個動作。"
+            title={t('library.emptyTitle')}
+            description={t('library.emptyBody')}
             action={
               <Button variant="primary" size="md" onClick={clearAll}>
                 <X size={14} strokeWidth={2.4} />
-                清除全部篩選
+                {t('library.emptyCta')}
               </Button>
             }
           />

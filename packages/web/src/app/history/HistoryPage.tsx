@@ -11,6 +11,7 @@ import { Chip } from '@/ui/Chip';
 import { ConfirmDialog } from '@/ui/ConfirmDialog';
 import { EmptyState } from '@/ui/EmptyState';
 import { Skeleton } from '@/ui/Skeleton';
+import { t } from '@/lib/i18n';
 import { useUiStore } from '@/stores/uiStore';
 import { formatDuration } from '@/lib/time/formatDuration';
 import { cn } from '@/lib/cn';
@@ -47,11 +48,11 @@ export function HistoryPage() {
           <EmptyState
             className="mt-12"
             art={<Activity className="h-8 w-8" strokeWidth={2} />}
-            title="還沒有訓練紀錄"
-            description="完成第一次訓練後、會自動顯示在這裡。"
+            title={t('history.emptyTitle')}
+            description={t('history.emptyBody')}
             action={
               <Link to="/today">
-                <Button size="md">回首頁 · 開始第一次</Button>
+                <Button size="md">{t('history.emptyCta')}</Button>
               </Link>
             }
           />
@@ -308,9 +309,9 @@ function HistoryRow({ workout, avgVolume }: { workout: Workout; avgVolume: numbe
       <ConfirmDialog
         open={confirming}
         variant="destructive"
-        title="移除這筆紀錄？"
-        description="軟刪除、可由設定的「資料」區域復原。"
-        confirmLabel="移除"
+        title={t('history.deleteConfirmTitle')}
+        description={t('history.deleteConfirmBody')}
+        confirmLabel={t('common.remove')}
         onCancel={() => setConfirming(false)}
         onConfirm={handleDelete}
       />

@@ -8,6 +8,7 @@ import { PageHeader } from '@/app/_layout/PageHeader';
 import { Card } from '@/ui/Card';
 import { Button } from '@/ui/Button';
 import { ConfirmDialog } from '@/ui/ConfirmDialog';
+import { t } from '@/lib/i18n';
 import { Chip } from '@/ui/Chip';
 import { useUiStore } from '@/stores/uiStore';
 import { formatDuration } from '@/lib/time/formatDuration';
@@ -195,9 +196,9 @@ export function WorkoutDetailPage() {
       <ConfirmDialog
         open={confirmDelete}
         variant="destructive"
-        title="移除這筆訓練？"
-        description="軟刪除、可從匯出 JSON 復原。"
-        confirmLabel="移除"
+        title={t('history.detailDeleteTitle')}
+        description={t('history.detailDeleteBody')}
+        confirmLabel={t('common.remove')}
         onCancel={() => setConfirmDelete(false)}
         onConfirm={handleDelete}
       />

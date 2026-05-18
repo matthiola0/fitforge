@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { PageHeader } from '@/app/_layout/PageHeader';
 import { Button } from '@/ui/Button';
 import { ErrorState } from '@/ui/ErrorState';
+import { t } from '@/lib/i18n';
 
 /**
  * NotFoundPage — 404
@@ -11,22 +12,22 @@ import { ErrorState } from '@/ui/ErrorState';
 export function NotFoundPage() {
   return (
     <>
-      <PageHeader title="找不到頁面" back="/today" />
+      <PageHeader title={t('notFound.title')} back="/today" />
       <ErrorState
         kind="404"
-        title="找不到這個頁面"
-        description="可能是連結舊了、或這個頁面還沒實作。回首頁從頭開始吧。"
+        title={t('notFound.title')}
+        description={t('notFound.description')}
         primaryAction={
           <Link to="/today">
             <Button variant="primary" size="md">
-              回首頁
+              {t('notFound.homeCta')}
             </Button>
           </Link>
         }
         secondaryAction={
           <Link to="/plans">
             <Button variant="ghost" size="sm">
-              或看看課表
+              {t('notFound.plansCta')}
             </Button>
           </Link>
         }

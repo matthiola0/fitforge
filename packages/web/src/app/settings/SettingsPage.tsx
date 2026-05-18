@@ -17,6 +17,7 @@ import { PageHeader } from '@/app/_layout/PageHeader';
 import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
 import { ConfirmDialog } from '@/ui/ConfirmDialog';
+import { t } from '@/lib/i18n';
 import { useUiStore } from '@/stores/uiStore';
 import { cn } from '@/lib/cn';
 
@@ -234,15 +235,17 @@ export function SettingsPage() {
       <ConfirmDialog
         open={confirmReset}
         variant="nuclear"
-        title="清除所有資料？"
+        title={t('settings.resetConfirmTitle')}
         description={
           <>
-            <strong className="text-foreground">此動作不可復原。</strong>
-            所有訓練紀錄、自訂課表、設定都會永久刪除。
+            <strong className="text-foreground">
+              {t('settings.resetConfirmBodyEmphasis')}
+            </strong>
+            {t('settings.resetConfirmBodyDetail')}
           </>
         }
-        typeToConfirm="我要清除"
-        confirmLabel="永久清除"
+        typeToConfirm={t('settings.resetConfirmType')}
+        confirmLabel={t('settings.resetConfirmCta')}
         onCancel={() => setConfirmReset(false)}
         onConfirm={handleReset}
       />

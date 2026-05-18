@@ -1,6 +1,7 @@
 import { Check, Download, Plus, Share } from 'lucide-react';
 import { Button } from '@/ui/Button';
 import { Sheet } from '@/ui/Sheet';
+import { t } from '@/lib/i18n';
 import type { InstallPlatform } from './useInstallPrompt';
 
 /**
@@ -36,10 +37,10 @@ export function InstallPromptSheet({
         </div>
 
         <h3 className="mt-5 text-center text-[20px] font-bold leading-[1.3] tracking-[-0.02em]">
-          裝到主畫面、訓練時更快開
+          {t('install.title')}
         </h3>
         <p className="mt-2 px-2 text-center text-[14px] leading-[1.55] text-muted-foreground">
-          離線可用、安裝後像 native app 一樣秒開
+          {t('install.subtitle')}
         </p>
 
         {showAndroidCTA ? (
@@ -55,7 +56,7 @@ export function InstallPromptSheet({
           className="mt-1 text-muted-foreground"
           onClick={onDismiss}
         >
-          之後再說
+          {t('install.laterCta')}
         </Button>
 
         {/* a11y / 平台說明 — 給 screen reader、不擋視覺 */}
@@ -73,13 +74,13 @@ function AndroidBody({ onInstall }: { onInstall: () => void }) {
   return (
     <>
       <ul className="mt-5 space-y-2.5 px-1">
-        <Bullet>訓練中可完全離線</Bullet>
-        <Bullet>桌面 icon、不用每次找瀏覽器</Bullet>
+        <Bullet>{t('install.bulletOffline')}</Bullet>
+        <Bullet>{t('install.bulletDesktop')}</Bullet>
       </ul>
 
       <Button variant="primary" size="lg" block className="mt-7 h-[52px]" onClick={onInstall}>
         <Download className="h-[18px] w-[18px]" aria-hidden />
-        立即安裝
+        {t('install.installCta')}
       </Button>
     </>
   );
@@ -91,7 +92,7 @@ function IOSBody() {
       <div className="mt-5 flex items-center gap-3">
         <div className="h-px flex-1 bg-border" />
         <span className="font-mono text-[10.5px] font-bold uppercase tracking-[1.4px] text-muted-foreground">
-          Safari · 3 步 · 約 10 秒
+          {t('install.iosDividerLabel')}
         </span>
         <div className="h-px flex-1 bg-border" />
       </div>

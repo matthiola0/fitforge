@@ -5,6 +5,7 @@ import type { Plan, Workout } from '@fitforge/core';
 import { useCore } from '@/lib/core/CoreProvider';
 import { useRxQuery } from '@/lib/rxdb/useRxQuery';
 import { greetingByHour } from '@/lib/time/formatDuration';
+import { t } from '@/lib/i18n';
 import { PageHeader } from '@/app/_layout/PageHeader';
 import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
@@ -97,7 +98,7 @@ function TodayHero({
           <Link to={`/workout/${inProgress.id}`}>
             <Button size="xl" block className="mt-5">
               <Play size={18} strokeWidth={2.5} fill="currentColor" />
-              繼續訓練
+              {t('today.inProgressCta')}
             </Button>
           </Link>
         </div>
@@ -114,17 +115,17 @@ function TodayHero({
       <Card className="overflow-hidden">
         <div className="p-5">
           <Badge variant="outline" className="uppercase tracking-[0.1em]">
-            開始第一次
+            {t('today.noPlanBadge')}
           </Badge>
           <h2 className="mt-3 text-[22px] font-bold tracking-[-0.02em]">
-            還沒選課表
+            {t('today.noPlanTitle')}
           </h2>
           <p className="mt-1 text-[14px] text-muted-foreground">
-            選一個預設課表、開始你的健身旅程。
+            {t('today.noPlanDescription')}
           </p>
           <Link to="/plans">
             <Button size="xl" block className="mt-5">
-              選擇課表
+              {t('today.noPlanCta')}
               <ChevronRight size={18} strokeWidth={2.5} />
             </Button>
           </Link>
@@ -168,7 +169,7 @@ function TodayHero({
         <Link to={`/workout/new?planId=${activePlan.id}&dayId=${day.id}`}>
           <Button size="xl" block className="mt-5">
             <Play size={18} strokeWidth={2.5} fill="currentColor" />
-            開始訓練
+            {t('today.startCta')}
           </Button>
         </Link>
       </div>
@@ -186,9 +187,9 @@ function AdhocEntry() {
           <Shuffle size={20} strokeWidth={2.2} />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-[15px] font-semibold">自由訓練</div>
+          <div className="text-[15px] font-semibold">{t('today.adhocTitle')}</div>
           <div className="truncate text-[12px] text-muted-foreground">
-            沒在跑課表？選個部位、隨意練
+            {t('today.adhocSubtitle')}
           </div>
         </div>
         <ChevronRight size={20} className="text-muted-foreground" strokeWidth={2} />

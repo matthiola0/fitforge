@@ -22,6 +22,7 @@ import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
 import { Chip } from '@/ui/Chip';
 import { ConfirmDialog } from '@/ui/ConfirmDialog';
+import { t } from '@/lib/i18n';
 import { Sheet } from '@/ui/Sheet';
 import { NumberStepper } from '@/ui/NumberStepper';
 import { ExerciseAnimation } from '@/features/exercises/ExerciseAnimation';
@@ -349,19 +350,23 @@ function ActiveSession({ workout, exerciseMap, navigate }: ActiveSessionProps) {
       <ConfirmDialog
         open={confirmingFinish}
         variant="primary"
-        title="結束本次訓練？"
-        description="已紀錄的組會保留、未完成的組會丟失。"
+        title={t('workout.finishConfirmTitle')}
+        description={t('workout.finishConfirmBody')}
         meta={
           <span className="inline-flex items-center gap-3 rounded-[10px] bg-muted px-3.5 py-2 text-[12px]">
-            <span className="num font-medium">{completedSetsCount} 組保留</span>
+            <span className="num font-medium">
+              {t('workout.finishConfirmMetaSaved', { count: completedSetsCount })}
+            </span>
             <span className="opacity-40">·</span>
             <span className="num font-medium text-muted-foreground">
-              {totalSetsCount - completedSetsCount} 組丟失
+              {t('workout.finishConfirmMetaLost', {
+                count: totalSetsCount - completedSetsCount,
+              })}
             </span>
           </span>
         }
-        confirmLabel="結束"
-        cancelLabel="繼續訓練"
+        confirmLabel={t('workout.finishConfirmCta')}
+        cancelLabel={t('workout.finishConfirmCancel')}
         onCancel={() => setConfirmingFinish(false)}
         onConfirm={finishWorkout}
       />

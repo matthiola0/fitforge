@@ -22,6 +22,7 @@ import { Button } from '@/ui/Button';
 import { Card } from '@/ui/Card';
 import { Chip } from '@/ui/Chip';
 import { ConfirmDialog } from '@/ui/ConfirmDialog';
+import { t } from '@/lib/i18n';
 import { ExerciseThumb } from '@/features/exercises/ExerciseThumb';
 import { useUiStore } from '@/stores/uiStore';
 import { bodyPartLabel, BODY_PART_LABELS_ZH, muscleLabel } from '@/lib/labels';
@@ -148,14 +149,9 @@ export function PlanDetailPage() {
       <ConfirmDialog
         open={confirmDelete}
         variant="destructive"
-        title="移除這個課表？"
-        description={
-          <>
-            「<span className="font-bold text-foreground">{plan.name}</span>
-            」軟刪除、訓練紀錄不受影響。
-          </>
-        }
-        confirmLabel="移除"
+        title={t('plans.deleteConfirmTitle')}
+        description={t('plans.deleteConfirmBody', { name: plan.name })}
+        confirmLabel={t('common.remove')}
         onCancel={() => setConfirmDelete(false)}
         onConfirm={onDelete}
       />

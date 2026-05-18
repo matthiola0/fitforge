@@ -21,6 +21,7 @@ import { ConfirmDialog } from '@/ui/ConfirmDialog';
 import { EmptyState } from '@/ui/EmptyState';
 import { Sheet } from '@/ui/Sheet';
 import { Skeleton } from '@/ui/Skeleton';
+import { t } from '@/lib/i18n';
 import { Input } from '@/ui/Input';
 import { ExerciseThumb } from '@/features/exercises/ExerciseThumb';
 import { useExercises } from '@/features/exercises/useExercises';
@@ -295,12 +296,12 @@ export function PlanEditorPage() {
       <ConfirmDialog
         open={confirmExit}
         variant="warning"
-        title="未儲存的變更會丟失"
-        description="想先儲存嗎？"
-        confirmLabel="儲存並關閉"
-        cancelLabel="繼續編輯"
+        title={t('plans.exitConfirmTitle')}
+        description={t('plans.exitConfirmBody')}
+        confirmLabel={t('plans.exitConfirmSave')}
+        cancelLabel={t('plans.exitConfirmCancel')}
         tertiary={{
-          label: '不儲存、直接離開',
+          label: t('plans.exitConfirmDiscard'),
           onClick: () => {
             setConfirmExit(false);
             navigate(`/plans/${planId}`);
@@ -764,8 +765,8 @@ function ExercisePickerSheet({
         ) : (exercises ?? []).length === 0 ? (
           <EmptyState
             className="py-8"
-            title="沒有符合的動作"
-            description="換個關鍵字或部位試試。"
+            title={t('plans.pickerEmptyTitle')}
+            description={t('plans.pickerEmptyBody')}
           />
         ) : (
           <ul className="space-y-1.5">

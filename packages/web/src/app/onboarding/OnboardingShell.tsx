@@ -6,6 +6,7 @@ import { useCore } from '@/lib/core/CoreProvider';
 import { useUiStore } from '@/stores/uiStore';
 import { useOnboardingDraft } from '@/features/onboarding/useOnboardingDraft';
 import { cn } from '@/lib/cn';
+import { t } from '@/lib/i18n';
 
 /**
  * OnboardingShell — 共用 layout：top bar (progress + skip/back) + content + sticky footer CTA
@@ -30,7 +31,7 @@ export function OnboardingShell({
   showSkip = false,
   onNext,
   nextDisabled,
-  nextLabel = '下一步',
+  nextLabel = t('common.next'),
   children,
 }: Props) {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ export function OnboardingShell({
               onClick={skip}
               className="-mr-2 px-2 py-1 text-[13px] font-semibold text-muted-foreground hover:text-foreground"
             >
-              跳過
+              {t('common.skip')}
             </button>
           ) : (
             <div className="w-9" />
