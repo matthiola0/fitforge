@@ -65,26 +65,34 @@ export default defineConfig({
       output: {
         manualChunks: (id) => {
           if (!id.includes('node_modules')) return undefined;
+          // Normalise Windows backslashes — Rollup gives native separators
+          const path = id.replace(/\\/g, '/');
+
           // RxDB + RxJS are the heaviest combo (~250KB raw)
-          if (id.includes('rxdb') || id.includes('rxjs') || id.includes('dexie')) {
+          if (path.includes('/rxdb/') || path.includes('/rxjs/') || path.includes('/dexie')) {
             return 'vendor-rxdb';
           }
-          // React core
+          // React core (react, react-dom, react-router-dom, scheduler,
+          // @remix-run/router — internal dep of react-router; if left in the
+          // catch-all it forms a circular import: vendor imports React from
+          // vendor-react while vendor-react imports back from vendor → app
+          // crashes with "Cannot read properties of undefined (reading 'useState')")
           if (
-            id.includes('react-dom') ||
-            id.includes('/react/') ||
-            id.includes('scheduler') ||
-            id.includes('react-router')
+            /\/react-dom\//.test(path) ||
+            /\/react\//.test(path) ||
+            /\/scheduler\//.test(path) ||
+            /\/react-router/.test(path) ||
+            /\/@remix-run\//.test(path)
           ) {
             return 'vendor-react';
           }
           // Lucide icons — tree-shaken but still chunky
-          if (id.includes('lucide-react')) return 'vendor-icons';
+          if (path.includes('/lucide-react/')) return 'vendor-icons';
           // Zod / nanoid / date-fns — small but logical group
           if (
-            id.includes('/zod/') ||
-            id.includes('/nanoid/') ||
-            id.includes('/date-fns/')
+            path.includes('/zod/') ||
+            path.includes('/nanoid/') ||
+            path.includes('/date-fns/')
           ) {
             return 'vendor-utils';
           }
